@@ -32,14 +32,18 @@ const require = createRequire(import.meta.url)
  */
 function patchNextEnvInterop(): void {
   const moduleApi = Module as typeof Module & {
-    _load: (...args: unknown[]) => unknown
+    _load: (request: string, parent?: unknown, isMain?: boolean) => unknown
     __dxiNextEnvPatched?: boolean
   }
 
   if (!moduleApi.__dxiNextEnvPatched) {
-    const originalLoad = moduleApi._load
-    moduleApi._load = function patchedLoad(request: string, ...rest: unknown[]) {
-      const exported = originalLoad.call(this, request, ...rest) as {
+    const originalLoad = moduleApi._load.bind(moduleApi)
+    moduleApi._load = function patchedLoad(
+      request: string,
+      parent?: unknown,
+      isMain?: boolean,
+    ) {
+      const exported = originalLoad(request, parent, isMain) as {
         default?: unknown
         loadEnvConfig?: unknown
       }
