@@ -1,4 +1,5 @@
 import type { GlobalConfig } from 'payload'
+import { publicReadAuthenticatedUpdate } from '@/access'
 import { seoFields } from '@/fields/seo'
 
 const categoryOptions = [
@@ -13,9 +14,7 @@ const categoryOptions = [
 export const Faq: GlobalConfig = {
   slug: 'faq',
   label: 'FAQ Page',
-  access: {
-    read: () => true,
-  },
+  access: publicReadAuthenticatedUpdate,
   admin: {
     description: 'Editable content for the public FAQ page.',
   },

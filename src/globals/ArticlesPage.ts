@@ -1,12 +1,11 @@
 import type { GlobalConfig } from 'payload'
+import { publicReadAuthenticatedUpdate } from '@/access'
 import { seoFields } from '@/fields/seo'
 
 export const ArticlesPage: GlobalConfig = {
   slug: 'articles-page',
   label: 'Articles Page',
-  access: {
-    read: () => true,
-  },
+  access: publicReadAuthenticatedUpdate,
   admin: {
     description: 'Listing page settings and SEO for /articles.',
   },

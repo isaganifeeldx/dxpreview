@@ -32,6 +32,9 @@ export const Articles: CollectionConfig = {
         ],
       }
     },
+    create: ({ req: { user } }) => Boolean(user),
+    update: ({ req: { user } }) => Boolean(user),
+    delete: ({ req: { user } }) => Boolean(user),
   },
   fields: [
     {

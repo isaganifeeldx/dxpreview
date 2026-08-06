@@ -1,12 +1,11 @@
 import type { GlobalConfig } from 'payload'
+import { publicReadAuthenticatedUpdate } from '@/access'
 import { seoFields } from '@/fields/seo'
 
 export const Home: GlobalConfig = {
   slug: 'home',
   label: 'Home Page',
-  access: {
-    read: () => true,
-  },
+  access: publicReadAuthenticatedUpdate,
   admin: {
     description: 'Editable content for the public homepage.',
   },

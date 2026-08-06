@@ -1,12 +1,11 @@
 import type { GlobalConfig } from 'payload'
+import { publicReadAuthenticatedUpdate } from '@/access'
 import { seoFields } from '@/fields/seo'
 
 export const TermsOfService: GlobalConfig = {
   slug: 'terms-of-service',
   label: 'Terms of Service',
-  access: {
-    read: () => true,
-  },
+  access: publicReadAuthenticatedUpdate,
   admin: {
     description: 'Editable content for the public Terms of Service page.',
   },

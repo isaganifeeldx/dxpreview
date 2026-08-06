@@ -1,12 +1,11 @@
 import type { GlobalConfig } from 'payload'
+import { publicReadAuthenticatedUpdate } from '@/access'
 import { seoFields } from '@/fields/seo'
 
 export const PrivacyPolicy: GlobalConfig = {
   slug: 'privacy-policy',
   label: 'Privacy Policy',
-  access: {
-    read: () => true,
-  },
+  access: publicReadAuthenticatedUpdate,
   admin: {
     description: 'Editable content for the public Privacy Policy page.',
   },

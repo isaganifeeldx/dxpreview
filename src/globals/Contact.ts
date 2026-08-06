@@ -1,12 +1,11 @@
 import type { GlobalConfig } from 'payload'
+import { publicReadAuthenticatedUpdate } from '@/access'
 import { seoFields } from '@/fields/seo'
 
 export const Contact: GlobalConfig = {
   slug: 'contact',
   label: 'Contact Page',
-  access: {
-    read: () => true,
-  },
+  access: publicReadAuthenticatedUpdate,
   admin: {
     description: 'Editable content for the public Contact page.',
   },
