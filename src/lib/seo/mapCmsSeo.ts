@@ -29,7 +29,7 @@ function text(value: string | null | undefined, fallback = ''): string {
   return trimmed ? trimmed : fallback
 }
 
-export function mapCmsSeo(doc: CmsSeo, fallback: SeoData): SeoData {
+export function mapCmsSeo(doc: CmsSeo | undefined, fallback: SeoData): SeoData {
   if (!doc) return fallback
 
   return emptySeoData({

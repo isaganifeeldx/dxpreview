@@ -23,7 +23,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function TermsOfServicePage() {
   const content = await getTermsPageContent();
-  const contentHtml = resolveLegalBodyHtml(content.body, termsPageDefaults.body, {
+  const contentHtml = resolveLegalBodyHtml(content.body, termsPageDefaults.body as string, {
     linkPrivacyPolicy: true,
   });
   const defaultJsonLd = buildLegalPageJsonLd({
