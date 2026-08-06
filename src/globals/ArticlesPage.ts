@@ -1,6 +1,7 @@
 import type { GlobalConfig } from 'payload'
 import { publicReadAuthenticatedUpdate } from '@/access'
 import { seoFields } from '@/fields/seo'
+import { revalidateArticlesPageGlobal } from '@/hooks/revalidateCms'
 
 export const ArticlesPage: GlobalConfig = {
   slug: 'articles-page',
@@ -8,6 +9,9 @@ export const ArticlesPage: GlobalConfig = {
   access: publicReadAuthenticatedUpdate,
   admin: {
     description: 'Listing page settings and SEO for /articles.',
+  },
+  hooks: {
+    afterChange: [revalidateArticlesPageGlobal],
   },
   fields: [
     {

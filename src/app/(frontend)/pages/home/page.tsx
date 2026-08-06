@@ -5,6 +5,9 @@ import { getHomePageContent } from '@/lib/home/getHomePageContent';
 import { buildHomeJsonLd } from '@/lib/seo/buildHomeJsonLd';
 import { buildMetadataFromSeo } from '@/lib/seo/buildMetadata';
 
+/** Fallback if on-demand revalidation is missed; CMS saves also call revalidatePath. */
+export const revalidate = 60;
+
 export async function generateMetadata(): Promise<Metadata> {
   const content = await getHomePageContent();
 

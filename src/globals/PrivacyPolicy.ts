@@ -1,6 +1,7 @@
 import type { GlobalConfig } from 'payload'
 import { publicReadAuthenticatedUpdate } from '@/access'
 import { seoFields } from '@/fields/seo'
+import { revalidatePrivacyPolicyGlobal } from '@/hooks/revalidateCms'
 
 export const PrivacyPolicy: GlobalConfig = {
   slug: 'privacy-policy',
@@ -8,6 +9,9 @@ export const PrivacyPolicy: GlobalConfig = {
   access: publicReadAuthenticatedUpdate,
   admin: {
     description: 'Editable content for the public Privacy Policy page.',
+  },
+  hooks: {
+    afterChange: [revalidatePrivacyPolicyGlobal],
   },
   fields: [
     {

@@ -16,6 +16,8 @@ interface ArticleDetailPageProps {
   params: Promise<{ slug: string }>;
 }
 
+export const revalidate = 60;
+
 export async function generateStaticParams() {
   const articles = await getAllArticles();
   return articles.map((article) => ({ slug: article.slug }));

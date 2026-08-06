@@ -1,6 +1,7 @@
 import type { GlobalConfig } from 'payload'
 import { publicReadAuthenticatedUpdate } from '@/access'
 import { seoFields } from '@/fields/seo'
+import { revalidateFaqGlobal } from '@/hooks/revalidateCms'
 
 const categoryOptions = [
   { label: 'General', value: 'general' },
@@ -17,6 +18,9 @@ export const Faq: GlobalConfig = {
   access: publicReadAuthenticatedUpdate,
   admin: {
     description: 'Editable content for the public FAQ page.',
+  },
+  hooks: {
+    afterChange: [revalidateFaqGlobal],
   },
   fields: [
     {

@@ -5,6 +5,8 @@ import { getFaqPageContent } from '@/lib/faq/getFaqPageContent';
 import { buildMetadataFromSeo } from '@/lib/seo/buildMetadata';
 import { buildFaqPageJsonLd } from '@/lib/seo/faqSchema';
 
+export const revalidate = 60;
+
 export async function generateMetadata(): Promise<Metadata> {
   const content = await getFaqPageContent();
 

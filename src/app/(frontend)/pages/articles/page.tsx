@@ -5,6 +5,8 @@ import { getArticlesPageContent } from '@/lib/articles/getArticlesPageContent';
 import { buildArticlesListJsonLd } from '@/lib/seo/buildArticleJsonLd';
 import { buildMetadataFromSeo } from '@/lib/seo/buildMetadata';
 
+export const revalidate = 60;
+
 export async function generateMetadata(): Promise<Metadata> {
   const content = await getArticlesPageContent();
 

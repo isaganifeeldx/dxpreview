@@ -7,6 +7,8 @@ import { getPrivacyPageContent } from '@/lib/privacy/getPrivacyPageContent';
 import { buildLegalPageJsonLd } from '@/lib/seo/buildLegalPageJsonLd';
 import { buildMetadataFromSeo } from '@/lib/seo/buildMetadata';
 
+export const revalidate = 60;
+
 export async function generateMetadata(): Promise<Metadata> {
   const content = await getPrivacyPageContent();
 

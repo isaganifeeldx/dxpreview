@@ -5,6 +5,8 @@ import { getContactPageContent } from '@/lib/contact/getContactPageContent';
 import { buildContactPageJsonLd } from '@/lib/seo/buildContactPageJsonLd';
 import { buildMetadataFromSeo } from '@/lib/seo/buildMetadata';
 
+export const revalidate = 60;
+
 export async function generateMetadata(): Promise<Metadata> {
   const content = await getContactPageContent();
 

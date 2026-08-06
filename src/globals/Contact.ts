@@ -1,6 +1,7 @@
 import type { GlobalConfig } from 'payload'
 import { publicReadAuthenticatedUpdate } from '@/access'
 import { seoFields } from '@/fields/seo'
+import { revalidateContactGlobal } from '@/hooks/revalidateCms'
 
 export const Contact: GlobalConfig = {
   slug: 'contact',
@@ -8,6 +9,9 @@ export const Contact: GlobalConfig = {
   access: publicReadAuthenticatedUpdate,
   admin: {
     description: 'Editable content for the public Contact page.',
+  },
+  hooks: {
+    afterChange: [revalidateContactGlobal],
   },
   fields: [
     {

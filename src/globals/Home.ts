@@ -1,6 +1,7 @@
 import type { GlobalConfig } from 'payload'
 import { publicReadAuthenticatedUpdate } from '@/access'
 import { seoFields } from '@/fields/seo'
+import { revalidateHomeGlobal } from '@/hooks/revalidateCms'
 
 export const Home: GlobalConfig = {
   slug: 'home',
@@ -8,6 +9,9 @@ export const Home: GlobalConfig = {
   access: publicReadAuthenticatedUpdate,
   admin: {
     description: 'Editable content for the public homepage.',
+  },
+  hooks: {
+    afterChange: [revalidateHomeGlobal],
   },
   fields: [
     {

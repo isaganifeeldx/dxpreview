@@ -1,6 +1,7 @@
 import type { GlobalConfig } from 'payload'
 import { publicReadAuthenticatedUpdate } from '@/access'
 import { seoFields } from '@/fields/seo'
+import { revalidateTermsOfServiceGlobal } from '@/hooks/revalidateCms'
 
 export const TermsOfService: GlobalConfig = {
   slug: 'terms-of-service',
@@ -8,6 +9,9 @@ export const TermsOfService: GlobalConfig = {
   access: publicReadAuthenticatedUpdate,
   admin: {
     description: 'Editable content for the public Terms of Service page.',
+  },
+  hooks: {
+    afterChange: [revalidateTermsOfServiceGlobal],
   },
   fields: [
     {

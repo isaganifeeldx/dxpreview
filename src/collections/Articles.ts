@@ -1,6 +1,10 @@
 import type { CollectionConfig } from 'payload'
 import { slugField } from 'payload'
 import { seoFields } from '@/fields/seo'
+import {
+  revalidateArticleAfterChange,
+  revalidateArticleAfterDelete,
+} from '@/hooks/revalidateCms'
 
 export const Articles: CollectionConfig = {
   slug: 'articles',
@@ -19,6 +23,10 @@ export const Articles: CollectionConfig = {
       // Allow incomplete articles while drafting; required fields still apply on Publish.
       validate: false,
     },
+  },
+  hooks: {
+    afterChange: [revalidateArticleAfterChange],
+    afterDelete: [revalidateArticleAfterDelete],
   },
   access: {
     read: ({ req: { user } }) => {
