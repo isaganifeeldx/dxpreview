@@ -4,14 +4,15 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "tsx scripts/ensure-db-schema.ts && next build",
+    "build": "node --require ./scripts/patch-next-env.cjs --import tsx scripts/ensure-db-schema.ts && next build",
     "start": "next start",
     "lint": "next lint",
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
-    "db:ensure": "tsx scripts/ensure-db-schema.ts",
-    "db:push": "tsx scripts/ensure-db-schema.ts"
+    "db:ensure": "node --require ./scripts/patch-next-env.cjs --import tsx scripts/ensure-db-schema.ts",
+    "db:push": "node --require ./scripts/patch-next-env.cjs --import tsx scripts/ensure-db-schema.ts"
   },
   "dependencies": {
+    "@next/env": "^16.3.0",
     "@payloadcms/db-postgres": "^3.86.0",
     "@payloadcms/next": "^3.86.0",
     "@payloadcms/richtext-lexical": "^3.86.0",

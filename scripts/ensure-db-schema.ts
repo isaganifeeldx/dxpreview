@@ -14,14 +14,60 @@
  *   npm run db:ensure
  *   npm run db:push
  */
-import { config as loadEnv } from 'dotenv'
+import { createRequire } from 'node:module'
+import Module from 'node:module'
+import { config as loadDotenv } from 'dotenv'
 import pg from 'pg'
 
-loadEnv({ path: '.env.local' })
-loadEnv({ path: '.env' })
+loadDotenv({ path: '.env.local', quiet: true })
+loadDotenv({ path: '.env', quiet: true })
 
 const onlyIfEmpty = process.argv.includes('--only-if-empty')
 const skipPush = process.env.PAYLOAD_SKIP_SCHEMA_PUSH === 'true'
+const require = createRequire(import.meta.url)
+
+/**
+ * Payload's loadEnv does `import x from '@next/env'` then reads `x.loadEnvConfig`.
+ * Under tsx on Vercel that default export is undefined — patch CJS interop first.
+ */
+function patchNextEnvInterop(): void {
+  const moduleApi = Module as typeof Module & {
+    _load: (...args: unknown[]) => unknown
+    __dxiNextEnvPatched?: boolean
+  }
+
+  if (!moduleApi.__dxiNextEnvPatched) {
+    const originalLoad = moduleApi._load
+    moduleApi._load = function patchedLoad(request: string, ...rest: unknown[]) {
+      const exported = originalLoad.call(this, request, ...rest) as {
+        default?: unknown
+        loadEnvConfig?: unknown
+      }
+
+      if (
+        typeof request === 'string' &&
+        request.includes('@next/env') &&
+        exported &&
+        typeof exported === 'object' &&
+        !exported.default &&
+        typeof exported.loadEnvConfig === 'function'
+      ) {
+        exported.default = exported
+      }
+
+      return exported
+    }
+    moduleApi.__dxiNextEnvPatched = true
+  }
+
+  const nextEnv = require('@next/env') as {
+    default?: unknown
+    loadEnvConfig?: unknown
+  }
+  if (nextEnv && !nextEnv.default && typeof nextEnv.loadEnvConfig === 'function') {
+    nextEnv.default = nextEnv
+  }
+}
 
 function shouldUseSsl(connectionString: string): boolean {
   if (/sslmode=require/i.test(connectionString)) return true
@@ -75,8 +121,9 @@ async function pushSchema(): Promise<void> {
   // Skip Payload's interactive pushDevSchema on connect; we push ourselves below.
   process.env.PAYLOAD_MIGRATING = 'true'
 
+  patchNextEnvInterop()
+
   const { getPayload } = await import('payload')
-  // Same resolved config the Next app uses (`@payload-config` → src/payload.config.ts).
   const { default: payloadConfig } = await import('@payload-config')
   const payload = await getPayload({ config: payloadConfig })
   const adapter = payload.db as unknown as PushableAdapter
