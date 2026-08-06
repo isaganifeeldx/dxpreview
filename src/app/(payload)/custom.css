@@ -1,0 +1,89 @@
+/* Payload admin custom styles — login page only */
+
+/*
+ * Force a light login surface even when the admin theme is dark.
+ * Override theme tokens so labels/links that use --theme-* stay readable.
+ */
+html[data-theme] .template-minimal,
+.template-minimal {
+  --theme-bg: #ffffff;
+  --theme-input-bg: #ffffff;
+  --theme-text: #111827;
+  --theme-elevation-0: #ffffff;
+  --theme-elevation-50: #f8fafc;
+  --theme-elevation-100: #f1f5f9;
+  --theme-elevation-150: #e2e8f0;
+  --theme-elevation-200: #e2e8f0;
+  --theme-elevation-250: #cbd5e1;
+  --theme-elevation-300: #cbd5e1;
+  --theme-elevation-400: #94a3b8;
+  --theme-elevation-500: #64748b;
+  --theme-elevation-600: #475569;
+  --theme-elevation-700: #334155;
+  --theme-elevation-800: #1e293b;
+  --theme-elevation-900: #111827;
+  --theme-elevation-1000: #0f172a;
+  --theme-border-color: #cbd5e1;
+
+  background: #ffffff !important;
+  color: #111827 !important;
+  color-scheme: light;
+}
+
+/* Explicit label color (covers dark-theme field-label rules) */
+html[data-theme] .login__form .field-label,
+html[data-theme] .login__form label,
+.login__form .field-label,
+.login__form label {
+  color: #111827 !important;
+}
+
+.login__form {
+  color: #111827 !important;
+}
+
+.login a {
+  color: #2563eb !important;
+}
+
+/* Email & password fields: white fill + grey border */
+html[data-theme] .login__form input[type='email'],
+html[data-theme] .login__form input[type='password'],
+html[data-theme] .login__form input#field-email,
+html[data-theme] .login__form input#field-password,
+.login__form input[type='email'],
+.login__form input[type='password'],
+.login__form input#field-email,
+.login__form input#field-password {
+  background-color: #ffffff !important;
+  background-image: none !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #111827 !important;
+  box-shadow: none !important;
+  color-scheme: light;
+}
+
+/* Chrome/Edge autofill can override background unless we paint a shadow fill */
+.login__form input[type='email']:-webkit-autofill,
+.login__form input[type='password']:-webkit-autofill,
+.login__form input#field-email:-webkit-autofill,
+.login__form input#field-password:-webkit-autofill {
+  -webkit-text-fill-color: #111827 !important;
+  box-shadow: 0 0 0 1000px #ffffff inset !important;
+  border: 1px solid #cbd5e1 !important;
+  transition: background-color 99999s ease-out;
+}
+
+.login__form input[type='email']::placeholder,
+.login__form input[type='password']::placeholder {
+  color: #6b7280 !important;
+}
+
+.login__form input[type='email']:focus,
+.login__form input[type='password']:focus,
+.login__form input#field-email:focus,
+.login__form input#field-password:focus {
+  outline: none;
+  border-color: #94a3b8 !important;
+  box-shadow: none !important;
+}

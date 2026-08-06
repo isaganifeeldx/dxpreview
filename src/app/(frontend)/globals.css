@@ -1,0 +1,357 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Lao MN';
+  src: url('../../assets/fonts/lao-mn.woff') format('woff'),
+    url('../../assets/fonts/lao-mn.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('../../assets/fonts/Inter.woff') format('woff'),
+    url('../../assets/fonts/Inter.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+html {
+  scrollbar-gutter: stable;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+:focus-visible {
+  outline: 2px solid #2a3040;
+  outline-offset: 2px;
+}
+
+::selection {
+  background: color-mix(in srgb, #bde2fc 70%, white);
+  color: #2a3040;
+}
+
+.dashboard-gradient-surface {
+  position: relative;
+  background-color: #f7f9fc;
+  background-image: url('/images/gradient-bg.webp');
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
+.lao-mn {
+  font-family: 'Lao MN', sans-serif;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+.inter {
+  font-family: 'Inter', sans-serif;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+}
+
+.title-heading-normal {
+  font-family: 'Lao MN', sans-serif;
+  font-size: 28px;
+  line-height: 1.3;
+  letter-spacing: 0;
+}
+
+.heading-large {
+  font-family: 'Lao MN', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  font-size: 64px;
+  font-weight: 100;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 5px;
+}
+
+@media (max-width: 1024px) {
+  .heading-large {
+    font-size: 50px;
+  }
+}
+
+@media (max-width: 600px) {
+  .heading-large {
+    font-size: 30px;
+  }
+}
+
+.header-gradient-overlay {
+  position: relative;
+  isolation: isolate;
+}
+
+.header-gradient-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(86deg, #ffffff 0%, #ffffff 50%, #f1f5ff 100%);
+  opacity: 0.4;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.glass-panel {
+  position: relative;
+  isolation: isolate;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.32) 0%,
+    rgba(255, 255, 255, 0.56) 50%,
+    rgba(241, 245, 255, 0.56) 100%
+  );
+  /* box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08); */
+  padding: 22px 24px;
+  color: #101322;
+}
+
+.header-glass {
+  position: relative;
+  isolation: isolate;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.32) 0%,
+    rgba(255, 255, 255, 0.56) 50%,
+    rgba(241, 245, 255, 0.56) 100%
+  );
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+  color: #101322;
+}
+
+.header-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9),
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.65)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.glass-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9),
+    rgba(255, 255, 255, 0.15) 50%,
+    rgba(255, 255, 255, 0.65)
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass-panel,
+  .header-glass {
+    -webkit-backdrop-filter: blur(24px) saturate(160%);
+    backdrop-filter: blur(24px) saturate(160%);
+  }
+}
+
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes hueShift {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    filter: hue-rotate(10deg);
+  }
+}
+
+/* FAQ accordion — hide native disclosure marker */
+.faq-summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-summary::marker {
+  content: '';
+}
+
+/* Contact form select — white field on glass panel */
+.contact-form-select {
+  color: #696969;
+  background-color: #ffffff;
+}
+
+.contact-form-select:focus {
+  color: #696969;
+}
+
+.contact-form-select option {
+  color: #696969;
+  background-color: #ffffff;
+}
+
+/* Legal pages (privacy policy, etc.) */
+.legal-content {
+  color: #2a3040;
+  font-size: 16px;
+  line-height: 1.75;
+}
+
+.legal-content h2 {
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #2a3040;
+}
+
+.legal-content h3 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: #2a3040;
+}
+
+.legal-content p {
+  margin-bottom: 1rem;
+}
+
+.legal-content ul,
+.legal-content ol {
+  margin-bottom: 1rem;
+  padding-left: 1.25rem;
+}
+
+.legal-content ul {
+  list-style: disc;
+}
+
+.legal-content ol {
+  list-style: decimal;
+}
+
+.legal-content li {
+  margin-bottom: 0.35rem;
+}
+
+.legal-content a {
+  color: #6a758c;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.legal-content a:hover {
+  color: #2a3040;
+}
+
+.legal-content strong {
+  font-weight: 600;
+}
+
+/* Article detail body */
+.article-content {
+  color: #5c6470;
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+@media (min-width: 640px) {
+  .article-content {
+    font-size: 16px;
+  }
+}
+
+.article-content > * + * {
+  margin-top: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .article-content > * + * {
+    margin-top: 2rem;
+  }
+}
+
+.article-content h2,
+.article-content h3 {
+  color: #2a3040;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.article-content h2 {
+  font-size: 1.25rem;
+}
+
+.article-content h3 {
+  font-size: 1.05rem;
+}
+
+.article-content ul,
+.article-content ol {
+  padding-left: 1.25rem;
+}
+
+.article-content ul {
+  list-style: disc;
+}
+
+.article-content ol {
+  list-style: decimal;
+}
+
+.article-content a {
+  color: #6a758c;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.article-content a:hover {
+  color: #2a3040;
+}
+
+.article-content strong {
+  font-weight: 600;
+}

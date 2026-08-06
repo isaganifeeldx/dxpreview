@@ -1,0 +1,178 @@
+import { getMediaUrl } from '@/lib/media'
+import { getPayloadClient } from '@/lib/payload'
+import { mapCmsSeo, type CmsSeo } from '@/lib/seo/mapCmsSeo'
+import { DEFAULT_NUMBER_ICONS, DEFAULT_PROCESS_IMAGE, homePageDefaults } from './defaults'
+import type { HomePageContentData } from './types'
+
+type CmsMedia = {
+  url?: string | null
+} | null
+
+type CmsHome = {
+  hero?: {
+    lineOne?: string | null
+    title?: string | null
+    description?: string | null
+    features?: Array<{ label?: string | null } | null> | null
+    primaryCtaLabel?: string | null
+    primaryCtaHref?: string | null
+    secondaryCtaLabel?: string | null
+    secondaryCtaHref?: string | null
+    videoId?: string | null
+  } | null
+  trust?: {
+    intro?: string | null
+    stats?: Array<{ value?: string | null; label?: string | null } | null> | null
+  } | null
+  process?: {
+    title?: string | null
+    cards?: Array<{
+      title?: string | null
+      description?: string | null
+      image?: number | CmsMedia
+      numberSide?: 'left' | 'right' | null
+    } | null> | null
+  } | null
+  discover?: {
+    title?: string | null
+    description?: string | null
+    ctaLabel?: string | null
+    ctaHref?: string | null
+    videoId?: string | null
+  } | null
+  gallery?: {
+    title?: string | null
+    images?: Array<{
+      image?: number | CmsMedia
+      alt?: string | null
+      grow?: number | null
+    } | null> | null
+  } | null
+  lessons?: {
+    title?: string | null
+    description?: string | null
+    ctaLabel?: string | null
+    ctaHref?: string | null
+    videoId?: string | null
+  } | null
+  seo?: CmsSeo
+}
+
+function text(value: string | null | undefined, fallback: string): string {
+  const trimmed = value?.trim()
+  return trimmed ? trimmed : fallback
+}
+
+function mapHomeFromCms(doc: CmsHome | null | undefined): HomePageContentData {
+  const defaults = homePageDefaults
+  if (!doc) return defaults
+
+  const heroFeatures =
+    doc.hero?.features
+      ?.map((feature) => feature?.label?.trim())
+      .filter((label): label is string => Boolean(label))
+      .map((label) => ({ label })) ?? []
+
+  const trustStats =
+    doc.trust?.stats
+      ?.map((stat) => {
+        const value = stat?.value?.trim()
+        const label = stat?.label?.trim()
+        if (!value || !label) return null
+        return { value, label }
+      })
+      .filter((stat): stat is { value: string; label: string } => Boolean(stat)) ?? []
+
+  const processCards =
+    doc.process?.cards
+      ?.map((card, index) => {
+        const title = card?.title?.trim()
+        const description = card?.description?.trim()
+        if (!title || !description) return null
+        return {
+          title,
+          description,
+          imageSrc: getMediaUrl(card?.image) ?? DEFAULT_PROCESS_IMAGE,
+          numberIcon: DEFAULT_NUMBER_ICONS[index % DEFAULT_NUMBER_ICONS.length],
+          numberSide: card?.numberSide === 'left' ? ('left' as const) : ('right' as const),
+        }
+      })
+      .filter((card): card is NonNullable<typeof card> => Boolean(card)) ?? []
+
+  const galleryImages =
+    doc.gallery?.images
+      ?.map((item) => {
+        const src = getMediaUrl(item?.image)
+        const alt = item?.alt?.trim()
+        if (!src || !alt) return null
+        return {
+          src,
+          alt,
+          grow: typeof item?.grow === 'number' && item.grow > 0 ? item.grow : 2,
+        }
+      })
+      .filter((item): item is NonNullable<typeof item> => Boolean(item)) ?? []
+
+  return {
+    hero: {
+      lineOne: text(doc.hero?.lineOne, defaults.hero.lineOne),
+      title: text(doc.hero?.title, defaults.hero.title),
+      description: text(doc.hero?.description, defaults.hero.description),
+      features: heroFeatures.length > 0 ? heroFeatures : defaults.hero.features,
+      primaryCta: {
+        label: text(doc.hero?.primaryCtaLabel, defaults.hero.primaryCta.label),
+        href: text(doc.hero?.primaryCtaHref, defaults.hero.primaryCta.href),
+      },
+      secondaryCta: {
+        label: text(doc.hero?.secondaryCtaLabel, defaults.hero.secondaryCta.label),
+        href: text(doc.hero?.secondaryCtaHref, defaults.hero.secondaryCta.href),
+      },
+      videoId: text(doc.hero?.videoId, defaults.hero.videoId),
+    },
+    trust: {
+      intro: text(doc.trust?.intro, defaults.trust.intro),
+      stats: trustStats.length > 0 ? trustStats : defaults.trust.stats,
+    },
+    process: {
+      title: text(doc.process?.title, defaults.process.title),
+      cards: processCards.length > 0 ? processCards : defaults.process.cards,
+    },
+    discover: {
+      title: text(doc.discover?.title, defaults.discover.title),
+      description: text(doc.discover?.description, defaults.discover.description),
+      cta: {
+        label: text(doc.discover?.ctaLabel, defaults.discover.cta.label),
+        href: text(doc.discover?.ctaHref, defaults.discover.cta.href),
+      },
+      videoId: text(doc.discover?.videoId, defaults.discover.videoId),
+    },
+    gallery: {
+      title: text(doc.gallery?.title, defaults.gallery.title),
+      images: galleryImages.length > 0 ? galleryImages : defaults.gallery.images,
+    },
+    lessons: {
+      title: text(doc.lessons?.title, defaults.lessons.title),
+      description: text(doc.lessons?.description, defaults.lessons.description),
+      cta: {
+        label: text(doc.lessons?.ctaLabel, defaults.lessons.cta.label),
+        href: text(doc.lessons?.ctaHref, defaults.lessons.cta.href),
+      },
+      videoId: text(doc.lessons?.videoId, defaults.lessons.videoId),
+    },
+    seo: mapCmsSeo(doc.seo, defaults.seo),
+  }
+}
+
+export async function getHomePageContent(): Promise<HomePageContentData> {
+  try {
+    const payload = await getPayloadClient()
+    const doc = (await payload.findGlobal({
+      slug: 'home',
+      depth: 1,
+    })) as CmsHome
+    return mapHomeFromCms(doc)
+  } catch (error) {
+    console.error('[home] Failed to load Home global from Payload — using defaults.', error)
+    return homePageDefaults
+  }
+}
