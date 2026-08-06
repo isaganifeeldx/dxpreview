@@ -1,7 +1,7 @@
-/* Payload admin custom styles — login page only */
+/* Payload admin custom styles — login + create-first-user */
 
 /*
- * Force a light login surface even when the admin theme is dark.
+ * Force a light auth surface even when the admin theme is dark.
  * Override theme tokens so labels/links that use --theme-* stay readable.
  */
 html[data-theme] .template-minimal,
@@ -31,26 +31,38 @@ html[data-theme] .template-minimal,
 }
 
 /* Explicit label color (covers dark-theme field-label rules) */
+html[data-theme] .template-minimal .field-label,
+html[data-theme] .template-minimal label,
 html[data-theme] .login__form .field-label,
 html[data-theme] .login__form label,
+.template-minimal .field-label,
+.template-minimal label,
 .login__form .field-label,
 .login__form label {
   color: #111827 !important;
 }
 
+.template-minimal,
 .login__form {
   color: #111827 !important;
 }
 
+.template-minimal a,
 .login a {
   color: #2563eb !important;
 }
 
 /* Email & password fields: white fill + grey border */
+html[data-theme] .template-minimal input[type='email'],
+html[data-theme] .template-minimal input[type='password'],
+html[data-theme] .template-minimal input[type='text'],
 html[data-theme] .login__form input[type='email'],
 html[data-theme] .login__form input[type='password'],
 html[data-theme] .login__form input#field-email,
 html[data-theme] .login__form input#field-password,
+.template-minimal input[type='email'],
+.template-minimal input[type='password'],
+.template-minimal input[type='text'],
 .login__form input[type='email'],
 .login__form input[type='password'],
 .login__form input#field-email,
@@ -64,6 +76,7 @@ html[data-theme] .login__form input#field-password,
 }
 
 /* Chrome/Edge autofill can override background unless we paint a shadow fill */
+.template-minimal input:-webkit-autofill,
 .login__form input[type='email']:-webkit-autofill,
 .login__form input[type='password']:-webkit-autofill,
 .login__form input#field-email:-webkit-autofill,
@@ -74,11 +87,13 @@ html[data-theme] .login__form input#field-password,
   transition: background-color 99999s ease-out;
 }
 
+.template-minimal input::placeholder,
 .login__form input[type='email']::placeholder,
 .login__form input[type='password']::placeholder {
   color: #6b7280 !important;
 }
 
+.template-minimal input:focus,
 .login__form input[type='email']:focus,
 .login__form input[type='password']:focus,
 .login__form input#field-email:focus,
@@ -86,4 +101,12 @@ html[data-theme] .login__form input#field-password,
   outline: none;
   border-color: #94a3b8 !important;
   box-shadow: none !important;
+}
+
+/*
+ * Empty modal container can sit over create-first-user and block clicks.
+ * Allow interaction with the form while no modal content is open.
+ */
+.template-minimal .payload__modal-container:not(:has(.payload__modal, .drawer)) {
+  pointer-events: none !important;
 }

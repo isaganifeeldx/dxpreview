@@ -20,8 +20,13 @@ const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 const blobToken = process.env.BLOB_READ_WRITE_TOKEN || ''
+const hasValidBlobToken = /^vercel_blob_rw_[a-z0-9]+_[a-z0-9]+$/i.test(blobToken)
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || ''
+const isVercel = process.env.VERCEL === '1'
 
 export default buildConfig({
+  // Required for correct admin cookies / API URLs on deployed hosts (Vercel).
+  ...(siteUrl ? { serverURL: siteUrl } : {}),
   admin: {
     user: Users.slug,
     importMap: {
@@ -53,8 +58,8 @@ export default buildConfig({
   }),
   plugins: [
     vercelBlobStorage({
-      // Keep local disk uploads when no Blob token (local/AWS path).
-      enabled: Boolean(blobToken),
+      // Keep local disk uploads when no valid Blob token (local/AWS path).
+      enabled: hasValidBlobToken,
       collections: {
         media: true,
       },
@@ -63,16 +68,20 @@ export default buildConfig({
       clientUploads: true,
     }),
   ],
-  // Required for Schedule publish / unpublish on Articles (and any future scheduled jobs).
+  // Schedule publish jobs. autoRun is for long-lived servers only — not Vercel serverless.
   jobs: {
     access: {
       run: ({ req }) => Boolean(req.user),
     },
-    autoRun: [
-      {
-        cron: '* * * * *',
-      },
-    ],
+    ...(isVercel
+      ? {}
+      : {
+          autoRun: [
+            {
+              cron: '* * * * *',
+            },
+          ],
+        }),
   },
   sharp,
 })

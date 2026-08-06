@@ -1,3 +1,4 @@
+import { VercelBlobClientUploadHandler as VercelBlobClientUploadHandler_16c82c5e25f43069fa2e1d31d8b8a7d5 } from '@payloadcms/storage-vercel-blob/client'
 import { default as default_dbaf382c2b9056e621d5a9542de1524b } from '../../../components/payload/SlugField'
 import { RscEntryLexicalCell as RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
 import { RscEntryLexicalField as RscEntryLexicalField_44fe37237e0ebf4470c9990d8cb7b07e } from '@payloadcms/richtext-lexical/rsc'
@@ -30,6 +31,7 @@ import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } f
 
 /** @type import('payload').ImportMap */
 export const importMap = {
+  "@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler": VercelBlobClientUploadHandler_16c82c5e25f43069fa2e1d31d8b8a7d5,
   "/components/payload/SlugField#default": default_dbaf382c2b9056e621d5a9542de1524b,
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalCell": RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e,
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalField": RscEntryLexicalField_44fe37237e0ebf4470c9990d8cb7b07e,
