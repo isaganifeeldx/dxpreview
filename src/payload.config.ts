@@ -21,12 +21,39 @@ const dirname = path.dirname(filename)
 
 const blobToken = process.env.BLOB_READ_WRITE_TOKEN || ''
 const hasValidBlobToken = /^vercel_blob_rw_[a-z0-9]+_[a-z0-9]+$/i.test(blobToken)
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || ''
 const isVercel = process.env.VERCEL === '1'
 
+function normalizeUrl(url: string): string {
+  return url.replace(/\/$/, '')
+}
+
+function toAbsoluteUrl(hostOrUrl: string): string {
+  if (/^https?:\/\//i.test(hostOrUrl)) return normalizeUrl(hostOrUrl)
+  return normalizeUrl(`https://${hostOrUrl}`)
+}
+
+/** Prefer explicit site URL; fall back to the current Vercel deployment host. */
+const configuredSiteUrl = process.env.NEXT_PUBLIC_SITE_URL
+  ? toAbsoluteUrl(process.env.NEXT_PUBLIC_SITE_URL)
+  : ''
+
+const vercelOrigins = [
+  process.env.VERCEL_URL,
+  process.env.VERCEL_BRANCH_URL,
+  process.env.VERCEL_PROJECT_PRODUCTION_URL,
+]
+  .filter((value): value is string => Boolean(value))
+  .map(toAbsoluteUrl)
+
+const serverURL = configuredSiteUrl || vercelOrigins[0] || ''
+
+/** Whitelist every host the admin might be opened from (preview + production). */
+const trustedOrigins = [...new Set([serverURL, configuredSiteUrl, ...vercelOrigins].filter(Boolean))]
+
 export default buildConfig({
-  // Required for correct admin cookies / API URLs on deployed hosts (Vercel).
-  ...(siteUrl ? { serverURL: siteUrl } : {}),
+  ...(serverURL ? { serverURL } : {}),
+  csrf: trustedOrigins,
+  cors: trustedOrigins,
   admin: {
     user: Users.slug,
     importMap: {
