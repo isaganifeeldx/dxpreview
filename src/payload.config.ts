@@ -20,9 +20,16 @@ import { TermsOfService } from './globals/TermsOfService'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
-const blobToken = process.env.BLOB_READ_WRITE_TOKEN || ''
-const hasValidBlobToken = /^vercel_blob_rw_[a-z0-9]+_[a-z0-9]+$/i.test(blobToken)
+const blobToken = (process.env.BLOB_READ_WRITE_TOKEN || '').trim()
+/** Accept real Vercel Blob RW tokens; avoid disabling the plugin on minor format drift. */
+const hasValidBlobToken = blobToken.startsWith('vercel_blob_rw_')
 const isVercel = process.env.VERCEL === '1'
+
+if (isVercel && !hasValidBlobToken) {
+  console.warn(
+    '[payload] BLOB_READ_WRITE_TOKEN is missing or invalid. Media will use local disk and break on Vercel — connect a Blob store and set the token for Production + Preview.',
+  )
+}
 
 function normalizeUrl(url: string): string {
   return url.replace(/\/$/, '')
@@ -95,7 +102,7 @@ export default buildConfig({
   }),
   plugins: [
     vercelBlobStorage({
-      // Keep local disk uploads when no valid Blob token (local/AWS path).
+      // Required on Vercel — local disk uploads do not persist in serverless.
       enabled: hasValidBlobToken,
       collections: {
         media: true,
