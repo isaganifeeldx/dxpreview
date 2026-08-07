@@ -2,14 +2,13 @@ import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import path from 'path'
-import { buildConfig, type Plugin } from 'payload'
+import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
 import { Articles } from './collections/Articles'
 import { Media } from './collections/Media'
 import { Users } from './collections/Users'
-import { vercelBlobClientUploadEndpoint } from './endpoints/vercelBlobClientUpload'
 import { ArticlesPage } from './globals/ArticlesPage'
 import { Contact } from './globals/Contact'
 import { Faq } from './globals/Faq'
@@ -17,6 +16,7 @@ import { Home } from './globals/Home'
 import { PrivacyPolicy } from './globals/PrivacyPolicy'
 import { Settings } from './globals/Settings'
 import { TermsOfService } from './globals/TermsOfService'
+import { numberedBlobUploadsPlugin } from './plugins/numberedBlobUploads'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -91,7 +91,6 @@ export default buildConfig({
     Settings,
     TermsOfService,
   ],
-  endpoints: hasValidBlobToken ? [vercelBlobClientUploadEndpoint] : [],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -112,30 +111,10 @@ export default buildConfig({
       token: blobToken,
       // Bypass Vercel serverless 4.5MB body limit for larger images/videos.
       clientUploads: true,
-      // Numbered suffixes (article-1.webp) via NumberedBlobUploadHandler — not random.
+      // Numbered names + overwrite are handled by numberedBlobUploadsPlugin.
       addRandomSuffix: false,
     }),
-    // Runs after Blob plugin providers so our numbered uploader wins setUploadHandler.
-    ((config) => {
-      if (!hasValidBlobToken) return config
-      config.admin ??= {}
-      config.admin.components ??= {}
-      config.admin.components.providers ??= []
-      config.admin.components.providers.push({
-        path: '/components/payload/NumberedBlobUploadHandler#NumberedBlobUploadHandler',
-        clientProps: {
-          collectionSlug: 'media',
-          enabled: true,
-          extra: {
-            addRandomSuffix: false,
-            useCompositePrefixes: false,
-          },
-          // Custom route enables allowOverwrite for validation retries (e.g. missing alt).
-          serverHandlerPath: '/vercel-blob-client-upload-route-overwrite',
-        },
-      })
-      return config
-    }) satisfies Plugin,
+    numberedBlobUploadsPlugin(blobToken),
   ],
   // Schedule publish jobs. autoRun is for long-lived servers only — not Vercel serverless.
   jobs: {

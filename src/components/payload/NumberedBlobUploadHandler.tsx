@@ -10,6 +10,15 @@ function posixBasename(key: string): string {
   return lastSlash === -1 ? normalized : normalized.slice(lastSlash + 1)
 }
 
+function incrementFilename(name: string): string {
+  const dot = name.lastIndexOf('.')
+  const base = dot === -1 ? name : name.slice(0, dot)
+  const ext = dot === -1 ? '' : name.slice(dot)
+  const match = base.match(/^(.*)-(\d+)$/)
+  if (!match) return `${base}-1${ext}`
+  return `${match[1]}-${Number(match[2]) + 1}${ext}`
+}
+
 /**
  * Numbered filenames when another Media doc already uses the name
  * (`article-1.webp`), plus overwrite so retrying save after a validation
@@ -46,14 +55,12 @@ export const NumberedBlobUploadHandler = createClientUploadHandler({
       throw new Error('Could not reserve a unique media filename.')
     }
 
-    const { filename: uniqueFilename } = (await uniqueRes.json()) as { filename?: string }
+    let uniqueFilename = ((await uniqueRes.json()) as { filename?: string }).filename
     if (!uniqueFilename) {
       throw new Error('Unique filename response was empty.')
     }
 
-    if (uniqueFilename !== file.name) {
-      updateFilename(uniqueFilename)
-    }
+    updateFilename(uniqueFilename)
 
     const endpointRoute = formatAdminURL({
       apiRoute,
@@ -61,27 +68,43 @@ export const NumberedBlobUploadHandler = createClientUploadHandler({
       serverURL,
     })
 
-    const { fileKey: pathname, sanitizedDocPrefix } = getFileKey({
-      collectionPrefix: prefix,
-      docPrefix,
-      filename: uniqueFilename,
-      useCompositePrefixes,
-    })
+    const uploadOnce = async (filename: string) => {
+      const { fileKey: pathname, sanitizedDocPrefix } = getFileKey({
+        collectionPrefix: prefix,
+        docPrefix,
+        filename,
+        useCompositePrefixes,
+      })
 
-    const result = await upload(pathname, file, {
-      access: 'public',
-      clientPayload: collectionSlug,
-      contentType: file.type,
-      handleUploadUrl: endpointRoute,
-      // Supported by Vercel Blob client tokens; types lag behind the runtime option.
-      ...({ allowOverwrite: true } as Record<string, unknown>),
-    })
+      const result = await upload(pathname, file, {
+        access: 'public',
+        clientPayload: collectionSlug,
+        contentType: file.type,
+        handleUploadUrl: endpointRoute,
+        ...({ allowOverwrite: true } as Record<string, unknown>),
+      })
 
-    const pathnameFromBlob = result.pathname.replace(/^\/+/, '')
-    updateFilename(decodeURIComponent(posixBasename(pathnameFromBlob)))
+      return { result, sanitizedDocPrefix }
+    }
 
-    return {
-      prefix: sanitizedDocPrefix,
+    try {
+      const { result, sanitizedDocPrefix } = await uploadOnce(uniqueFilename)
+      const pathnameFromBlob = result.pathname.replace(/^\/+/, '')
+      updateFilename(decodeURIComponent(posixBasename(pathnameFromBlob)))
+      return { prefix: sanitizedDocPrefix }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error)
+      if (!/blob already exists/i.test(message)) {
+        throw error
+      }
+
+      // Fallback if overwrite token was not applied: bump to article-1.webp, etc.
+      uniqueFilename = incrementFilename(uniqueFilename)
+      updateFilename(uniqueFilename)
+      const { result, sanitizedDocPrefix } = await uploadOnce(uniqueFilename)
+      const pathnameFromBlob = result.pathname.replace(/^\/+/, '')
+      updateFilename(decodeURIComponent(posixBasename(pathnameFromBlob)))
+      return { prefix: sanitizedDocPrefix }
     }
   },
 })
