@@ -3,6 +3,8 @@ import { authenticated } from '@/access'
 
 const isProd = process.env.NODE_ENV === 'production'
 
+const isLoggedIn = ({ req: { user } }: { req: { user?: unknown } }) => Boolean(user)
+
 export const Users: CollectionConfig = {
   slug: 'users',
   admin: {
@@ -18,12 +20,12 @@ export const Users: CollectionConfig = {
   // No public self-registration. First user still works via /admin create-first-user
   // (Payload uses overrideAccess). Extra CMS users can only be added while logged in.
   access: {
-    admin: authenticated,
+    admin: isLoggedIn,
     create: authenticated,
     read: authenticated,
     update: authenticated,
     delete: authenticated,
-    unlock: authenticated,
+    unlock: isLoggedIn,
   },
   fields: [
     // Email added by default
