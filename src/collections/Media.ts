@@ -1,5 +1,9 @@
 import type { CollectionConfig } from 'payload'
+import { APIError } from 'payload'
 import { adminOnlyApiView, authenticated } from '@/access'
+import { getUniqueMediaFilename } from '@/lib/media/getUniqueMediaFilename'
+
+const blobToken = (process.env.BLOB_READ_WRITE_TOKEN || '').trim()
 
 export const Media: CollectionConfig = {
   slug: 'media',
@@ -16,6 +20,31 @@ export const Media: CollectionConfig = {
     update: authenticated,
     delete: authenticated,
   },
+  endpoints: [
+    {
+      path: '/unique-filename',
+      method: 'post',
+      handler: async (req) => {
+        if (!req.user) {
+          throw new APIError('Unauthorized', 401)
+        }
+
+        const body = (await req.json?.()) as { filename?: string } | null
+        const filename = body?.filename?.trim()
+        if (!filename) {
+          throw new APIError('filename is required', 400)
+        }
+
+        const unique = await getUniqueMediaFilename({
+          desiredFilename: filename,
+          req,
+          token: blobToken.startsWith('vercel_blob_rw_') ? blobToken : undefined,
+        })
+
+        return Response.json({ filename: unique })
+      },
+    },
+  ],
   fields: [
     {
       name: 'alt',

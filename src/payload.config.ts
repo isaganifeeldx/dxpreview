@@ -2,7 +2,7 @@ import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import path from 'path'
-import { buildConfig } from 'payload'
+import { buildConfig, type Plugin } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
@@ -110,9 +110,29 @@ export default buildConfig({
       token: blobToken,
       // Bypass Vercel serverless 4.5MB body limit for larger images/videos.
       clientUploads: true,
-      // Avoid "blob already exists" when re-uploading the same filename.
-      addRandomSuffix: true,
+      // Numbered suffixes (article-1.webp) via NumberedBlobUploadHandler — not random.
+      addRandomSuffix: false,
     }),
+    // Runs after Blob plugin providers so our numbered uploader wins setUploadHandler.
+    ((config) => {
+      if (!hasValidBlobToken) return config
+      config.admin ??= {}
+      config.admin.components ??= {}
+      config.admin.components.providers ??= []
+      config.admin.components.providers.push({
+        path: '/components/payload/NumberedBlobUploadHandler#NumberedBlobUploadHandler',
+        clientProps: {
+          collectionSlug: 'media',
+          enabled: true,
+          extra: {
+            addRandomSuffix: false,
+            useCompositePrefixes: false,
+          },
+          serverHandlerPath: '/vercel-blob-client-upload-route',
+        },
+      })
+      return config
+    }) satisfies Plugin,
   ],
   // Schedule publish jobs. autoRun is for long-lived servers only — not Vercel serverless.
   jobs: {
