@@ -1,4 +1,4 @@
-import type { CollectionConfig } from 'payload'
+import type { CollectionBeforeChangeHook, CollectionConfig } from 'payload'
 import { slugField } from 'payload'
 import { adminOnlyApiView } from '@/access'
 import { seoFields } from '@/fields/seo'
@@ -6,6 +6,20 @@ import {
   revalidateArticleAfterChange,
   revalidateArticleAfterDelete,
 } from '@/hooks/revalidateCms'
+
+/** When publishing, fill Publish date if the editor left it blank. */
+const setPublishedAtOnPublish: CollectionBeforeChangeHook = ({ data, originalDoc }) => {
+  if (!data) return data
+
+  const nextStatus = (data._status ?? originalDoc?._status) as string | undefined
+  if (nextStatus !== 'published') return data
+
+  if (!data.publishedAt) {
+    data.publishedAt = (originalDoc?.publishedAt as string | undefined) ?? new Date().toISOString()
+  }
+
+  return data
+}
 
 export const Articles: CollectionConfig = {
   slug: 'articles',
@@ -31,6 +45,7 @@ export const Articles: CollectionConfig = {
     },
   },
   hooks: {
+    beforeChange: [setPublishedAtOnPublish],
     afterChange: [revalidateArticleAfterChange],
     afterDelete: [revalidateArticleAfterDelete],
   },
@@ -102,7 +117,8 @@ export const Articles: CollectionConfig = {
           displayFormat: 'd MMM yyyy h:mm a',
         },
         position: 'sidebar',
-        description: 'Displayed on the public article. Use Schedule (above) to publish at a future time.',
+        description:
+          'Shown on the public site. Leave empty when publishing — it will be set to now automatically.',
       },
     },
     {

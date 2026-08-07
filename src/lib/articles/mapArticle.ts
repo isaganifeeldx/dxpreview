@@ -17,6 +17,8 @@ export type CmsArticle = {
   excerpt?: string | null
   category?: string | null
   publishedAt?: string | null
+  createdAt?: string | null
+  updatedAt?: string | null
   featured?: boolean | null
   image?: number | CmsMedia
   imageAlt?: string | null
@@ -49,7 +51,11 @@ export function mapCmsArticle(doc: CmsArticle): ArticleItem | null {
       ? doc.image.alt?.trim()
       : ''
   const imageAlt = doc.imageAlt?.trim() || mediaAlt || title
-  const date = formatArticleDate(doc.publishedAt) || '—'
+  const date =
+    formatArticleDate(doc.publishedAt) ||
+    formatArticleDate(doc.createdAt) ||
+    formatArticleDate(doc.updatedAt) ||
+    '—'
 
   const seoFallback = emptySeoData({
     title: `${title} | DX Interiors`,
