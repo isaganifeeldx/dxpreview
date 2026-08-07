@@ -11,7 +11,7 @@ export const Settings: GlobalConfig = {
   label: 'Settings',
   access: publicReadAuthenticatedUpdate,
   admin: {
-    description: 'Site-wide header navigation and footer links.',
+    description: 'Site-wide header, footer, and tracking scripts.',
     group: 'Site',
     components: {
       views: {
@@ -203,6 +203,48 @@ export const Settings: GlobalConfig = {
                   type: 'text',
                   label: 'Copyright text',
                   defaultValue: d.footer.copyright,
+                },
+              ],
+            },
+          ],
+        },
+        {
+          label: 'Tracking',
+          fields: [
+            {
+              name: 'tracking',
+              type: 'group',
+              label: false,
+              fields: [
+                {
+                  name: 'googleTagHead',
+                  type: 'textarea',
+                  label: 'Google Tag / GTM (head)',
+                  admin: {
+                    description:
+                      'Paste the Google tag (gtag.js) or Google Tag Manager snippet that belongs in <head>. Leave empty to disable.',
+                    rows: 10,
+                  },
+                },
+                {
+                  name: 'googleTagBody',
+                  type: 'textarea',
+                  label: 'Google Tag Manager (body)',
+                  admin: {
+                    description:
+                      'Optional. Paste the GTM <noscript> snippet that belongs right after <body>.',
+                    rows: 6,
+                  },
+                },
+                {
+                  name: 'metaPixel',
+                  type: 'textarea',
+                  label: 'Meta Pixel',
+                  admin: {
+                    description:
+                      'Paste the Meta (Facebook) Pixel base code. Leave empty to disable.',
+                    rows: 10,
+                  },
                 },
               ],
             },

@@ -35,11 +35,20 @@ type CmsSettings = {
     legalLinks?: CmsLink[] | null
     copyright?: string | null
   } | null
+  tracking?: {
+    googleTagHead?: string | null
+    googleTagBody?: string | null
+    metaPixel?: string | null
+  } | null
 }
 
 function text(value: string | null | undefined, fallback: string): string {
   const trimmed = value?.trim()
   return trimmed ? trimmed : fallback
+}
+
+function optionalScript(value: string | null | undefined): string {
+  return value?.trim() ?? ''
 }
 
 function mapLinks(rows: CmsLink[] | null | undefined, fallback: MenuLink[]): MenuLink[] {
@@ -117,6 +126,11 @@ function mapSettings(doc: CmsSettings | null | undefined): SiteSettingsData {
       social: social.length > 0 ? social : defaults.footer.social,
       legalLinks: mapLinks(doc.footer?.legalLinks, defaults.footer.legalLinks),
       copyright: text(doc.footer?.copyright, defaults.footer.copyright),
+    },
+    tracking: {
+      googleTagHead: optionalScript(doc.tracking?.googleTagHead),
+      googleTagBody: optionalScript(doc.tracking?.googleTagBody),
+      metaPixel: optionalScript(doc.tracking?.metaPixel),
     },
   }
 }

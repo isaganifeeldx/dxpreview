@@ -32,6 +32,11 @@ export type SiteSettingsData = {
     legalLinks: MenuLink[]
     copyright: string
   }
+  tracking: {
+    googleTagHead: string
+    googleTagBody: string
+    metaPixel: string
+  }
 }
 
 export const siteSettingsDefaults: SiteSettingsData = {
@@ -92,5 +97,10 @@ export const siteSettingsDefaults: SiteSettingsData = {
       { label: 'User Agreement', href: '#' },
     ],
     copyright: '© 2026 DX Living. All rights reserved',
+  },
+  tracking: {
+    googleTagHead: '',
+    googleTagBody: '',
+    metaPixel: '',
   },
 }
