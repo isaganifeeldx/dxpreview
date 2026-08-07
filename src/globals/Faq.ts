@@ -18,6 +18,7 @@ export const Faq: GlobalConfig = {
   access: publicReadAuthenticatedUpdate,
   admin: {
     description: 'Editable content for the public FAQ page.',
+    group: 'Pages',
     components: {
       views: {
         edit: adminOnlyApiView,

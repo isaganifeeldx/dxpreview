@@ -9,6 +9,7 @@ export const TermsOfService: GlobalConfig = {
   access: publicReadAuthenticatedUpdate,
   admin: {
     description: 'Editable content for the public Terms of Service page.',
+    group: 'Pages',
     components: {
       views: {
         edit: adminOnlyApiView,

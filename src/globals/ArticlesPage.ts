@@ -9,6 +9,7 @@ export const ArticlesPage: GlobalConfig = {
   access: publicReadAuthenticatedUpdate,
   admin: {
     description: 'Listing page settings and SEO for /articles.',
+    group: 'Pages',
     components: {
       views: {
         edit: adminOnlyApiView,

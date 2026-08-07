@@ -9,6 +9,7 @@ export const Home: GlobalConfig = {
   access: publicReadAuthenticatedUpdate,
   admin: {
     description: 'Editable content for the public homepage.',
+    group: 'Pages',
     components: {
       views: {
         edit: adminOnlyApiView,

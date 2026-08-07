@@ -9,6 +9,7 @@ export const PrivacyPolicy: GlobalConfig = {
   access: publicReadAuthenticatedUpdate,
   admin: {
     description: 'Editable content for the public Privacy Policy page.',
+    group: 'Pages',
     components: {
       views: {
         edit: adminOnlyApiView,

@@ -9,6 +9,7 @@ export const Contact: GlobalConfig = {
   access: publicReadAuthenticatedUpdate,
   admin: {
     description: 'Editable content for the public Contact page.',
+    group: 'Pages',
     components: {
       views: {
         edit: adminOnlyApiView,

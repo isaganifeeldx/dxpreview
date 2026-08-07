@@ -72,8 +72,17 @@ export default buildConfig({
     // Avoid noisy hydration warnings from theme/CSS and browser extensions on /admin
     suppressHydrationWarning: true,
   },
-  collections: [Users, Media, Articles],
-  globals: [Settings, Home, Faq, TermsOfService, PrivacyPolicy, Contact, ArticlesPage],
+  collections: [Articles, Media, Users],
+  // Alphabetical by admin label within the Globals sidebar.
+  globals: [
+    ArticlesPage,
+    Contact,
+    Faq,
+    Home,
+    PrivacyPolicy,
+    Settings,
+    TermsOfService,
+  ],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
