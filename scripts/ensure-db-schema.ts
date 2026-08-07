@@ -96,6 +96,60 @@ async function usersTableExists(connectionString: string): Promise<boolean> {
   }
 }
 
+/**
+ * Accounts created before the `role` field often got defaultValue `editor`.
+ * If nobody is admin, promote the oldest user so CMS user-management isn't locked out.
+ */
+async function ensureAtLeastOneAdmin(connectionString: string): Promise<void> {
+  const client = new pg.Client({
+    connectionString,
+    ssl: shouldUseSsl(connectionString) ? { rejectUnauthorized: false } : undefined,
+  })
+
+  try {
+    await client.connect()
+
+    const usersExist = await client.query<{ exists: boolean }>(
+      `select to_regclass('public.users') is not null as exists`,
+    )
+    if (!usersExist.rows[0]?.exists) return
+
+    const roleColumn = await client.query<{ exists: boolean }>(
+      `select exists (
+         select 1 from information_schema.columns
+         where table_schema = 'public' and table_name = 'users' and column_name = 'role'
+       ) as exists`,
+    )
+    if (!roleColumn.rows[0]?.exists) return
+
+    const admins = await client.query<{ count: string }>(
+      `select count(*)::text as count from users where role = 'admin'`,
+    )
+    if (Number(admins.rows[0]?.count ?? 0) > 0) {
+      console.log('Admin user(s) already present — no role backfill needed.')
+      return
+    }
+
+    const promoted = await client.query<{ id: number | string; email: string }>(
+      `update users
+       set role = 'admin'
+       where id = (select id from users order by id asc limit 1)
+       returning id, email`,
+    )
+
+    const row = promoted.rows[0]
+    if (row) {
+      console.log(
+        `No admin found — promoted first account to admin (id=${row.id}, email=${row.email}).`,
+      )
+    } else {
+      console.log('No users to promote — create the first admin via /admin.')
+    }
+  } finally {
+    await client.end().catch(() => undefined)
+  }
+}
+
 type PushableAdapter = {
   schema: unknown
   drizzle: unknown
@@ -183,6 +237,7 @@ async function main() {
 
   await pushSchema()
   console.log('Database schema is up to date.')
+  await ensureAtLeastOneAdmin(databaseUri)
   process.exit(0)
 }
 
