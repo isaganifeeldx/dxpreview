@@ -3,8 +3,6 @@ import { APIError } from 'payload'
 import { adminOnlyApiView, authenticated } from '@/access'
 import { getUniqueMediaFilename } from '@/lib/media/getUniqueMediaFilename'
 
-const blobToken = (process.env.BLOB_READ_WRITE_TOKEN || '').trim()
-
 export const Media: CollectionConfig = {
   slug: 'media',
   admin: {
@@ -38,7 +36,6 @@ export const Media: CollectionConfig = {
         const unique = await getUniqueMediaFilename({
           desiredFilename: filename,
           req,
-          token: blobToken.startsWith('vercel_blob_rw_') ? blobToken : undefined,
         })
 
         return Response.json({ filename: unique })

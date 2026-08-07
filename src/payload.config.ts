@@ -9,6 +9,7 @@ import sharp from 'sharp'
 import { Articles } from './collections/Articles'
 import { Media } from './collections/Media'
 import { Users } from './collections/Users'
+import { vercelBlobClientUploadEndpoint } from './endpoints/vercelBlobClientUpload'
 import { ArticlesPage } from './globals/ArticlesPage'
 import { Contact } from './globals/Contact'
 import { Faq } from './globals/Faq'
@@ -90,6 +91,7 @@ export default buildConfig({
     Settings,
     TermsOfService,
   ],
+  endpoints: hasValidBlobToken ? [vercelBlobClientUploadEndpoint] : [],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -128,7 +130,8 @@ export default buildConfig({
             addRandomSuffix: false,
             useCompositePrefixes: false,
           },
-          serverHandlerPath: '/vercel-blob-client-upload-route',
+          // Custom route enables allowOverwrite for validation retries (e.g. missing alt).
+          serverHandlerPath: '/vercel-blob-client-upload-route-overwrite',
         },
       })
       return config

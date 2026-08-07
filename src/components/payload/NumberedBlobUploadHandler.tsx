@@ -11,8 +11,9 @@ function posixBasename(key: string): string {
 }
 
 /**
- * Like Payload's Vercel Blob client uploader, but uses numbered suffixes
- * (`article-1.webp`) instead of long random suffixes.
+ * Numbered filenames when another Media doc already uses the name
+ * (`article-1.webp`), plus overwrite so retrying save after a validation
+ * error (e.g. missing alt) does not hit "blob already exists".
  */
 export const NumberedBlobUploadHandler = createClientUploadHandler({
   handler: async ({
@@ -72,6 +73,8 @@ export const NumberedBlobUploadHandler = createClientUploadHandler({
       clientPayload: collectionSlug,
       contentType: file.type,
       handleUploadUrl: endpointRoute,
+      // Supported by Vercel Blob client tokens; types lag behind the runtime option.
+      ...({ allowOverwrite: true } as Record<string, unknown>),
     })
 
     const pathnameFromBlob = result.pathname.replace(/^\/+/, '')
