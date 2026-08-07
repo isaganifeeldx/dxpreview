@@ -1,8 +1,15 @@
 import type { CollectionConfig } from 'payload'
-import { authenticated } from '@/access'
+import { adminOnlyApiView, authenticated } from '@/access'
 
 export const Media: CollectionConfig = {
   slug: 'media',
+  admin: {
+    components: {
+      views: {
+        edit: adminOnlyApiView,
+      },
+    },
+  },
   access: {
     read: () => true,
     create: authenticated,

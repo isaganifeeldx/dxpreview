@@ -1,5 +1,5 @@
 import type { GlobalConfig } from 'payload'
-import { publicReadAuthenticatedUpdate } from '@/access'
+import { adminOnlyApiView, publicReadAuthenticatedUpdate } from '@/access'
 import { seoFields } from '@/fields/seo'
 import { revalidateArticlesPageGlobal } from '@/hooks/revalidateCms'
 
@@ -9,6 +9,11 @@ export const ArticlesPage: GlobalConfig = {
   access: publicReadAuthenticatedUpdate,
   admin: {
     description: 'Listing page settings and SEO for /articles.',
+    components: {
+      views: {
+        edit: adminOnlyApiView,
+      },
+    },
   },
   hooks: {
     afterChange: [revalidateArticlesPageGlobal],

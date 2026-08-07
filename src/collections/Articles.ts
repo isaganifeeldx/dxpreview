@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 import { slugField } from 'payload'
+import { adminOnlyApiView } from '@/access'
 import { seoFields } from '@/fields/seo'
 import {
   revalidateArticleAfterChange,
@@ -16,6 +17,11 @@ export const Articles: CollectionConfig = {
     useAsTitle: 'title',
     defaultColumns: ['title', 'category', '_status', 'featured', 'publishedAt', 'updatedAt'],
     description: 'Blog / insights articles for the public Articles section.',
+    components: {
+      views: {
+        edit: adminOnlyApiView,
+      },
+    },
   },
   versions: {
     drafts: {

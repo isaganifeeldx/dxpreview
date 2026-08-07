@@ -1,5 +1,5 @@
 import type { GlobalConfig } from 'payload'
-import { publicReadAuthenticatedUpdate } from '@/access'
+import { adminOnlyApiView, publicReadAuthenticatedUpdate } from '@/access'
 import { seoFields } from '@/fields/seo'
 import { revalidateTermsOfServiceGlobal } from '@/hooks/revalidateCms'
 
@@ -9,6 +9,11 @@ export const TermsOfService: GlobalConfig = {
   access: publicReadAuthenticatedUpdate,
   admin: {
     description: 'Editable content for the public Terms of Service page.',
+    components: {
+      views: {
+        edit: adminOnlyApiView,
+      },
+    },
   },
   hooks: {
     afterChange: [revalidateTermsOfServiceGlobal],

@@ -1,5 +1,5 @@
 import type { GlobalConfig } from 'payload'
-import { publicReadAuthenticatedUpdate } from '@/access'
+import { adminOnlyApiView, publicReadAuthenticatedUpdate } from '@/access'
 import { seoFields } from '@/fields/seo'
 import { revalidateFaqGlobal } from '@/hooks/revalidateCms'
 
@@ -18,6 +18,11 @@ export const Faq: GlobalConfig = {
   access: publicReadAuthenticatedUpdate,
   admin: {
     description: 'Editable content for the public FAQ page.',
+    components: {
+      views: {
+        edit: adminOnlyApiView,
+      },
+    },
   },
   hooks: {
     afterChange: [revalidateFaqGlobal],
