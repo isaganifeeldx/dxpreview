@@ -45,3 +45,15 @@ export function revalidateArticle(slug?: string | null) {
     revalidatePublicAndPages(`/articles/${slug.trim()}`)
   }
 }
+
+/** Header/footer live in the frontend layout — invalidate the whole tree. */
+export function revalidateSiteSettings() {
+  revalidatePath('/', 'layout')
+  revalidatePath('/pages/home', 'layout')
+  revalidatePath('/faq')
+  revalidatePath('/contact')
+  revalidatePath('/articles')
+  revalidatePath('/privacy-policy')
+  revalidatePath('/terms-of-service')
+  revalidatePath('/sitemap.xml')
+}

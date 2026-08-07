@@ -4,21 +4,22 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import Link from 'next/link';
+import type { SiteSettingsData } from '@/lib/settings/defaults';
 
-const navLinks = [
-  { label: 'Product', href: '#' },
-  { label: 'Plans', href: '#' },
-  { label: 'Business', href: '#' },
-];
+type HeaderProps = {
+  settings: SiteSettingsData['header'];
+};
 
-const resourceLinks = [
-  { label: 'Articles', href: '/articles' },
-  { label: 'Tutorials', href: '#' },
-  { label: 'Inspiration', href: '#' },
-  { label: 'Help', href: '#' },
-];
+export default function Header({ settings }: HeaderProps) {
+  const {
+    navLinks,
+    resourcesLabel,
+    resourceLinks,
+    login,
+    demo,
+    startFree,
+  } = settings;
 
-export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [resourcesOpen, setResourcesOpen] = useState(false);
   const [mobileResourcesOpen, setMobileResourcesOpen] = useState(false);
@@ -148,7 +149,7 @@ export default function Header() {
           >
             {resourceLinks.map((link) => (
               <Link
-                key={link.label}
+                key={`${link.label}-${link.href}`}
                 href={link.href}
                 role="menuitem"
                 onClick={() => setResourcesOpen(false)}
@@ -173,7 +174,7 @@ export default function Header() {
             <nav className="relative z-10 flex flex-col gap-1" aria-label="Mobile">
               {navLinks.map((link) => (
                 <Link
-                  key={link.label}
+                  key={`${link.label}-${link.href}`}
                   href={link.href}
                   onClick={closeMenu}
                   className="rounded-lg px-3 py-2.5 text-sm text-slate-700 transition-colors hover:bg-white/55 hover:text-slate-900"
@@ -188,7 +189,7 @@ export default function Header() {
                 aria-expanded={mobileResourcesOpen}
                 onClick={() => setMobileResourcesOpen((open) => !open)}
               >
-                Resources
+                {resourcesLabel}
                 <svg
                   width="12"
                   height="12"
@@ -211,7 +212,7 @@ export default function Header() {
                 <div className="relative ml-2 mt-1 space-y-1 rounded-[14px] border border-white/50 bg-white/40 p-2">
                   {resourceLinks.map((link) => (
                     <Link
-                      key={link.label}
+                      key={`${link.label}-${link.href}`}
                       href={link.href}
                       onClick={closeMenu}
                       className="relative z-10 block rounded-lg px-3 py-2 text-sm text-slate-700 transition-colors hover:bg-white/55"
@@ -224,18 +225,18 @@ export default function Header() {
             </nav>
             <div className="relative z-10 mt-3 flex flex-col gap-2 border-t border-slate-200/60 pt-3">
               <Link
-                href="#"
+                href={login.href}
                 onClick={closeMenu}
                 className="rounded-lg px-3 py-2.5 text-sm text-slate-700 transition-colors hover:bg-white/55 md:hidden"
               >
-                Log in
+                {login.label}
               </Link>
               <Link
-                href="/contact"
+                href={demo.href}
                 onClick={closeMenu}
                 className="rounded-lg px-3 py-2.5 text-sm text-slate-700 transition-colors hover:bg-white/55"
               >
-                Get a demo
+                {demo.label}
               </Link>
             </div>
           </div>,
@@ -264,7 +265,7 @@ export default function Header() {
           >
             {navLinks.map((link) => (
               <Link
-                key={link.label}
+                key={`${link.label}-${link.href}`}
                 href={link.href}
                 className="transition-colors hover:text-slate-900"
               >
@@ -281,7 +282,7 @@ export default function Header() {
                 aria-haspopup="menu"
                 onClick={() => setResourcesOpen((open) => !open)}
               >
-                Resources
+                {resourcesLabel}
                 <svg
                   width="12"
                   height="12"
@@ -304,22 +305,22 @@ export default function Header() {
 
           <div className="relative z-10 flex items-center gap-2 sm:gap-3">
             <Link
-              href="#"
+              href={login.href}
               className="hidden rounded-full px-4 py-1.5 text-sm text-slate-700 transition-colors hover:text-slate-900 md:inline-flex"
             >
-              Log in
+              {login.label}
             </Link>
             <Link
-              href="/contact"
+              href={demo.href}
               className="hidden rounded-full px-4 py-1.5 text-sm text-slate-700 transition-colors hover:text-slate-900 lg:inline-flex"
             >
-              Get a demo
+              {demo.label}
             </Link>
             <Link
-              href="/login"
+              href={startFree.href}
               className="rounded-full bg-[#2A3040] px-3 py-1.5 text-xs text-white transition-colors hover:bg-[#111a2e] sm:px-4 sm:text-sm"
             >
-              Start Free
+              {startFree.label}
             </Link>
 
             <button

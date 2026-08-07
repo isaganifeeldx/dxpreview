@@ -14,6 +14,7 @@ import { Contact } from './globals/Contact'
 import { Faq } from './globals/Faq'
 import { Home } from './globals/Home'
 import { PrivacyPolicy } from './globals/PrivacyPolicy'
+import { Settings } from './globals/Settings'
 import { TermsOfService } from './globals/TermsOfService'
 
 const filename = fileURLToPath(import.meta.url)
@@ -72,7 +73,7 @@ export default buildConfig({
     suppressHydrationWarning: true,
   },
   collections: [Users, Media, Articles],
-  globals: [Home, Faq, TermsOfService, PrivacyPolicy, Contact, ArticlesPage],
+  globals: [Settings, Home, Faq, TermsOfService, PrivacyPolicy, Contact, ArticlesPage],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

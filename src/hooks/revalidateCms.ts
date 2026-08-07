@@ -6,6 +6,7 @@ import {
   revalidateFaq,
   revalidateHome,
   revalidatePrivacyPolicy,
+  revalidateSiteSettings,
   revalidateTermsOfService,
 } from '@/lib/cms/revalidate'
 
@@ -39,6 +40,10 @@ export const revalidateTermsOfServiceGlobal: GlobalAfterChangeHook = () => {
 
 export const revalidateArticlesPageGlobal: GlobalAfterChangeHook = () => {
   runSafe('articles-page', revalidateArticlesListing)
+}
+
+export const revalidateSettingsGlobal: GlobalAfterChangeHook = () => {
+  runSafe('settings', revalidateSiteSettings)
 }
 
 export const revalidateArticleAfterChange: CollectionAfterChangeHook = ({ doc }) => {
