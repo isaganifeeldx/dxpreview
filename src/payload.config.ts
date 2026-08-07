@@ -110,6 +110,8 @@ export default buildConfig({
       token: blobToken,
       // Bypass Vercel serverless 4.5MB body limit for larger images/videos.
       clientUploads: true,
+      // Avoid "blob already exists" when re-uploading the same filename.
+      addRandomSuffix: true,
     }),
   ],
   // Schedule publish jobs. autoRun is for long-lived servers only — not Vercel serverless.
