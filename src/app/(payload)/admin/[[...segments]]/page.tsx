@@ -9,6 +9,9 @@ import { importMap } from '../importMap';
 /** Payload admin cold-starts need headroom on Vercel (DB + RSC). */
 export const maxDuration = 60;
 
+/** Prefer US East to stay near Neon Ohio (us-east-2). */
+export const preferredRegion = ['iad1'];
+
 /** Admin always hits Postgres — never statically prerender. */
 export const dynamic = 'force-dynamic';
 

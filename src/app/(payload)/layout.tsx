@@ -14,6 +14,9 @@ import './custom.css';
 /** Payload admin cold-starts need headroom on Vercel (DB + RSC). */
 export const maxDuration = 60;
 
+/** Prefer US East to stay near Neon Ohio (us-east-2). */
+export const preferredRegion = ['iad1'];
+
 /** Admin layout bootstraps Payload against Postgres at request time. */
 export const dynamic = 'force-dynamic';
 
@@ -23,11 +26,16 @@ type Args = {
 
 const serverFunction: ServerFunctionClient = async function (args) {
   'use server';
-  return handleServerFunctions({
-    ...args,
-    config,
-    importMap,
-  });
+  try {
+    return await handleServerFunctions({
+      ...args,
+      config,
+      importMap,
+    });
+  } catch (error) {
+    console.error('[payload] serverFunction failed:', error);
+    throw error;
+  }
 };
 
 const Layout = ({ children }: Args) => (

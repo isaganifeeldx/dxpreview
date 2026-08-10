@@ -4,6 +4,17 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
   // Resolve async metadata before streaming HTML so SEO tags stay in <head>.
   htmlLimitedBots: /.*/,
+  // Payload admin uses Server Actions; allow the production alias + Vercel hosts
+  // so Origin / x-forwarded-host mismatches don't abort with "Connection closed".
+  experimental: {
+    serverActions: {
+      allowedOrigins: [
+        'dxpreview-tau.vercel.app',
+        'localhost:3000',
+        'localhost:3005',
+      ],
+    },
+  },
   images: {
     remotePatterns: [
       {
