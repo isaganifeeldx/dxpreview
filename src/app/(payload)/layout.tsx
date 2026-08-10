@@ -14,6 +14,9 @@ import './custom.css';
 /** Payload admin cold-starts need headroom on Vercel (DB + RSC). */
 export const maxDuration = 60;
 
+/** Admin layout bootstraps Payload against Postgres at request time. */
+export const dynamic = 'force-dynamic';
+
 type Args = {
   children: React.ReactNode;
 };

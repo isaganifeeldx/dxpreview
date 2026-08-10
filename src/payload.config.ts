@@ -71,12 +71,11 @@ const vercelOrigins = [
   .map(toAbsoluteUrl)
 
 /**
- * On Vercel Preview, prefer the deployment host for serverURL so cookies/CSRF
- * match the URL editors actually open (*.vercel.app), not a stale production URL.
+ * On Vercel, prefer the deployment host for serverURL so admin cookies/CSRF match
+ * the URL editors open (*.vercel.app), not a stale or mismatched NEXT_PUBLIC_SITE_URL.
  */
-const isPreviewDeploy = process.env.VERCEL_ENV === 'preview'
 const serverURL =
-  (isPreviewDeploy ? vercelOrigins[0] : '') ||
+  (isVercel ? vercelOrigins[0] : '') ||
   configuredSiteUrl ||
   vercelOrigins[0] ||
   ''
@@ -118,6 +117,11 @@ export default buildConfig({
         Logo: '/components/payload/Logo',
         Icon: '/components/payload/Icon',
       },
+      // Always in import map — numberedBlobUploadsPlugin swaps this in at runtime
+      // when BLOB_READ_WRITE_TOKEN is set (generate:importmap skips it without the token).
+      providers: [
+        '/components/payload/NumberedBlobUploadHandler#NumberedBlobUploadHandler',
+      ],
     },
     // Avoid noisy hydration warnings from theme/CSS and browser extensions on /admin
     suppressHydrationWarning: true,

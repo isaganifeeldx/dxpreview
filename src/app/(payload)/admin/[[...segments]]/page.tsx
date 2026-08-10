@@ -9,6 +9,9 @@ import { importMap } from '../importMap';
 /** Payload admin cold-starts need headroom on Vercel (DB + RSC). */
 export const maxDuration = 60;
 
+/** Admin always hits Postgres — never statically prerender. */
+export const dynamic = 'force-dynamic';
+
 type Args = {
   params: Promise<{
     segments: string[];
