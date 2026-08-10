@@ -20,6 +20,7 @@ import { PrivacyPolicy } from './globals/PrivacyPolicy'
 import { Settings } from './globals/Settings'
 import { TermsOfService } from './globals/TermsOfService'
 import { numberedBlobUploadsPlugin } from './plugins/numberedBlobUploads'
+import { normalizeDatabaseUri } from './lib/cms/databaseUri'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -144,8 +145,8 @@ export default buildConfig({
   },
   db: postgresAdapter({
     pool: {
-      connectionString: process.env.DATABASE_URI || '',
-      // Serverless: tiny pool. Long connect timeout — Neon free tier can sleep >10s.
+      connectionString: normalizeDatabaseUri(process.env.DATABASE_URI || ''),
+      // Serverless: tiny pool. Longer connect timeout for Neon cold starts.
       ...(isVercel
         ? {
             max: 1,
