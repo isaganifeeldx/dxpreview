@@ -24,6 +24,8 @@ loadDotenv({ path: '.env', quiet: true })
 
 const onlyIfEmpty = process.argv.includes('--only-if-empty')
 const skipPush = process.env.PAYLOAD_SKIP_SCHEMA_PUSH === 'true'
+const requireSchemaPush = process.env.PAYLOAD_REQUIRE_SCHEMA_PUSH === 'true'
+const isVercel = process.env.VERCEL === '1'
 const require = createRequire(import.meta.url)
 
 /**
@@ -88,7 +90,7 @@ function createPgClient(connectionString: string) {
 }
 
 /** Wake Neon / verify DATABASE_URI before Payload schema sync. */
-async function assertDatabaseReachable(connectionString: string): Promise<void> {
+async function assertDatabaseReachable(connectionString: string): Promise<boolean> {
   const maxAttempts = 4
   let lastError: unknown
 
@@ -98,7 +100,7 @@ async function assertDatabaseReachable(connectionString: string): Promise<void> 
       await client.connect()
       await client.query('select 1')
       console.log(`Database reachable (attempt ${attempt}/${maxAttempts}).`)
-      return
+      return true
     } catch (error) {
       lastError = error
       const message = error instanceof Error ? error.message : String(error)
@@ -111,16 +113,32 @@ async function assertDatabaseReachable(connectionString: string): Promise<void> 
     }
   }
 
-  const hint = [
-    'Could not connect to Postgres during Vercel build (timeout / unreachable).',
-    'Check DATABASE_URI for this environment:',
-    '- Neon: use a valid connection string; schema push prefers the direct (non-pooler) host',
-    '- Confirm the Neon project is active (not deleted/suspended)',
-    '- Allow connections (no IP allowlist blocking Vercel build machines)',
-    '- sslmode=require should be present for Neon/RDS',
-  ].join('\n')
+  console.error(
+    [
+      'Could not connect to Postgres during build (timeout / unreachable).',
+      `Host: ${safeDbHost(connectionString)}`,
+      'Check DATABASE_URI for this Vercel environment (Production vs Preview),',
+      'that Neon is awake, and that Build has access to the env var.',
+      `Last error: ${lastError instanceof Error ? lastError.message : String(lastError)}`,
+    ].join('\n'),
+  )
+  return false
+}
 
-  throw new Error(`${hint}\n\nLast error: ${lastError instanceof Error ? lastError.message : String(lastError)}`)
+function safeDbHost(connectionString: string): string {
+  try {
+    const withProtocol = connectionString.replace(/^postgresql:/i, 'http:')
+    return new URL(withProtocol).host || '(unknown)'
+  } catch {
+    return '(unparseable DATABASE_URI)'
+  }
+}
+
+function isConnectionError(error: unknown): boolean {
+  const message = error instanceof Error ? error.message : String(error)
+  return /timeout exceeded when trying to connect|ECONNREFUSED|ENOTFOUND|Connection terminated|connect ETIMEDOUT|password authentication failed|SSL/i.test(
+    message,
+  )
 }
 
 async function usersTableExists(connectionString: string): Promise<boolean> {
@@ -210,7 +228,6 @@ type PushableAdapter = {
 }
 
 async function pushSchema(): Promise<void> {
-  const isVercel = process.env.VERCEL === '1'
   if (!(process.env.PAYLOAD_SECRET || '').trim()) {
     if (isVercel) {
       throw new Error(
@@ -264,11 +281,31 @@ async function main() {
 
   const databaseUri = process.env.DATABASE_URI
   if (!databaseUri) {
+    if (isVercel && !requireSchemaPush) {
+      console.warn(
+        'Missing DATABASE_URI during Vercel build — skipping schema sync so next build can continue.\n' +
+          'Set DATABASE_URI for Build + Runtime, or set PAYLOAD_REQUIRE_SCHEMA_PUSH=true to fail hard.',
+      )
+      process.exit(0)
+    }
     console.error('Missing DATABASE_URI. Set it to your Postgres/Neon/RDS connection string.')
     process.exit(1)
   }
 
-  await assertDatabaseReachable(databaseUri)
+  console.log(`Schema sync target host: ${safeDbHost(databaseUri)}`)
+
+  const reachable = await assertDatabaseReachable(databaseUri)
+  if (!reachable) {
+    if (isVercel && !requireSchemaPush) {
+      console.warn(
+        'Skipping schema sync on Vercel because the database is unreachable from the build machine.\n' +
+          'next build will continue. Fix DATABASE_URI / Neon, then re-run db:push or redeploy.\n' +
+          'Set PAYLOAD_REQUIRE_SCHEMA_PUSH=true if you want the build to fail when DB is down.',
+      )
+      process.exit(0)
+    }
+    process.exit(1)
+  }
 
   if (onlyIfEmpty) {
     const exists = await usersTableExists(databaseUri)
@@ -281,10 +318,21 @@ async function main() {
     console.log('Syncing Payload schema (adds missing tables/columns if needed)…')
   }
 
-  await pushSchema()
-  console.log('Database schema is up to date.')
-  await ensureAtLeastOneAdmin(databaseUri)
-  process.exit(0)
+  try {
+    await pushSchema()
+    console.log('Database schema is up to date.')
+    await ensureAtLeastOneAdmin(databaseUri)
+    process.exit(0)
+  } catch (error) {
+    if (isVercel && !requireSchemaPush && isConnectionError(error)) {
+      console.warn(
+        'Schema sync hit a DB connection error on Vercel — skipping so next build can continue.',
+      )
+      console.warn(error)
+      process.exit(0)
+    }
+    throw error
+  }
 }
 
 main().catch((error) => {
