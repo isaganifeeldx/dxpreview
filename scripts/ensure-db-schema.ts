@@ -172,7 +172,13 @@ type PushableAdapter = {
 }
 
 async function pushSchema(): Promise<void> {
-  if (!process.env.PAYLOAD_SECRET) {
+  const isVercel = process.env.VERCEL === '1'
+  if (!(process.env.PAYLOAD_SECRET || '').trim()) {
+    if (isVercel) {
+      throw new Error(
+        'PAYLOAD_SECRET is required on Vercel. Set it in Project → Settings → Environment Variables for Production and Preview.',
+      )
+    }
     process.env.PAYLOAD_SECRET = 'schema-ensure-temporary-secret'
   }
 

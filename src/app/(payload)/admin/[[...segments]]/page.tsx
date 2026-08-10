@@ -6,6 +6,9 @@ import config from '@payload-config';
 import { RootPage, generatePageMetadata } from '@payloadcms/next/views';
 import { importMap } from '../importMap';
 
+/** Payload admin cold-starts need headroom on Vercel (DB + RSC). */
+export const maxDuration = 60;
+
 type Args = {
   params: Promise<{
     segments: string[];

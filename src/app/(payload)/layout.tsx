@@ -11,6 +11,9 @@ import { importMap } from './admin/importMap.js';
 // Keep styles in ./custom.css — that file is the upgrade-safe source of truth.
 import './custom.css';
 
+/** Payload admin cold-starts need headroom on Vercel (DB + RSC). */
+export const maxDuration = 60;
+
 type Args = {
   children: React.ReactNode;
 };

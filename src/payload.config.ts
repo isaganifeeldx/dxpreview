@@ -35,6 +35,18 @@ if (isVercel && !hasValidBlobToken) {
   )
 }
 
+if (isVercel && !(process.env.PAYLOAD_SECRET || '').trim()) {
+  console.error(
+    '[payload] PAYLOAD_SECRET is missing. Admin will fail to boot on Vercel while the public site may still show fallback content.',
+  )
+}
+
+if (isVercel && !(process.env.DATABASE_URI || '').trim()) {
+  console.error(
+    '[payload] DATABASE_URI is missing. Admin will not load; the public site may still render cached/fallback pages.',
+  )
+}
+
 function normalizeUrl(url: string): string {
   return url.replace(/\/$/, '')
 }
@@ -57,10 +69,36 @@ const vercelOrigins = [
   .filter((value): value is string => Boolean(value))
   .map(toAbsoluteUrl)
 
-const serverURL = configuredSiteUrl || vercelOrigins[0] || ''
+/**
+ * On Vercel Preview, prefer the deployment host for serverURL so cookies/CSRF
+ * match the URL editors actually open (*.vercel.app), not a stale production URL.
+ */
+const isPreviewDeploy = process.env.VERCEL_ENV === 'preview'
+const serverURL =
+  (isPreviewDeploy ? vercelOrigins[0] : '') ||
+  configuredSiteUrl ||
+  vercelOrigins[0] ||
+  ''
 
 /** Whitelist every host the admin might be opened from (preview + production). */
-const trustedOrigins = [...new Set([serverURL, configuredSiteUrl, ...vercelOrigins].filter(Boolean))]
+const trustedOrigins = [
+  ...new Set(
+    [serverURL, configuredSiteUrl, ...vercelOrigins]
+      .filter(Boolean)
+      // Also allow www ↔ apex if someone toggles the hostname.
+      .flatMap((origin) => {
+        try {
+          const url = new URL(origin)
+          const altHost = url.hostname.startsWith('www.')
+            ? url.hostname.slice(4)
+            : `www.${url.hostname}`
+          return [origin, `${url.protocol}//${altHost}`]
+        } catch {
+          return [origin]
+        }
+      }),
+  ),
+]
 
 export default buildConfig({
   ...(serverURL ? { serverURL } : {}),
@@ -107,6 +145,8 @@ export default buildConfig({
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URI || '',
+      // Serverless: keep the pool tiny so Neon/Vercel don't hang on exhausted connections.
+      ...(isVercel ? { max: 1, idleTimeoutMillis: 10_000, connectionTimeoutMillis: 10_000 } : {}),
     },
   }),
   plugins: [
