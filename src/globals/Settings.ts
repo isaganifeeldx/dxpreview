@@ -246,6 +246,16 @@ export const Settings: GlobalConfig = {
                     rows: 10,
                   },
                 },
+                {
+                  name: 'ahrefs',
+                  type: 'textarea',
+                  label: 'Ahrefs',
+                  admin: {
+                    description:
+                      'Paste the Ahrefs Analytics script. Leave empty to disable.',
+                    rows: 10,
+                  },
+                },
               ],
             },
           ],

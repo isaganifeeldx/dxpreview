@@ -39,6 +39,7 @@ type CmsSettings = {
     googleTagHead?: string | null
     googleTagBody?: string | null
     metaPixel?: string | null
+    ahrefs?: string | null
   } | null
 }
 
@@ -131,6 +132,7 @@ function mapSettings(doc: CmsSettings | null | undefined): SiteSettingsData {
       googleTagHead: optionalScript(doc.tracking?.googleTagHead),
       googleTagBody: optionalScript(doc.tracking?.googleTagBody),
       metaPixel: optionalScript(doc.tracking?.metaPixel),
+      ahrefs: optionalScript(doc.tracking?.ahrefs),
     },
   }
 }

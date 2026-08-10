@@ -9,8 +9,8 @@ interface SiteShellProps {
 
 export default async function SiteShell({ children }: SiteShellProps) {
   const settings = await getSiteSettings()
-  const { googleTagHead, googleTagBody, metaPixel } = settings.tracking
-  const headHtml = [googleTagHead, metaPixel].filter(Boolean).join('\n')
+  const { googleTagHead, googleTagBody, metaPixel, ahrefs } = settings.tracking
+  const headHtml = [googleTagHead, metaPixel, ahrefs].filter(Boolean).join('\n')
 
   return (
     <div className="dashboard-gradient-surface flex min-h-screen flex-col text-slate-900">

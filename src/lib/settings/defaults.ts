@@ -36,6 +36,7 @@ export type SiteSettingsData = {
     googleTagHead: string
     googleTagBody: string
     metaPixel: string
+    ahrefs: string
   }
 }
 
@@ -102,5 +103,6 @@ export const siteSettingsDefaults: SiteSettingsData = {
     googleTagHead: '',
     googleTagBody: '',
     metaPixel: '',
+    ahrefs: '',
   },
 }
