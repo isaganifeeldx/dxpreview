@@ -2,6 +2,7 @@ import type { GlobalConfig } from 'payload'
 import { adminOnlyApiView, publicReadAuthenticatedUpdate } from '@/access'
 import { seoFields } from '@/fields/seo'
 import { revalidateArticlesPageGlobal } from '@/hooks/revalidateCms'
+import { pagePreview } from '@/lib/cms/previewUrl'
 
 export const ArticlesPage: GlobalConfig = {
   slug: 'articles-page',
@@ -10,6 +11,7 @@ export const ArticlesPage: GlobalConfig = {
   admin: {
     description: 'Listing page settings and SEO for /articles.',
     group: 'Pages',
+    preview: pagePreview('/articles'),
     components: {
       views: {
         edit: adminOnlyApiView,

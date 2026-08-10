@@ -1,0 +1,21 @@
+import type { GeneratePreviewURL } from 'payload'
+import { getSiteUrl } from '@/lib/siteUrl'
+
+/** Absolute frontend URL for Payload admin Preview (opens in a new tab). */
+export function absolutePreviewUrl(path: string): string {
+  const base = getSiteUrl()
+  const normalized = path.startsWith('/') ? path : `/${path}`
+  return `${base}${normalized === '/' ? '' : normalized}` || `${base}/`
+}
+
+/** Fixed path for a page global (Home, FAQ, etc.). */
+export function pagePreview(path: string): GeneratePreviewURL {
+  return () => absolutePreviewUrl(path)
+}
+
+/** Single article preview — requires a slug. */
+export const articlePreview: GeneratePreviewURL = (doc) => {
+  const slug = typeof doc?.slug === 'string' ? doc.slug.trim() : ''
+  if (!slug) return null
+  return absolutePreviewUrl(`/articles/${slug}`)
+}

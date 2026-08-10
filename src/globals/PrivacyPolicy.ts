@@ -2,6 +2,7 @@ import type { GlobalConfig } from 'payload'
 import { adminOnlyApiView, publicReadAuthenticatedUpdate } from '@/access'
 import { seoFields } from '@/fields/seo'
 import { revalidatePrivacyPolicyGlobal } from '@/hooks/revalidateCms'
+import { pagePreview } from '@/lib/cms/previewUrl'
 
 export const PrivacyPolicy: GlobalConfig = {
   slug: 'privacy-policy',
@@ -10,6 +11,7 @@ export const PrivacyPolicy: GlobalConfig = {
   admin: {
     description: 'Editable content for the public Privacy Policy page.',
     group: 'Pages',
+    preview: pagePreview('/privacy-policy'),
     components: {
       views: {
         edit: adminOnlyApiView,

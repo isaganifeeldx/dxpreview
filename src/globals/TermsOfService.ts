@@ -2,6 +2,7 @@ import type { GlobalConfig } from 'payload'
 import { adminOnlyApiView, publicReadAuthenticatedUpdate } from '@/access'
 import { seoFields } from '@/fields/seo'
 import { revalidateTermsOfServiceGlobal } from '@/hooks/revalidateCms'
+import { pagePreview } from '@/lib/cms/previewUrl'
 
 export const TermsOfService: GlobalConfig = {
   slug: 'terms-of-service',
@@ -10,6 +11,7 @@ export const TermsOfService: GlobalConfig = {
   admin: {
     description: 'Editable content for the public Terms of Service page.',
     group: 'Pages',
+    preview: pagePreview('/terms-of-service'),
     components: {
       views: {
         edit: adminOnlyApiView,

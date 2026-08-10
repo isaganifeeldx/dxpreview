@@ -2,6 +2,7 @@ import type { GlobalConfig } from 'payload'
 import { adminOnlyApiView, publicReadAuthenticatedUpdate } from '@/access'
 import { seoFields } from '@/fields/seo'
 import { revalidateFaqGlobal } from '@/hooks/revalidateCms'
+import { pagePreview } from '@/lib/cms/previewUrl'
 
 const categoryOptions = [
   { label: 'General', value: 'general' },
@@ -19,6 +20,7 @@ export const Faq: GlobalConfig = {
   admin: {
     description: 'Editable content for the public FAQ page.',
     group: 'Pages',
+    preview: pagePreview('/faq'),
     components: {
       views: {
         edit: adminOnlyApiView,

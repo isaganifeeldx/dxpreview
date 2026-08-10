@@ -2,6 +2,7 @@ import type { GlobalConfig } from 'payload'
 import { adminOnlyApiView, publicReadAuthenticatedUpdate } from '@/access'
 import { seoFields } from '@/fields/seo'
 import { revalidateHomeGlobal } from '@/hooks/revalidateCms'
+import { pagePreview } from '@/lib/cms/previewUrl'
 
 export const Home: GlobalConfig = {
   slug: 'home',
@@ -10,6 +11,7 @@ export const Home: GlobalConfig = {
   admin: {
     description: 'Editable content for the public homepage.',
     group: 'Pages',
+    preview: pagePreview('/'),
     components: {
       views: {
         edit: adminOnlyApiView,

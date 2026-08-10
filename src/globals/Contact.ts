@@ -2,6 +2,7 @@ import type { GlobalConfig } from 'payload'
 import { adminOnlyApiView, publicReadAuthenticatedUpdate } from '@/access'
 import { seoFields } from '@/fields/seo'
 import { revalidateContactGlobal } from '@/hooks/revalidateCms'
+import { pagePreview } from '@/lib/cms/previewUrl'
 
 export const Contact: GlobalConfig = {
   slug: 'contact',
@@ -10,6 +11,7 @@ export const Contact: GlobalConfig = {
   admin: {
     description: 'Editable content for the public Contact page.',
     group: 'Pages',
+    preview: pagePreview('/contact'),
     components: {
       views: {
         edit: adminOnlyApiView,

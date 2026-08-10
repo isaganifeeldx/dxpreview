@@ -1,34 +1,36 @@
-import type { Metadata } from 'next';
-import Image from 'next/image';
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
-import RecentArticles from '@/components/pages/articles/RecentArticles';
-import JsonLdScripts from '@/components/seo/JsonLdScripts';
+import type { Metadata } from 'next'
+import Image from 'next/image'
+import Link from 'next/link'
+import { notFound } from 'next/navigation'
+import ArticleTableOfContents from '@/components/pages/articles/ArticleTableOfContents'
+import RecentArticles from '@/components/pages/articles/RecentArticles'
+import JsonLdScripts from '@/components/seo/JsonLdScripts'
+import { buildArticleToc } from '@/lib/articles/buildArticleToc'
 import {
   getAllArticles,
   getArticleBySlug,
   getRecentArticles,
-} from '@/lib/articles/getArticles';
-import { buildArticleJsonLd } from '@/lib/seo/buildArticleJsonLd';
-import { buildMetadataFromSeo } from '@/lib/seo/buildMetadata';
+} from '@/lib/articles/getArticles'
+import { buildArticleJsonLd } from '@/lib/seo/buildArticleJsonLd'
+import { buildMetadataFromSeo } from '@/lib/seo/buildMetadata'
 
 interface ArticleDetailPageProps {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string }>
 }
 
-export const revalidate = 60;
+export const revalidate = 60
 
 export async function generateStaticParams() {
-  const articles = await getAllArticles();
-  return articles.map((article) => ({ slug: article.slug }));
+  const articles = await getAllArticles()
+  return articles.map((article) => ({ slug: article.slug }))
 }
 
 export async function generateMetadata({
   params,
 }: ArticleDetailPageProps): Promise<Metadata> {
-  const { slug } = await params;
-  const article = await getArticleBySlug(slug);
-  if (!article) return { title: 'Article | DX Interiors' };
+  const { slug } = await params
+  const article = await getArticleBySlug(slug)
+  if (!article) return { title: 'Article | DX Interiors' }
 
   return buildMetadataFromSeo({
     seo: article.seo,
@@ -38,17 +40,18 @@ export async function generateMetadata({
     fallbackImageUrl: article.seo.ogImageUrl ?? article.image,
     siteName: 'DX Interiors',
     absoluteTitle: true,
-  });
+  })
 }
 
 export default async function ArticleDetailPage({ params }: ArticleDetailPageProps) {
-  const { slug } = await params;
-  const article = await getArticleBySlug(slug);
-  if (!article) notFound();
+  const { slug } = await params
+  const article = await getArticleBySlug(slug)
+  if (!article) notFound()
 
-  const allArticles = await getAllArticles();
-  const recentArticles = getRecentArticles(allArticles, article.slug, 3);
-  const defaultJsonLd = buildArticleJsonLd(article);
+  const allArticles = await getAllArticles()
+  const recentArticles = getRecentArticles(allArticles, article.slug, 3)
+  const defaultJsonLd = buildArticleJsonLd(article)
+  const { contentHtml, toc } = buildArticleToc(article.contentHtml)
 
   return (
     <>
@@ -85,14 +88,16 @@ export default async function ArticleDetailPage({ params }: ArticleDetailPagePro
             />
           </div>
 
+          <ArticleTableOfContents items={toc} />
+
           <div
             className="article-content mt-6 sm:mt-10"
-            dangerouslySetInnerHTML={{ __html: article.contentHtml }}
+            dangerouslySetInnerHTML={{ __html: contentHtml }}
           />
         </article>
 
         <RecentArticles articles={recentArticles} />
       </div>
     </>
-  );
+  )
 }

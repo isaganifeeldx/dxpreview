@@ -110,3 +110,164 @@ html[data-theme] .login__form input#field-password,
 .template-minimal .payload__modal-container:not(:has(.payload__modal, .drawer)) {
   pointer-events: none !important;
 }
+
+/*
+ * Lexical experimental tables default to COLUMN_WIDTH=75px + width:fit-content,
+ * which makes new tables look ~225–375px wide. Stretch them to the editor.
+ */
+.LexicalEditorTheme__tableScrollableWrapper {
+  width: 100%;
+  max-width: 100%;
+  margin-right: 0;
+}
+
+.LexicalEditorTheme__table {
+  width: 100% !important;
+  max-width: 100%;
+  table-layout: fixed !important;
+}
+
+.LexicalEditorTheme__table colgroup col {
+  width: auto !important;
+}
+
+/*
+ * Match frontend article H2–H6 spacing so editors don't add blank
+ * paragraphs to recreate the gap they see on the live page.
+ * (Overrides Lexical's default margin-block on headings.)
+ */
+.ContentEditable__root .LexicalEditorTheme__h2,
+.ContentEditable__root .LexicalEditorTheme__h3,
+.ContentEditable__root .LexicalEditorTheme__h4,
+.ContentEditable__root .LexicalEditorTheme__h5,
+.ContentEditable__root .LexicalEditorTheme__h6 {
+  margin-block: 0 !important;
+  line-height: 1.35;
+}
+
+.ContentEditable__root .LexicalEditorTheme__h2 {
+  padding-top: 1.25rem;
+  padding-bottom: 0.5rem;
+}
+
+.ContentEditable__root .LexicalEditorTheme__h3 {
+  padding-top: 1rem;
+  padding-bottom: 0.4rem;
+}
+
+.ContentEditable__root .LexicalEditorTheme__h4 {
+  padding-top: 0.875rem;
+  padding-bottom: 0.35rem;
+}
+
+.ContentEditable__root .LexicalEditorTheme__h5 {
+  padding-top: 0.75rem;
+  padding-bottom: 0.3rem;
+}
+
+.ContentEditable__root .LexicalEditorTheme__h6 {
+  padding-top: 0.75rem;
+  padding-bottom: 0.3rem;
+}
+
+.ContentEditable__root > .LexicalEditorTheme__h2:first-child,
+.ContentEditable__root > .LexicalEditorTheme__h3:first-child,
+.ContentEditable__root > .LexicalEditorTheme__h4:first-child,
+.ContentEditable__root > .LexicalEditorTheme__h5:first-child,
+.ContentEditable__root > .LexicalEditorTheme__h6:first-child {
+  padding-top: 0;
+}
+
+@media (min-width: 640px) {
+  .ContentEditable__root .LexicalEditorTheme__h2 {
+    padding-top: 2rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .ContentEditable__root .LexicalEditorTheme__h3 {
+    padding-top: 1.5rem;
+    padding-bottom: 0.6rem;
+  }
+
+  .ContentEditable__root .LexicalEditorTheme__h4 {
+    padding-top: 1.25rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .ContentEditable__root .LexicalEditorTheme__h5 {
+    padding-top: 1rem;
+    padding-bottom: 0.45rem;
+  }
+
+  .ContentEditable__root .LexicalEditorTheme__h6 {
+    padding-top: 1rem;
+    padding-bottom: 0.45rem;
+  }
+
+  .ContentEditable__root > .LexicalEditorTheme__h2:first-child,
+  .ContentEditable__root > .LexicalEditorTheme__h3:first-child,
+  .ContentEditable__root > .LexicalEditorTheme__h4:first-child,
+  .ContentEditable__root > .LexicalEditorTheme__h5:first-child,
+  .ContentEditable__root > .LexicalEditorTheme__h6:first-child {
+    padding-top: 0;
+  }
+}
+
+/*
+ * Match frontend article images: full width + same vertical spacing.
+ * Lexical caps landscape uploads at 450px by default.
+ */
+.ContentEditable__root .LexicalEditorTheme__upload {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-block: 1.5rem !important;
+  margin-inline: 0 !important;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.ContentEditable__root .LexicalEditorTheme__upload img,
+.ContentEditable__root .LexicalEditorTheme__upload svg,
+.ContentEditable__root .LexicalEditorTheme__upload__contents--landscape img,
+.ContentEditable__root .LexicalEditorTheme__upload__contents--landscape svg,
+.ContentEditable__root .LexicalEditorTheme__upload__contents--portrait img,
+.ContentEditable__root .LexicalEditorTheme__upload__contents--portrait svg {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  max-height: none !important;
+  min-height: 0 !important;
+  height: auto !important;
+  display: block;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.ContentEditable__root > .LexicalEditorTheme__upload:first-child {
+  margin-top: 0 !important;
+}
+
+.ContentEditable__root > img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-radius: 12px;
+}
+
+@media (min-width: 640px) {
+  .ContentEditable__root .LexicalEditorTheme__upload {
+    margin-block: 2.5rem !important;
+  }
+
+  .ContentEditable__root > .LexicalEditorTheme__upload:first-child {
+    margin-top: 0 !important;
+  }
+
+  .ContentEditable__root > img {
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
+  }
+}

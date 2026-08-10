@@ -314,19 +314,185 @@ body {
   }
 }
 
+.article-content p {
+  margin-bottom: 1.25rem;
+}
+
+/* Use paragraph bottom spacing between consecutive <p>s (avoids margin collapse) */
+.article-content p + p {
+  margin-top: 0;
+}
+
+.article-content p:last-child {
+  margin-bottom: 0;
+}
+
+@media (min-width: 640px) {
+  .article-content p {
+    margin-bottom: 1.875rem; /* ~30px, matches reference3 */
+  }
+}
+
 .article-content h2,
-.article-content h3 {
+.article-content h3,
+.article-content h4,
+.article-content h5,
+.article-content h6 {
   color: #2a3040;
+  font-family: 'Lao MN', sans-serif;
   font-weight: 600;
   line-height: 1.35;
+  letter-spacing: 0;
+  scroll-margin-block: 30vh;
 }
 
 .article-content h2 {
-  font-size: 1.25rem;
+  /* Scale under H1: 22 → 32px */
+  font-size: 20px;
+  padding-top: 1.25rem;
+  padding-bottom: 0.5rem;
 }
 
 .article-content h3 {
-  font-size: 1.05rem;
+  font-size: 18px;
+  padding-top: 1rem;
+  padding-bottom: 0.4rem;
+}
+
+.article-content h4 {
+  font-size: 17px;
+  padding-top: 0.875rem;
+  padding-bottom: 0.35rem;
+}
+
+.article-content h5 {
+  font-size: 16px;
+  padding-top: 0.75rem;
+  padding-bottom: 0.3rem;
+}
+
+.article-content h6 {
+  font-size: 15px;
+  padding-top: 0.75rem;
+  padding-bottom: 0.3rem;
+}
+
+/* Avoid a large gap when a heading is the first body node */
+.article-content > h2:first-child,
+.article-content > h3:first-child,
+.article-content > h4:first-child,
+.article-content > h5:first-child,
+.article-content > h6:first-child {
+  padding-top: 0;
+}
+
+/* Matches article H1 sm:text-[28px] */
+@media (min-width: 640px) {
+  .article-content h2 {
+    font-size: 24px;
+    padding-top: 2rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .article-content h3 {
+    font-size: 22px;
+    padding-top: 1.5rem;
+    padding-bottom: 0.6rem;
+  }
+
+  .article-content h4 {
+    font-size: 20px;
+    padding-top: 1.25rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .article-content h5 {
+    font-size: 18px;
+    padding-top: 1rem;
+    padding-bottom: 0.45rem;
+  }
+
+  .article-content h6 {
+    font-size: 16px;
+    padding-top: 1rem;
+    padding-bottom: 0.45rem;
+  }
+
+  .article-content > h2:first-child,
+  .article-content > h3:first-child,
+  .article-content > h4:first-child,
+  .article-content > h5:first-child,
+  .article-content > h6:first-child {
+    padding-top: 0;
+  }
+}
+
+/* Matches article H1 md:text-[32px] */
+@media (min-width: 768px) {
+  .article-content h2 {
+    font-size: 28px;
+  }
+
+  .article-content h3 {
+    font-size: 24px;
+  }
+
+  .article-content h4 {
+    font-size: 20px;
+  }
+
+  .article-content h5 {
+    font-size: 18px;
+  }
+
+  .article-content h6 {
+    font-size: 16px;
+  }
+}
+
+.article-content img,
+.article-content picture,
+.article-content figure {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-radius: 12px;
+}
+
+.article-content picture img,
+.article-content figure img {
+  margin-top: 0;
+  margin-bottom: 0;
+  border-radius: 12px;
+}
+
+.article-content > img:first-child,
+.article-content > picture:first-child,
+.article-content > figure:first-child {
+  margin-top: 0;
+}
+
+@media (min-width: 640px) {
+  .article-content img,
+  .article-content picture,
+  .article-content figure {
+    margin-top: 2.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .article-content picture img,
+  .article-content figure img {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  .article-content > img:first-child,
+  .article-content > picture:first-child,
+  .article-content > figure:first-child {
+    margin-top: 0;
+  }
 }
 
 .article-content ul,
@@ -354,4 +520,56 @@ body {
 
 .article-content strong {
   font-weight: 600;
+}
+
+/* Tables — Lexical adds lexical-table-cell-header-0 on every cell; only headerState > 0 is a real <th> */
+.article-content .lexical-table-container {
+  width: 100%;
+  margin-bottom: 30px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.article-content table,
+.article-content .lexical-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  margin-bottom: 30px;
+  font-weight: 400;
+}
+
+.article-content .lexical-table-container table,
+.article-content .lexical-table-container .lexical-table {
+  margin-bottom: 0;
+}
+
+.article-content table tr,
+.article-content .lexical-table-row {
+  background-color: #ffffff !important;
+}
+
+.article-content table td,
+.article-content .lexical-table td,
+.article-content .lexical-table-cell-header-0 {
+  background-color: #ffffff !important;
+  color: #5c6470;
+  padding: 6px 8px !important;
+  vertical-align: top;
+  border: 1px solid #e2e8f0 !important;
+  font-weight: 400 !important;
+  text-align: left;
+}
+
+.article-content table th,
+.article-content .lexical-table th,
+.article-content .lexical-table-cell-header-1,
+.article-content .lexical-table-cell-header-2,
+.article-content .lexical-table-cell-header-3 {
+  background-color: #f2f3f5 !important;
+  color: #2a3040 !important;
+  padding: 6px 8px !important;
+  font-weight: 600 !important;
+  vertical-align: middle;
+  border: 1px solid #e2e8f0 !important;
 }

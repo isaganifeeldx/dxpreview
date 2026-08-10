@@ -6,6 +6,7 @@ import {
   revalidateArticleAfterChange,
   revalidateArticleAfterDelete,
 } from '@/hooks/revalidateCms'
+import { articlePreview } from '@/lib/cms/previewUrl'
 
 /** When publishing, fill Publish date if the editor left it blank. */
 const setPublishedAtOnPublish: CollectionBeforeChangeHook = ({ data, originalDoc }) => {
@@ -31,6 +32,7 @@ export const Articles: CollectionConfig = {
     useAsTitle: 'title',
     defaultColumns: ['title', 'category', '_status', 'featured', 'publishedAt', 'updatedAt'],
     description: 'Blog / insights articles for the public Articles section.',
+    preview: articlePreview,
     components: {
       views: {
         edit: adminOnlyApiView,
