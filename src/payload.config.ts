@@ -145,8 +145,14 @@ export default buildConfig({
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URI || '',
-      // Serverless: keep the pool tiny so Neon/Vercel don't hang on exhausted connections.
-      ...(isVercel ? { max: 1, idleTimeoutMillis: 10_000, connectionTimeoutMillis: 10_000 } : {}),
+      // Serverless: tiny pool. Long connect timeout — Neon free tier can sleep >10s.
+      ...(isVercel
+        ? {
+            max: 1,
+            idleTimeoutMillis: 10_000,
+            connectionTimeoutMillis: 60_000,
+          }
+        : {}),
     },
   }),
   plugins: [

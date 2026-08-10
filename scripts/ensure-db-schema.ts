@@ -79,11 +79,52 @@ function shouldUseSsl(connectionString: string): boolean {
   return true
 }
 
-async function usersTableExists(connectionString: string): Promise<boolean> {
-  const client = new pg.Client({
+function createPgClient(connectionString: string) {
+  return new pg.Client({
     connectionString,
+    connectionTimeoutMillis: 60_000,
     ssl: shouldUseSsl(connectionString) ? { rejectUnauthorized: false } : undefined,
   })
+}
+
+/** Wake Neon / verify DATABASE_URI before Payload schema sync. */
+async function assertDatabaseReachable(connectionString: string): Promise<void> {
+  const maxAttempts = 4
+  let lastError: unknown
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    const client = createPgClient(connectionString)
+    try {
+      await client.connect()
+      await client.query('select 1')
+      console.log(`Database reachable (attempt ${attempt}/${maxAttempts}).`)
+      return
+    } catch (error) {
+      lastError = error
+      const message = error instanceof Error ? error.message : String(error)
+      console.warn(`Database connect attempt ${attempt}/${maxAttempts} failed: ${message}`)
+      if (attempt < maxAttempts) {
+        await new Promise((resolve) => setTimeout(resolve, attempt * 2000))
+      }
+    } finally {
+      await client.end().catch(() => undefined)
+    }
+  }
+
+  const hint = [
+    'Could not connect to Postgres during Vercel build (timeout / unreachable).',
+    'Check DATABASE_URI for this environment:',
+    '- Neon: use a valid connection string; schema push prefers the direct (non-pooler) host',
+    '- Confirm the Neon project is active (not deleted/suspended)',
+    '- Allow connections (no IP allowlist blocking Vercel build machines)',
+    '- sslmode=require should be present for Neon/RDS',
+  ].join('\n')
+
+  throw new Error(`${hint}\n\nLast error: ${lastError instanceof Error ? lastError.message : String(lastError)}`)
+}
+
+async function usersTableExists(connectionString: string): Promise<boolean> {
+  const client = createPgClient(connectionString)
 
   try {
     await client.connect()
@@ -101,10 +142,7 @@ async function usersTableExists(connectionString: string): Promise<boolean> {
  * If nobody is admin, promote the oldest user so CMS user-management isn't locked out.
  */
 async function ensureAtLeastOneAdmin(connectionString: string): Promise<void> {
-  const client = new pg.Client({
-    connectionString,
-    ssl: shouldUseSsl(connectionString) ? { rejectUnauthorized: false } : undefined,
-  })
+  const client = createPgClient(connectionString)
 
   try {
     await client.connect()
@@ -229,6 +267,8 @@ async function main() {
     console.error('Missing DATABASE_URI. Set it to your Postgres/Neon/RDS connection string.')
     process.exit(1)
   }
+
+  await assertDatabaseReachable(databaseUri)
 
   if (onlyIfEmpty) {
     const exists = await usersTableExists(databaseUri)
