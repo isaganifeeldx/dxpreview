@@ -70,13 +70,21 @@ const vercelOrigins = [
   .filter((value): value is string => Boolean(value))
   .map(toAbsoluteUrl)
 
+const productionVercelUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
+  ? toAbsoluteUrl(process.env.VERCEL_PROJECT_PRODUCTION_URL)
+  : ''
+
+const isPreviewDeploy = process.env.VERCEL_ENV === 'preview'
+
 /**
- * On Vercel, prefer the deployment host for serverURL so admin cookies/CSRF match
- * the URL editors open (*.vercel.app), not a stale or mismatched NEXT_PUBLIC_SITE_URL.
+ * serverURL must match the hostname in the browser address bar.
+ * - Production alias (e.g. dxpreview-tau.vercel.app): use NEXT_PUBLIC_SITE_URL or
+ *   VERCEL_PROJECT_PRODUCTION_URL — NOT VERCEL_URL (that is a per-deploy hash URL).
+ * - Preview (*.vercel.app for this deploy): use VERCEL_URL so cookies/CSRF match.
  */
 const serverURL =
-  (isVercel ? vercelOrigins[0] : '') ||
   configuredSiteUrl ||
+  (isPreviewDeploy ? vercelOrigins[0] : productionVercelUrl) ||
   vercelOrigins[0] ||
   ''
 
