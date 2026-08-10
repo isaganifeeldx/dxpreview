@@ -14,6 +14,9 @@ import {
 /** Payload API on Vercel — allow Neon cold start + auth. */
 export const maxDuration = 60;
 
+/** Run next to Neon Ohio (us-east-2), not edge PoPs like sin1. */
+export const preferredRegion = ['iad1'];
+
 export const GET = REST_GET(config);
 export const POST = REST_POST(config);
 export const DELETE = REST_DELETE(config);

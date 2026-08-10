@@ -6,6 +6,8 @@ import { databaseHost, normalizeDatabaseUri } from '@/lib/cms/databaseUri'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 60
+/** Run next to Neon Ohio (us-east-2), not Singapore (sin1). */
+export const preferredRegion = ['iad1']
 
 /** Lightweight CMS/DB check for Vercel debugging (no secrets). */
 export async function GET() {
