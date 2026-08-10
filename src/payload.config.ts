@@ -155,6 +155,31 @@ export default buildConfig({
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
+  onInit: async (payload) => {
+    // Backfill role for accounts created before saveToJWT / role field settled.
+    const users = await payload.find({
+      collection: 'users',
+      limit: 50,
+      depth: 0,
+      overrideAccess: true,
+    })
+
+    for (const user of users.docs) {
+      const role = (user as { role?: string | null }).role
+      if (role === 'admin' || role === 'editor') continue
+
+      await payload.update({
+        collection: 'users',
+        id: user.id,
+        data: {
+          // Sole / legacy accounts get admin so Users create stays usable.
+          role: users.totalDocs === 1 ? 'admin' : 'editor',
+        },
+        overrideAccess: true,
+        depth: 0,
+      })
+    }
+  },
   db: postgresAdapter({
     pool: {
       connectionString: normalizeDatabaseUri(process.env.DATABASE_URI || ''),

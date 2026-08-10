@@ -18,7 +18,7 @@ export async function GET() {
     const payload = await getPayload({ config })
     const users = await payload.find({
       collection: 'users',
-      limit: 1,
+      limit: 5,
       depth: 0,
       overrideAccess: true,
     })
@@ -28,6 +28,10 @@ export async function GET() {
       host,
       userCount: users.totalDocs,
       firstUserFlow: users.totalDocs === 0,
+      userRoles: users.docs.map((u) => ({
+        id: u.id,
+        role: (u as { role?: string | null }).role ?? null,
+      })),
       serverURL: payload.config.serverURL || null,
     })
   } catch (error) {

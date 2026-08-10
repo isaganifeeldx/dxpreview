@@ -1,9 +1,11 @@
 import type {
+  CollectionAfterChangeHook,
   CollectionBeforeChangeHook,
   CollectionBeforeValidateHook,
   CollectionConfig,
   Where,
 } from 'payload'
+import { APIError } from 'payload'
 import {
   adminOnlyApiView,
   isAdmin,
@@ -48,6 +50,34 @@ const ensureFirstUserIsAdmin: CollectionBeforeValidateHook = async ({
   return data
 }
 
+/** Safety net: sole account must stay admin so Users nav isn't hidden forever. */
+const promoteSoleUserToAdmin: CollectionAfterChangeHook = async ({
+  doc,
+  operation,
+  req,
+}) => {
+  if (operation !== 'create') return doc
+
+  const existing = await req.payload.find({
+    collection: 'users',
+    limit: 2,
+    depth: 0,
+    overrideAccess: true,
+  })
+
+  if (existing.totalDocs === 1 && doc.role !== 'admin') {
+    return req.payload.update({
+      collection: 'users',
+      id: doc.id,
+      data: { role: 'admin' },
+      overrideAccess: true,
+      depth: 0,
+    })
+  }
+
+  return doc
+}
+
 /** Non-admins cannot change roles; only admins create users (except first user). */
 const protectRoleChanges: CollectionBeforeChangeHook = async ({
   data,
@@ -73,7 +103,7 @@ const protectRoleChanges: CollectionBeforeChangeHook = async ({
     }
 
     if (!isAdminUser(actor)) {
-      throw new Error('Only admins can create users.')
+      throw new APIError('Only admins can create users.', 403)
     }
 
     const role = data.role as UserRole | undefined
@@ -114,6 +144,7 @@ export const Users: CollectionConfig = {
   hooks: {
     beforeValidate: [ensureFirstUserIsAdmin],
     beforeChange: [protectRoleChanges],
+    afterChange: [promoteSoleUserToAdmin],
   },
   // No public self-registration. First user still works via /admin create-first-user
   // (Payload uses overrideAccess). Extra users: admins only, with role admin | editor.
@@ -140,13 +171,19 @@ export const Users: CollectionConfig = {
       type: 'select',
       required: true,
       defaultValue: 'editor',
+      // Needed so admin UI / access checks see role on the session user.
+      // Without this, Users create can render a blank document view.
+      saveToJWT: true,
       options: [
         { label: 'Admin', value: 'admin' },
         { label: 'Editor', value: 'editor' },
       ],
       access: {
         // Admins choose role when creating/editing users. Editors never see or change it.
-        create: ({ req: { user } }) => isAdminUser(user as AuthUser | null),
+        // Allow with no req.user so /admin create-first-user can set role=admin
+        // (otherwise defaultValue "editor" sticks and Users stays hidden forever).
+        create: ({ req: { user } }) =>
+          !user || isAdminUser(user as AuthUser | null),
         read: ({ req: { user } }) => isAdminUser(user as AuthUser | null),
         update: ({ req: { user } }) => isAdminUser(user as AuthUser | null),
       },
