@@ -1,3 +1,4 @@
+import { shouldSkipCmsAtBuild } from '@/lib/cms/buildTime'
 import { getPayloadClient } from '@/lib/payload'
 import { mapCmsSeo, type CmsSeo } from '@/lib/seo/mapCmsSeo'
 import { privacyPageDefaults } from './defaults'
@@ -26,6 +27,8 @@ function mapPrivacyFromCms(doc: CmsPrivacy | null | undefined): PrivacyPageConte
 }
 
 export async function getPrivacyPageContent(): Promise<PrivacyPageContentData> {
+  if (shouldSkipCmsAtBuild()) return privacyPageDefaults
+
   try {
     const payload = await getPayloadClient()
     const doc = (await payload.findGlobal({

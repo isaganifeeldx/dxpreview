@@ -1,3 +1,4 @@
+import { shouldSkipCmsAtBuild } from '@/lib/cms/buildTime'
 import { getPayloadClient } from '@/lib/payload'
 import { mapCmsSeo, type CmsSeo } from '@/lib/seo/mapCmsSeo'
 import { contactPageDefaults } from './defaults'
@@ -40,6 +41,8 @@ function mapContactFromCms(doc: CmsContact | null | undefined): ContactPageConte
 }
 
 export async function getContactPageContent(): Promise<ContactPageContentData> {
+  if (shouldSkipCmsAtBuild()) return contactPageDefaults
+
   try {
     const payload = await getPayloadClient()
     const doc = (await payload.findGlobal({

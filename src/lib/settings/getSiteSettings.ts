@@ -1,3 +1,4 @@
+import { shouldSkipCmsAtBuild } from '@/lib/cms/buildTime'
 import { getPayloadClient } from '@/lib/payload'
 import { siteSettingsDefaults, type MenuLink, type SiteSettingsData } from './defaults'
 
@@ -138,6 +139,8 @@ function mapSettings(doc: CmsSettings | null | undefined): SiteSettingsData {
 }
 
 export async function getSiteSettings(): Promise<SiteSettingsData> {
+  if (shouldSkipCmsAtBuild()) return siteSettingsDefaults
+
   try {
     const payload = await getPayloadClient()
     const doc = (await payload.findGlobal({

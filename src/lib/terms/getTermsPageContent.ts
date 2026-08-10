@@ -1,3 +1,4 @@
+import { shouldSkipCmsAtBuild } from '@/lib/cms/buildTime'
 import { getPayloadClient } from '@/lib/payload'
 import { mapCmsSeo, type CmsSeo } from '@/lib/seo/mapCmsSeo'
 import { termsPageDefaults } from './defaults'
@@ -27,6 +28,8 @@ function mapTermsFromCms(doc: CmsTerms | null | undefined): TermsPageContentData
 }
 
 export async function getTermsPageContent(): Promise<TermsPageContentData> {
+  if (shouldSkipCmsAtBuild()) return termsPageDefaults
+
   try {
     const payload = await getPayloadClient()
     const doc = (await payload.findGlobal({

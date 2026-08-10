@@ -1,3 +1,4 @@
+import { shouldSkipCmsAtBuild } from '@/lib/cms/buildTime'
 import { getMediaUrl } from '@/lib/media'
 import { getPayloadClient } from '@/lib/payload'
 import { mapCmsSeo, type CmsSeo } from '@/lib/seo/mapCmsSeo'
@@ -164,6 +165,8 @@ function mapHomeFromCms(doc: CmsHome | null | undefined): HomePageContentData {
 }
 
 export async function getHomePageContent(): Promise<HomePageContentData> {
+  if (shouldSkipCmsAtBuild()) return homePageDefaults
+
   try {
     const payload = await getPayloadClient()
     const doc = (await payload.findGlobal({

@@ -21,8 +21,16 @@ interface ArticleDetailPageProps {
 export const revalidate = 60
 
 export async function generateStaticParams() {
-  const articles = await getAllArticles()
-  return articles.map((article) => ({ slug: article.slug }))
+  try {
+    const articles = await getAllArticles()
+    return articles.map((article) => ({ slug: article.slug }))
+  } catch (error) {
+    console.error(
+      '[articles] generateStaticParams failed — skipping static article paths for this build.',
+      error,
+    )
+    return []
+  }
 }
 
 export async function generateMetadata({

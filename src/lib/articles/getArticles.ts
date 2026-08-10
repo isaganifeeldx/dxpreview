@@ -1,3 +1,4 @@
+import { shouldSkipCmsAtBuild } from '@/lib/cms/buildTime'
 import { getPayloadClient } from '@/lib/payload'
 import { articlesPageDefaults, toFallbackArticleItem } from './defaults'
 import { mapCmsArticle, type CmsArticle } from './mapArticle'
@@ -5,6 +6,10 @@ import type { ArticleItem } from './types'
 import { articles as staticArticles } from '@/data/articlesData'
 
 export async function getAllArticles(): Promise<ArticleItem[]> {
+  if (shouldSkipCmsAtBuild()) {
+    return staticArticles.map(toFallbackArticleItem)
+  }
+
   try {
     const payload = await getPayloadClient()
     const result = await payload.find({

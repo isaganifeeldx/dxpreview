@@ -1,3 +1,4 @@
+import { shouldSkipCmsAtBuild } from '@/lib/cms/buildTime'
 import { getPayloadClient } from '@/lib/payload'
 import { mapCmsSeo, type CmsSeo } from '@/lib/seo/mapCmsSeo'
 import { articlesPageDefaults } from './defaults'
@@ -18,6 +19,10 @@ function text(value: string | null | undefined, fallback: string): string {
 export async function getArticlesPageContent(): Promise<ArticlesPageContentData> {
   const articles = await getAllArticles()
   const defaults = articlesPageDefaults
+
+  if (shouldSkipCmsAtBuild()) {
+    return { ...defaults, articles }
+  }
 
   try {
     const payload = await getPayloadClient()

@@ -1,4 +1,5 @@
 import type { FaqCategoryId, FaqItem } from '@/data/faqData'
+import { shouldSkipCmsAtBuild } from '@/lib/cms/buildTime'
 import { getPayloadClient } from '@/lib/payload'
 import { mapCmsSeo, type CmsSeo } from '@/lib/seo/mapCmsSeo'
 import { faqPageDefaults } from './defaults'
@@ -76,6 +77,8 @@ function mapFaqFromCms(doc: CmsFaq | null | undefined): FaqPageContentData {
 }
 
 export async function getFaqPageContent(): Promise<FaqPageContentData> {
+  if (shouldSkipCmsAtBuild()) return faqPageDefaults
+
   try {
     const payload = await getPayloadClient()
     const doc = (await payload.findGlobal({

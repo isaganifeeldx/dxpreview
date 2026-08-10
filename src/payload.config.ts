@@ -146,12 +146,15 @@ export default buildConfig({
   db: postgresAdapter({
     pool: {
       connectionString: normalizeDatabaseUri(process.env.DATABASE_URI || ''),
-      // Serverless: tiny pool. Longer connect timeout for Neon cold starts.
       ...(isVercel
         ? {
             max: 1,
             idleTimeoutMillis: 10_000,
-            connectionTimeoutMillis: 60_000,
+            // During `next build`, fail fast so pages/sitemap fall back to defaults
+            // instead of hanging 60s×N until Vercel kills the route.
+            // At runtime, allow Neon cold starts more time.
+            connectionTimeoutMillis:
+              process.env.NEXT_PHASE === 'phase-production-build' ? 5_000 : 60_000,
           }
         : {}),
     },
