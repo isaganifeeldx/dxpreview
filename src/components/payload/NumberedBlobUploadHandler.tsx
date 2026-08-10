@@ -3,6 +3,7 @@
 import { createClientUploadHandler, getFileKey } from '@payloadcms/plugin-cloud-storage/client'
 import { upload } from '@vercel/blob/client'
 import { formatAdminURL } from 'payload/shared'
+import { convertImageFileToWebp } from '@/lib/media/convertImageToWebp'
 
 function posixBasename(key: string): string {
   const normalized = key.replace(/^\/+/, '')
@@ -21,8 +22,8 @@ function incrementFilename(name: string): string {
 
 /**
  * Numbered filenames when another Media doc already uses the name
- * (`article-1.webp`), plus overwrite so retrying save after a validation
- * error (e.g. missing alt) does not hit "blob already exists".
+ * (`article-1.webp`), converts images to WebP before Blob upload, and
+ * overwrites so retrying save after a validation error does not fail.
  */
 export const NumberedBlobUploadHandler = createClientUploadHandler({
   handler: async ({
@@ -38,6 +39,9 @@ export const NumberedBlobUploadHandler = createClientUploadHandler({
   }) => {
     const useCompositePrefixes = Boolean(extra?.useCompositePrefixes)
 
+    // Convert JPEG/PNG/etc → WebP before upload (filename becomes *.webp).
+    const uploadFile = await convertImageFileToWebp(file)
+
     const uniqueRoute = formatAdminURL({
       apiRoute,
       path: '/media/unique-filename',
@@ -48,7 +52,7 @@ export const NumberedBlobUploadHandler = createClientUploadHandler({
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ filename: file.name }),
+      body: JSON.stringify({ filename: uploadFile.name }),
     })
 
     if (!uniqueRes.ok) {
@@ -58,6 +62,11 @@ export const NumberedBlobUploadHandler = createClientUploadHandler({
     let uniqueFilename = ((await uniqueRes.json()) as { filename?: string }).filename
     if (!uniqueFilename) {
       throw new Error('Unique filename response was empty.')
+    }
+
+    // Ensure reserved name keeps .webp after conversion.
+    if (uploadFile.type === 'image/webp' && !uniqueFilename.toLowerCase().endsWith('.webp')) {
+      uniqueFilename = `${uniqueFilename.replace(/\.[^.]+$/, '')}.webp`
     }
 
     updateFilename(uniqueFilename)
@@ -76,10 +85,10 @@ export const NumberedBlobUploadHandler = createClientUploadHandler({
         useCompositePrefixes,
       })
 
-      const result = await upload(pathname, file, {
+      const result = await upload(pathname, uploadFile, {
         access: 'public',
         clientPayload: collectionSlug,
-        contentType: file.type,
+        contentType: uploadFile.type,
         handleUploadUrl: endpointRoute,
         ...({ allowOverwrite: true } as Record<string, unknown>),
       })
@@ -98,7 +107,6 @@ export const NumberedBlobUploadHandler = createClientUploadHandler({
         throw error
       }
 
-      // Fallback if overwrite token was not applied: bump to article-1.webp, etc.
       uniqueFilename = incrementFilename(uniqueFilename)
       updateFilename(uniqueFilename)
       const { result, sanitizedDocPrefix } = await uploadOnce(uniqueFilename)
