@@ -6,6 +6,7 @@ import { getFaqPageContent } from '@/lib/faq/getFaqPageContent'
 import { getHomePageContent } from '@/lib/home/getHomePageContent'
 import { getPrivacyPageContent } from '@/lib/privacy/getPrivacyPageContent'
 import { getTermsPageContent } from '@/lib/terms/getTermsPageContent'
+import { getPricingPageContent } from '@/lib/pricing/getPricingPageContent'
 import { getSiteUrl } from '@/lib/siteUrl'
 
 /**
@@ -32,7 +33,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const lastModified = new Date()
 
   try {
-    const [home, faq, contact, privacy, terms, articlesPage, articles] = await Promise.all([
+    const [home, faq, contact, privacy, terms, articlesPage, articles, pricing] = await Promise.all([
       getHomePageContent(),
       getFaqPageContent(),
       getContactPageContent(),
@@ -40,6 +41,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       getTermsPageContent(),
       getArticlesPageContent(),
       getAllArticles(),
+      getPricingPageContent(),
     ])
 
     const staticRoutes: StaticRoute[] = [
@@ -69,6 +71,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.8,
         isIndexable: !articlesPage.seo.noIndex,
       },
+      {
+        path: '/pricing',
+        changeFrequency: 'monthly',
+        priority: 0.8,
+        isIndexable: !pricing.seo.noIndex,
+      },
     ]
 
     const staticEntries = staticRoutes
@@ -96,6 +104,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       { url: siteUrl, lastModified, changeFrequency: 'weekly', priority: 1 },
       { url: `${siteUrl}/faq`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
       { url: `${siteUrl}/contact`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
+      { url: `${siteUrl}/pricing`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
       { url: `${siteUrl}/articles`, lastModified, changeFrequency: 'weekly', priority: 0.8 },
       { url: `${siteUrl}/privacy-policy`, lastModified, changeFrequency: 'yearly', priority: 0.3 },
       { url: `${siteUrl}/terms-of-service`, lastModified, changeFrequency: 'yearly', priority: 0.3 },

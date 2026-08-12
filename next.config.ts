@@ -89,6 +89,11 @@ const nextConfig: NextConfig = {
         destination: '/articles/:slug',
         permanent: true,
       },
+      {
+        source: '/pages/pricing',
+        destination: '/pricing',
+        permanent: true,
+      },
     ];
   },
   async rewrites() {
@@ -100,6 +105,7 @@ const nextConfig: NextConfig = {
       { source: '/terms-of-service', destination: '/pages/terms-of-service' },
       { source: '/articles', destination: '/pages/articles' },
       { source: '/articles/:slug', destination: '/pages/articles/:slug' },
+      { source: '/pricing', destination: '/pages/pricing' },
     ];
   },
   webpack: (webpackConfig) => {

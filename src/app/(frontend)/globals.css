@@ -215,6 +215,35 @@ body {
   content: '';
 }
 
+.pricing-compare-grid {
+  display: grid;
+  grid-template-columns: minmax(220px, 1.3fr) repeat(4, minmax(140px, 1fr));
+  column-gap: 0;
+}
+
+.pricing-compare-grid > * {
+  border-left: 1px solid #d8dee8;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+.pricing-compare-grid > *:first-child {
+  border-left: none;
+  padding-left: 0.75rem;
+}
+
+/* Table rows: vertical lines run full height (padding lives on cells). */
+.pricing-compare-grid--table > * {
+  padding-top: 0.875rem;
+  padding-bottom: 0.875rem;
+}
+
+.pricing-compare-label {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+}
+
 /* Contact form select — white field on glass panel */
 .contact-form-select {
   color: #696969;
