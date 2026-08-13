@@ -5,6 +5,7 @@ import {
   revalidateContact,
   revalidateFaq,
   revalidateHome,
+  revalidatePricing,
   revalidatePrivacyPolicy,
   revalidateSiteSettings,
   revalidateTermsOfService,
@@ -28,6 +29,10 @@ export const revalidateFaqGlobal: GlobalAfterChangeHook = () => {
 
 export const revalidateContactGlobal: GlobalAfterChangeHook = () => {
   runSafe('contact', revalidateContact)
+}
+
+export const revalidatePricingGlobal: GlobalAfterChangeHook = () => {
+  runSafe('pricing', revalidatePricing)
 }
 
 export const revalidatePrivacyPolicyGlobal: GlobalAfterChangeHook = () => {

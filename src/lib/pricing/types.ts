@@ -91,7 +91,7 @@ export type PricingPageContentData = {
   }
   socialProof: {
     title: string
-    logos: Array<{ name: string; mark: string }>
+    logos: Array<{ name: string; mark: string; imageSrc?: string }>
   }
   promos: PromoBanner[]
   faq: {

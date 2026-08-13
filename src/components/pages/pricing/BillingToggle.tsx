@@ -18,7 +18,7 @@ export default function BillingToggle({
   const isYearly = value === 'yearly'
 
   return (
-    <div className="mt-8 flex items-center justify-center gap-3 sm:gap-4">
+    <div className="mt-6 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 sm:mt-8 sm:gap-4">
       <span
         className={`text-[14px] sm:text-[15px] ${
           isYearly ? 'text-[#6A758C]' : 'font-medium text-[#2A3040]'
@@ -33,7 +33,7 @@ export default function BillingToggle({
         aria-checked={isYearly}
         aria-label={`Billing cycle: ${isYearly ? yearlyLabel : monthlyLabel}`}
         onClick={() => onChange(isYearly ? 'monthly' : 'yearly')}
-        className={`relative h-7 w-[52px] rounded-full transition-colors duration-300 ${
+        className={`relative h-7 w-[52px] shrink-0 rounded-full transition-colors duration-300 ${
           isYearly ? 'bg-[#2A3040]' : 'bg-[#C5CAD3]'
         }`}
       >
@@ -45,7 +45,7 @@ export default function BillingToggle({
       </button>
 
       <span
-        className={`inline-flex items-center gap-2 text-[14px] sm:text-[15px] ${
+        className={`inline-flex flex-wrap items-center justify-center gap-2 text-[14px] sm:text-[15px] ${
           isYearly ? 'font-medium text-[#2A3040]' : 'text-[#6A758C]'
         }`}
       >

@@ -121,8 +121,8 @@ export default function FeatureComparison({
           {title}
         </h2>
 
-        <div className="overflow-x-auto xl:overflow-visible">
-          <div className="min-w-[880px]">
+        <div className="pricing-compare-scroll xl:overflow-visible">
+          <div className="min-w-[760px] sm:min-w-[820px] xl:min-w-[880px]">
             <div ref={stickySentinelRef} className="h-px w-full" aria-hidden />
 
             <div
@@ -133,7 +133,7 @@ export default function FeatureComparison({
             >
               <div
                 aria-hidden
-                className={`pointer-events-none absolute inset-y-0 left-2 right-2 rounded-[14px] transition-[background-color,box-shadow,opacity] duration-200 sm:left-3 sm:right-3 ${
+                className={`pointer-events-none absolute inset-y-0 left-1.5 right-1.5 rounded-[14px] transition-[background-color,box-shadow,opacity] duration-200 sm:left-3 sm:right-3 ${
                   isStuck
                     ? 'bg-white opacity-100 shadow-[0_8px_24px_rgba(42,48,64,0.08)]'
                     : 'bg-transparent opacity-0 shadow-none'
@@ -141,11 +141,11 @@ export default function FeatureComparison({
               />
 
               <div
-                className={`pricing-compare-grid relative items-end px-6 py-5 transition-[border-color] duration-200 sm:px-8 lg:px-10 ${
+                className={`pricing-compare-grid relative items-end px-4 py-4 transition-[border-color] duration-200 sm:px-6 sm:py-5 lg:px-10 ${
                   isStuck ? 'border-b border-transparent' : 'border-b border-white/50'
                 }`}
               >
-                <p className="pricing-compare-label relative z-[1] bg-transparent title-heading-normal text-[26px] text-[#2A3040] sm:text-[32px]">
+                <p className="pricing-compare-label relative z-[1] bg-transparent title-heading-normal text-[18px] leading-tight text-[#2A3040] sm:text-[26px] lg:text-[32px]">
                   {title}
                 </p>
                 {PLAN_ORDER.map((id) => {
@@ -153,7 +153,7 @@ export default function FeatureComparison({
                   const muted = Boolean(plan.compareCta.muted)
                   return (
                     <div key={id} className="relative z-[1] text-center">
-                      <p className="inline-flex items-center justify-center gap-1.5 text-[15px] font-semibold text-[#2A3040]">
+                      <p className="inline-flex items-center justify-center gap-1 text-[13px] font-semibold text-[#2A3040] sm:gap-1.5 sm:text-[15px]">
                         {plan.icon === 'crown' ? (
                           <CrownSmallIcon />
                         ) : null}
@@ -161,7 +161,7 @@ export default function FeatureComparison({
                       </p>
                       <Link
                         href={plan.compareCta.href}
-                        className={`mt-3 inline-flex w-full items-center justify-center rounded-full px-3 py-1.5 text-[12px] font-medium transition-colors ${
+                        className={`mt-2 inline-flex w-full items-center justify-center rounded-full px-2 py-1.5 text-[11px] font-medium transition-colors sm:mt-3 sm:px-3 sm:text-[12px] ${
                           muted
                             ? 'border border-[#D5DAE3] bg-[#F4F5F7] text-[#2A3040] hover:bg-[#EAECEF]'
                             : 'bg-[#2A3040] text-white hover:bg-[#111a2e]'
@@ -175,7 +175,11 @@ export default function FeatureComparison({
               </div>
             </div>
 
-            <div className="mt-4 space-y-2.5 px-6 sm:px-8 lg:px-10">
+            <p className="mt-2 px-4 text-[11px] text-[#6A758C] sm:hidden">
+              Swipe sideways to compare all plans
+            </p>
+
+            <div className="mt-3 space-y-2.5 px-4 sm:mt-4 sm:px-6 lg:px-10">
               {categories.map((category, index) => {
                 const isOpen = expandedId === category.id
                 return (
@@ -191,20 +195,20 @@ export default function FeatureComparison({
                       type="button"
                       onClick={() => toggleCategory(category.id)}
                       aria-expanded={isOpen}
-                      className={`flex w-full items-center gap-3 px-4 py-3.5 text-left transition-colors hover:bg-[#AEC8FF]/25 ${
+                      className={`flex w-full items-center gap-2 px-3 py-3 text-left transition-colors hover:bg-[#AEC8FF]/25 sm:gap-3 sm:px-4 sm:py-3.5 ${
                         isOpen ? 'border-b border-[#D8DEE8] bg-[#AEC8FF]/25' : ''
                       }`}
                     >
-                      <span className="w-7 shrink-0 text-[13px] font-medium text-[#6A758C]">
+                      <span className="w-6 shrink-0 text-[12px] font-medium text-[#6A758C] sm:w-7 sm:text-[13px]">
                         {formatIndex(index)}
                       </span>
-                      <span className="text-[#2A3040]">
+                      <span className="shrink-0 text-[#2A3040]">
                         <CategoryIcon icon={category.icon} />
                       </span>
-                      <span className="flex-1 text-[15px] font-semibold text-[#2A3040]">
+                      <span className="min-w-0 flex-1 text-[14px] font-semibold text-[#2A3040] sm:text-[15px]">
                         {category.label}
                       </span>
-                      <ChevronIcon open={isOpen} className="h-4 w-4 text-[#6A758C]" />
+                      <ChevronIcon open={isOpen} className="h-4 w-4 shrink-0 text-[#6A758C]" />
                     </button>
 
                     {isOpen ? (
@@ -219,7 +223,7 @@ export default function FeatureComparison({
                               } ${rowIndex % 2 === 0 ? 'bg-white/50' : 'bg-[#F5F7FA]/70'}`}
                             >
                               <p
-                                className={`pricing-compare-label text-[14px] text-[#2A3040] ${
+                                className={`pricing-compare-label text-[12px] text-[#2A3040] sm:text-[14px] ${
                                   rowIndex % 2 === 0 ? 'bg-white/50' : 'bg-[#F5F7FA]/70'
                                 }`}
                               >

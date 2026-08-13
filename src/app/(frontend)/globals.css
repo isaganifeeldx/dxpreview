@@ -221,6 +221,23 @@ body {
   column-gap: 0;
 }
 
+@media (max-width: 1023px) {
+  .pricing-compare-grid {
+    grid-template-columns: minmax(150px, 1.2fr) repeat(4, minmax(108px, 1fr));
+  }
+}
+
+@media (max-width: 639px) {
+  .pricing-compare-grid {
+    grid-template-columns: minmax(130px, 1.15fr) repeat(4, minmax(96px, 1fr));
+  }
+
+  .pricing-compare-grid > * {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+}
+
 .pricing-compare-grid > * {
   border-left: 1px solid #d8dee8;
   padding-left: 0.75rem;
@@ -238,10 +255,23 @@ body {
   padding-bottom: 0.875rem;
 }
 
+@media (max-width: 639px) {
+  .pricing-compare-grid--table > * {
+    padding-top: 0.65rem;
+    padding-bottom: 0.65rem;
+  }
+}
+
 .pricing-compare-label {
   position: sticky;
   left: 0;
   z-index: 1;
+}
+
+.pricing-compare-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
 }
 
 /* Contact form select — white field on glass panel */

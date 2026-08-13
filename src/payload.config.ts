@@ -16,6 +16,7 @@ import { ArticlesPage } from './globals/ArticlesPage'
 import { Contact } from './globals/Contact'
 import { Faq } from './globals/Faq'
 import { Home } from './globals/Home'
+import { Pricing } from './globals/Pricing'
 import { PrivacyPolicy } from './globals/PrivacyPolicy'
 import { Settings } from './globals/Settings'
 import { TermsOfService } from './globals/TermsOfService'
@@ -142,6 +143,7 @@ export default buildConfig({
     Faq,
     Home,
     PrivacyPolicy,
+    Pricing,
     Settings,
     TermsOfService,
   ],
