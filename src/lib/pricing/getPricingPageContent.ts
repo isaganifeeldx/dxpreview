@@ -172,7 +172,7 @@ function toComparisonIcon(
   return fallback
 }
 
-function mapFeatureValue(value: CmsFeatureValue): FeatureValue {
+function mapFeatureValue(value: CmsFeatureValue | undefined): FeatureValue {
   const type = value?.type?.trim()
   if (type === 'included') return true
   if (type === 'text') {
@@ -196,72 +196,75 @@ function mapCta(
 function mapPlans(plans: CmsPricing['plans']): PricingPlan[] {
   if (!plans?.length) return []
 
-  return plans
-    .map((plan, index) => {
-      const name = plan?.name?.trim()
-      const description = plan?.description?.trim()
-      if (!name || !description) return null
+  const mapped: PricingPlan[] = []
 
-      const id = toPlanId(plan?.planId, PLAN_IDS[Math.min(index, PLAN_IDS.length - 1)])
-      const fallback = pricingPageDefaults.plans.find((p) => p.id === id) ?? pricingPageDefaults.plans[0]
+  for (let index = 0; index < plans.length; index++) {
+    const plan = plans[index]
+    const name = plan?.name?.trim()
+    const description = plan?.description?.trim()
+    if (!name || !description) continue
 
-      const featureSections =
-        plan?.featureSections
-          ?.map((section, sectionIndex) => {
-            const items =
-              section?.items
-                ?.map((item) => item?.text?.trim())
-                .filter((item): item is string => Boolean(item)) ?? []
+    const id = toPlanId(plan?.planId, PLAN_IDS[Math.min(index, PLAN_IDS.length - 1)])
+    const fallback = pricingPageDefaults.plans.find((p) => p.id === id) ?? pricingPageDefaults.plans[0]
 
-            if (items.length === 0) return null
+    const featureSections =
+      plan?.featureSections
+        ?.map((section, sectionIndex) => {
+          const items =
+            section?.items
+              ?.map((item) => item?.text?.trim())
+              .filter((item): item is string => Boolean(item)) ?? []
 
-            const heading = optionalText(section?.heading)
-            const sectionId =
-              optionalText(section?.sectionId) ||
-              (heading ? slugify(heading) : `section-${sectionIndex + 1}`)
+          if (items.length === 0) return null
 
-            return {
-              id: sectionId,
-              heading,
-              icon: toFeatureIcon(section?.icon),
-              items,
-            }
-          })
-          .filter((section): section is NonNullable<typeof section> => Boolean(section)) ?? []
+          const heading = optionalText(section?.heading)
+          const sectionId =
+            optionalText(section?.sectionId) ||
+            (heading ? slugify(heading) : `section-${sectionIndex + 1}`)
 
-      const secondaryLabel = optionalText(plan?.secondaryCtaLabel)
-      const secondaryHref = optionalText(plan?.secondaryCtaHref)
+          return {
+            id: sectionId,
+            heading,
+            icon: toFeatureIcon(section?.icon),
+            items,
+          }
+        })
+        .filter((section): section is NonNullable<typeof section> => Boolean(section)) ?? []
 
-      return {
-        id,
-        name,
-        description,
-        icon: toPlanIcon(plan?.icon, fallback.icon),
-        recommended: Boolean(plan?.recommended),
-        recommendedLabel: plan?.recommended
-          ? text(plan?.recommendedLabel, fallback.recommendedLabel ?? 'Recommended')
-          : undefined,
-        monthlyPrice:
-          typeof plan?.monthlyPrice === 'number' ? plan.monthlyPrice : fallback.monthlyPrice,
-        yearlyPrice:
-          typeof plan?.yearlyPrice === 'number' ? plan.yearlyPrice : fallback.yearlyPrice,
-        priceLabel: optionalText(plan?.priceLabel) ?? fallback.priceLabel,
-        priceSuffix: text(plan?.priceSuffix, fallback.priceSuffix),
-        cta: mapCta(plan?.ctaLabel, plan?.ctaHref, fallback.cta),
-        secondaryCta:
-          secondaryLabel && secondaryHref
-            ? { label: secondaryLabel, href: secondaryHref }
-            : fallback.secondaryCta,
-        compareCta: {
-          ...mapCta(plan?.compareCtaLabel, plan?.compareCtaHref, fallback.compareCta),
-          muted: Boolean(plan?.compareCtaMuted ?? fallback.compareCta.muted),
-        },
-        featureHeading: text(plan?.featureHeading, fallback.featureHeading),
-        featureSections: featureSections.length > 0 ? featureSections : fallback.featureSections,
-        learnMoreLabel: text(plan?.learnMoreLabel, fallback.learnMoreLabel),
-      } satisfies PricingPlan
+    const secondaryLabel = optionalText(plan?.secondaryCtaLabel)
+    const secondaryHref = optionalText(plan?.secondaryCtaHref)
+
+    mapped.push({
+      id,
+      name,
+      description,
+      icon: toPlanIcon(plan?.icon, fallback.icon),
+      recommended: Boolean(plan?.recommended),
+      recommendedLabel: plan?.recommended
+        ? text(plan?.recommendedLabel, fallback.recommendedLabel ?? 'Recommended')
+        : undefined,
+      monthlyPrice:
+        typeof plan?.monthlyPrice === 'number' ? plan.monthlyPrice : fallback.monthlyPrice,
+      yearlyPrice:
+        typeof plan?.yearlyPrice === 'number' ? plan.yearlyPrice : fallback.yearlyPrice,
+      priceLabel: optionalText(plan?.priceLabel) ?? fallback.priceLabel,
+      priceSuffix: text(plan?.priceSuffix, fallback.priceSuffix),
+      cta: mapCta(plan?.ctaLabel, plan?.ctaHref, fallback.cta),
+      secondaryCta:
+        secondaryLabel && secondaryHref
+          ? { label: secondaryLabel, href: secondaryHref }
+          : fallback.secondaryCta,
+      compareCta: {
+        ...mapCta(plan?.compareCtaLabel, plan?.compareCtaHref, fallback.compareCta),
+        muted: Boolean(plan?.compareCtaMuted ?? fallback.compareCta.muted),
+      },
+      featureHeading: text(plan?.featureHeading, fallback.featureHeading),
+      featureSections: featureSections.length > 0 ? featureSections : fallback.featureSections,
+      learnMoreLabel: text(plan?.learnMoreLabel, fallback.learnMoreLabel),
     })
-    .filter((plan): plan is PricingPlan => Boolean(plan))
+  }
+
+  return mapped
 }
 
 function mapComparisonCategories(
@@ -269,63 +272,69 @@ function mapComparisonCategories(
 ): ComparisonCategory[] {
   if (!categories?.length) return []
 
-  return categories
-    .map((category, categoryIndex) => {
-      const label = category?.label?.trim()
-      if (!label) return null
+  const mapped: ComparisonCategory[] = []
 
-      const rows =
-        category?.rows
-          ?.map((row, rowIndex) => {
-            const rowLabel = row?.label?.trim()
-            if (!rowLabel) return null
+  for (let categoryIndex = 0; categoryIndex < categories.length; categoryIndex++) {
+    const category = categories[categoryIndex]
+    const label = category?.label?.trim()
+    if (!label) continue
 
-            return {
-              id: optionalText(row?.rowId) || slugify(rowLabel) || `row-${rowIndex + 1}`,
-              label: rowLabel,
-              values: {
-                free: mapFeatureValue(row?.free),
-                pro: mapFeatureValue(row?.pro),
-                business: mapFeatureValue(row?.business),
-                enterprise: mapFeatureValue(row?.enterprise),
-              },
-            }
-          })
-          .filter((row): row is NonNullable<typeof row> => Boolean(row)) ?? []
+    const rows =
+      category?.rows
+        ?.map((row, rowIndex) => {
+          const rowLabel = row?.label?.trim()
+          if (!rowLabel) return null
 
-      if (rows.length === 0) return null
+          return {
+            id: optionalText(row?.rowId) || slugify(rowLabel) || `row-${rowIndex + 1}`,
+            label: rowLabel,
+            values: {
+              free: mapFeatureValue(row?.free),
+              pro: mapFeatureValue(row?.pro),
+              business: mapFeatureValue(row?.business),
+              enterprise: mapFeatureValue(row?.enterprise),
+            },
+          }
+        })
+        .filter((row): row is NonNullable<typeof row> => Boolean(row)) ?? []
 
-      return {
-        id: optionalText(category?.categoryId) || slugify(label) || `category-${categoryIndex + 1}`,
-        label,
-        icon: toComparisonIcon(category?.icon),
-        rows,
-      } satisfies ComparisonCategory
+    if (rows.length === 0) continue
+
+    mapped.push({
+      id: optionalText(category?.categoryId) || slugify(label) || `category-${categoryIndex + 1}`,
+      label,
+      icon: toComparisonIcon(category?.icon),
+      rows,
     })
-    .filter((category): category is ComparisonCategory => Boolean(category))
+  }
+
+  return mapped
 }
 
 function mapPromos(promos: CmsPricing['promos']): PromoBanner[] {
   if (!promos?.length) return []
 
-  return promos
-    .map((promo, index) => {
-      const title = promo?.title?.trim()
-      const description = promo?.description?.trim()
-      if (!title || !description) return null
+  const mapped: PromoBanner[] = []
 
-      const variant = promo?.variant === 'ai' ? 'ai' : 'business'
-      const fallback = pricingPageDefaults.promos[index] ?? pricingPageDefaults.promos[0]
+  for (let index = 0; index < promos.length; index++) {
+    const promo = promos[index]
+    const title = promo?.title?.trim()
+    const description = promo?.description?.trim()
+    if (!title || !description) continue
 
-      return {
-        id: optionalText(promo?.promoId) || slugify(title) || `promo-${index + 1}`,
-        title,
-        description,
-        variant,
-        cta: mapCta(promo?.ctaLabel, promo?.ctaHref, fallback.cta),
-      } satisfies PromoBanner
+    const variant = promo?.variant === 'ai' ? 'ai' : 'business'
+    const fallback = pricingPageDefaults.promos[index] ?? pricingPageDefaults.promos[0]
+
+    mapped.push({
+      id: optionalText(promo?.promoId) || slugify(title) || `promo-${index + 1}`,
+      title,
+      description,
+      variant,
+      cta: mapCta(promo?.ctaLabel, promo?.ctaHref, fallback.cta),
     })
-    .filter((promo): promo is PromoBanner => Boolean(promo))
+  }
+
+  return mapped
 }
 
 function mapPricingFromCms(doc: CmsPricing | null | undefined): PricingPageContentData {
@@ -334,19 +343,15 @@ function mapPricingFromCms(doc: CmsPricing | null | undefined): PricingPageConte
 
   const plans = mapPlans(doc.plans)
   const categories = mapComparisonCategories(doc.comparison?.categories)
-  const logos =
-    doc.socialProof?.logos
-      ?.map((logo) => {
-        const name = logo?.name?.trim()
-        if (!name) return null
-        const mark = logo?.mark?.trim() || name
-        const imageSrc = getMediaUrl(logo?.image) ?? undefined
-        if (!imageSrc && !logo?.mark?.trim()) return null
-        return { name, mark, imageSrc }
-      })
-      .filter(
-        (logo): logo is { name: string; mark: string; imageSrc?: string } => Boolean(logo),
-      ) ?? []
+  const logos: Array<{ name: string; mark: string; imageSrc?: string }> = []
+  for (const logo of doc.socialProof?.logos ?? []) {
+    const name = logo?.name?.trim()
+    if (!name) continue
+    const mark = logo?.mark?.trim() || name
+    const imageSrc = getMediaUrl(logo?.image) ?? undefined
+    if (!imageSrc && !logo?.mark?.trim()) continue
+    logos.push({ name, mark, imageSrc })
+  }
 
   const footnotes =
     doc.planFootnotes
