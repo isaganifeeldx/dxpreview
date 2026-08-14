@@ -6,6 +6,7 @@ import { getFaqPageContent } from '@/lib/faq/getFaqPageContent'
 import { getHomePageContent } from '@/lib/home/getHomePageContent'
 import { getPrivacyPageContent } from '@/lib/privacy/getPrivacyPageContent'
 import { getTermsPageContent } from '@/lib/terms/getTermsPageContent'
+import { getBusinessPageContent } from '@/lib/business/getBusinessPageContent'
 import { getPricingPageContent } from '@/lib/pricing/getPricingPageContent'
 import { getSiteUrl } from '@/lib/siteUrl'
 
@@ -33,16 +34,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const lastModified = new Date()
 
   try {
-    const [home, faq, contact, privacy, terms, articlesPage, articles, pricing] = await Promise.all([
-      getHomePageContent(),
-      getFaqPageContent(),
-      getContactPageContent(),
-      getPrivacyPageContent(),
-      getTermsPageContent(),
-      getArticlesPageContent(),
-      getAllArticles(),
-      getPricingPageContent(),
-    ])
+    const [home, faq, contact, privacy, terms, articlesPage, articles, pricing, business] =
+      await Promise.all([
+        getHomePageContent(),
+        getFaqPageContent(),
+        getContactPageContent(),
+        getPrivacyPageContent(),
+        getTermsPageContent(),
+        getArticlesPageContent(),
+        getAllArticles(),
+        getPricingPageContent(),
+        getBusinessPageContent(),
+      ])
 
     const staticRoutes: StaticRoute[] = [
       { path: '/', changeFrequency: 'weekly', priority: 1, isIndexable: !home.seo.noIndex },
@@ -77,6 +80,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.8,
         isIndexable: !pricing.seo.noIndex,
       },
+      {
+        path: '/business',
+        changeFrequency: 'monthly',
+        priority: 0.7,
+        isIndexable: !business.seo.noIndex,
+      },
     ]
 
     const staticEntries = staticRoutes
@@ -105,6 +114,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       { url: `${siteUrl}/faq`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
       { url: `${siteUrl}/contact`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
       { url: `${siteUrl}/pricing`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
+      { url: `${siteUrl}/business`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
       { url: `${siteUrl}/articles`, lastModified, changeFrequency: 'weekly', priority: 0.8 },
       { url: `${siteUrl}/privacy-policy`, lastModified, changeFrequency: 'yearly', priority: 0.3 },
       { url: `${siteUrl}/terms-of-service`, lastModified, changeFrequency: 'yearly', priority: 0.3 },

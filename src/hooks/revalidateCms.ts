@@ -2,6 +2,7 @@ import type { CollectionAfterChangeHook, CollectionAfterDeleteHook, GlobalAfterC
 import {
   revalidateArticle,
   revalidateArticlesListing,
+  revalidateBusiness,
   revalidateContact,
   revalidateFaq,
   revalidateHome,
@@ -33,6 +34,10 @@ export const revalidateContactGlobal: GlobalAfterChangeHook = () => {
 
 export const revalidatePricingGlobal: GlobalAfterChangeHook = () => {
   runSafe('pricing', revalidatePricing)
+}
+
+export const revalidateBusinessGlobal: GlobalAfterChangeHook = () => {
+  runSafe('business', revalidateBusiness)
 }
 
 export const revalidatePrivacyPolicyGlobal: GlobalAfterChangeHook = () => {

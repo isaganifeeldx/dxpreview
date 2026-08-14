@@ -1,6 +1,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import LividEmbed from '@/components/ui/LividEmbed';
+import BusinessClosingCta from '@/components/pages/business/BusinessClosingCta';
+import BusinessFeatures from '@/components/pages/business/BusinessFeatures';
+import BusinessTestimonials from '@/components/pages/business/BusinessTestimonials';
 import type { HomePageContentData, HomeProcessCard } from '@/lib/home/types';
 
 const heroFeatureIcons = [
@@ -432,6 +435,23 @@ export default function HomePageContent({ content }: HomePageContentProps) {
           </div>
         </div>
       </section>
+
+      <BusinessTestimonials
+        title={content.testimonials.title}
+        items={content.testimonials.items}
+        headingId="home-testimonials-heading"
+      />
+      <BusinessFeatures
+        eyebrow={content.features.eyebrow}
+        title={content.features.title}
+        items={content.features.items}
+        headingId="home-features-heading"
+      />
+      <BusinessClosingCta
+        title={content.closing.title}
+        primaryCta={content.closing.primaryCta}
+        secondaryCta={content.closing.secondaryCta}
+      />
     </>
   );
 }

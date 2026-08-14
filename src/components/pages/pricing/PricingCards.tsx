@@ -40,7 +40,7 @@ function planCardClassName(planId: PricingPlan['id']) {
   }
 
   if (planId === 'enterprise') {
-    return `${base} border border-white/80 bg-[linear-gradient(138deg,#FFFFFF_0%,#AEC8FF_50%)]`
+    return `${base} border border-white/80 bg-[linear-gradient(135deg,#FFFFFF_0%,#AEC8FF_85%)]`
   }
 
   return `glass-panel ${base} !rounded-[20px] !p-5 sm:!p-6 lg:!p-7`

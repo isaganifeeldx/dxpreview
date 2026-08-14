@@ -354,6 +354,270 @@ export const Home: GlobalConfig = {
           ],
         },
         {
+          label: 'Testimonials',
+          fields: [
+            {
+              name: 'testimonials',
+              type: 'group',
+              fields: [
+                {
+                  name: 'title',
+                  type: 'text',
+                  defaultValue: 'Trusted by design leaders',
+                },
+                {
+                  name: 'items',
+                  type: 'array',
+                  label: 'Quotes',
+                  labels: { singular: 'Quote', plural: 'Quotes' },
+                  admin: { initCollapsed: true },
+                  defaultValue: [
+                    {
+                      itemId: 'studio',
+                      quote:
+                        'We present client-ready boards in the same meeting we capture the room. DX Interiors replaced a week of visualisation wait time.',
+                      role: 'Design director',
+                      company: 'National interior studio',
+                    },
+                    {
+                      itemId: 'developer',
+                      quote:
+                        'Sales suites stay on-brand across every project. Shared libraries and admin controls finally match how our teams actually work.',
+                      role: 'Head of product',
+                      company: 'Residential developer',
+                    },
+                    {
+                      itemId: 'hospitality',
+                      quote:
+                        'Flythroughs and material swaps used to be a specialist bottleneck. Now every designer on the account can deliver at the same standard.',
+                      role: 'Creative lead',
+                      company: 'Hospitality group',
+                    },
+                  ],
+                  fields: [
+                    { name: 'itemId', type: 'text', label: 'Item id' },
+                    { name: 'quote', type: 'textarea', required: true },
+                    {
+                      type: 'row',
+                      fields: [
+                        {
+                          name: 'role',
+                          type: 'text',
+                          required: true,
+                          admin: { width: '50%' },
+                        },
+                        {
+                          name: 'company',
+                          type: 'text',
+                          required: true,
+                          admin: { width: '50%' },
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          label: 'Features',
+          fields: [
+            {
+              name: 'features',
+              type: 'group',
+              fields: [
+                {
+                  name: 'eyebrow',
+                  type: 'text',
+                  defaultValue: 'Features',
+                },
+                {
+                  name: 'title',
+                  type: 'text',
+                  defaultValue: 'Everything your team needs',
+                },
+                {
+                  name: 'items',
+                  type: 'array',
+                  label: 'Feature cards',
+                  labels: { singular: 'Feature', plural: 'Features' },
+                  admin: { initCollapsed: true },
+                  defaultValue: [
+                    {
+                      itemId: 'sso',
+                      icon: 'lock',
+                      title: 'SSO',
+                      description: 'Directory sync and single sign-on so every seat stays under IT control.',
+                    },
+                    {
+                      itemId: 'security',
+                      icon: 'shield',
+                      title: 'Enterprise security',
+                      description:
+                        'Audit logs, role-based permissions, and data residency options for large organisations.',
+                    },
+                    {
+                      itemId: 'ai',
+                      icon: 'spark',
+                      title: 'Custom AI capacity',
+                      description: 'Dedicated render capacity and optional model fine-tuning for your studio look.',
+                    },
+                    {
+                      itemId: 'teams',
+                      icon: 'users',
+                      title: 'Team management',
+                      description: 'Unlimited seats, guest reviewers, and admin controls across projects and brands.',
+                    },
+                    {
+                      itemId: 'templates',
+                      icon: 'template',
+                      title: 'Custom templates',
+                      description: 'Lock in room templates, style presets, and presentation layouts for every brief.',
+                    },
+                    {
+                      itemId: 'privacy',
+                      icon: 'globe',
+                      title: 'Global privacy',
+                      description: 'Keep client spaces and catalogues in the region your compliance team requires.',
+                    },
+                    {
+                      itemId: 'encryption',
+                      icon: 'encrypt',
+                      title: 'Data encryption',
+                      description: 'Protect project files, renders, and brand kits in transit and at rest.',
+                    },
+                    {
+                      itemId: 'analytics',
+                      icon: 'chart',
+                      title: 'Usage analytics',
+                      description: 'See render volume, seat activity, and queue health across the organisation.',
+                    },
+                    {
+                      itemId: 'integrations',
+                      icon: 'plug',
+                      title: 'Custom integrations',
+                      description: 'Connect supplier catalogues, DAM, and internal tools through API and partner work.',
+                    },
+                    {
+                      itemId: 'support',
+                      icon: 'support',
+                      title: 'Priority support',
+                      description: 'A dedicated success manager, custom onboarding, and an SLA built for your rollout.',
+                    },
+                    {
+                      itemId: 'workflows',
+                      icon: 'workflow',
+                      title: 'Studio workflows',
+                      description: 'Batch renders, approvals, and shared libraries so delivery stays consistent.',
+                    },
+                    {
+                      itemId: 'white-label',
+                      icon: 'chat',
+                      title: 'White-label exports',
+                      description: 'Client-facing boards and flythroughs without DX watermarks or leftover branding.',
+                    },
+                  ],
+                  fields: [
+                    { name: 'itemId', type: 'text', label: 'Item id' },
+                    {
+                      type: 'row',
+                      fields: [
+                        {
+                          name: 'title',
+                          type: 'text',
+                          required: true,
+                          admin: { width: '60%' },
+                        },
+                        {
+                          name: 'icon',
+                          type: 'select',
+                          required: true,
+                          options: [
+                            { label: 'Shield', value: 'shield' },
+                            { label: 'Lock', value: 'lock' },
+                            { label: 'Spark', value: 'spark' },
+                            { label: 'Users', value: 'users' },
+                            { label: 'Template', value: 'template' },
+                            { label: 'Globe', value: 'globe' },
+                            { label: 'Encrypt', value: 'encrypt' },
+                            { label: 'Chart', value: 'chart' },
+                            { label: 'Plug', value: 'plug' },
+                            { label: 'Support', value: 'support' },
+                            { label: 'Workflow', value: 'workflow' },
+                            { label: 'Chat', value: 'chat' },
+                          ],
+                          defaultValue: 'shield',
+                          admin: { width: '40%' },
+                        },
+                      ],
+                    },
+                    {
+                      name: 'description',
+                      type: 'textarea',
+                      required: true,
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          label: 'Closing CTA',
+          fields: [
+            {
+              name: 'closing',
+              type: 'group',
+              fields: [
+                {
+                  name: 'title',
+                  type: 'text',
+                  defaultValue: 'Ready to scale your design studio?',
+                },
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'primaryCtaLabel',
+                      type: 'text',
+                      label: 'Primary CTA label',
+                      defaultValue: 'Schedule a demo',
+                      admin: { width: '50%' },
+                    },
+                    {
+                      name: 'primaryCtaHref',
+                      type: 'text',
+                      label: 'Primary CTA URL',
+                      defaultValue: '/business',
+                      admin: { width: '50%' },
+                    },
+                  ],
+                },
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'secondaryCtaLabel',
+                      type: 'text',
+                      label: 'Secondary CTA label',
+                      defaultValue: 'View plans',
+                      admin: { width: '50%' },
+                    },
+                    {
+                      name: 'secondaryCtaHref',
+                      type: 'text',
+                      label: 'Secondary CTA URL',
+                      defaultValue: '/pricing',
+                      admin: { width: '50%' },
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
           label: 'SEO',
           fields: [
             seoFields({

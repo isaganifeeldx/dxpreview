@@ -45,7 +45,7 @@ export const siteSettingsDefaults: SiteSettingsData = {
     navLinks: [
       { label: 'Product', href: '#' },
       { label: 'Plans', href: '/pricing' },
-      { label: 'Business', href: '#' },
+      { label: 'Business', href: '/business' },
     ],
     resourcesLabel: 'Resources',
     resourceLinks: [
@@ -63,7 +63,7 @@ export const siteSettingsDefaults: SiteSettingsData = {
     linkColumn: [
       { label: 'Product', href: '#' },
       { label: 'Plans', href: '/pricing' },
-      { label: 'Business', href: '#' },
+      { label: 'Business', href: '/business' },
       { label: 'FAQs', href: '/faq' },
     ],
     resourcesColumnTitle: 'Resources',

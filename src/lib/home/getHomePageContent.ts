@@ -4,6 +4,7 @@ import { getPayloadClient } from '@/lib/payload'
 import { mapCmsSeo, type CmsSeo } from '@/lib/seo/mapCmsSeo'
 import { DEFAULT_NUMBER_ICONS, DEFAULT_PROCESS_IMAGE, homePageDefaults } from './defaults'
 import type { HomePageContentData } from './types'
+import type { BusinessFeature, BusinessFeatureIcon, BusinessTestimonial } from '@/lib/business/types'
 
 type CmsMedia = {
   url?: string | null
@@ -56,12 +57,75 @@ type CmsHome = {
     ctaHref?: string | null
     videoId?: string | null
   } | null
+  testimonials?: {
+    title?: string | null
+    items?: Array<{
+      itemId?: string | null
+      quote?: string | null
+      role?: string | null
+      company?: string | null
+    } | null> | null
+  } | null
+  features?: {
+    eyebrow?: string | null
+    title?: string | null
+    items?: Array<{
+      itemId?: string | null
+      icon?: string | null
+      title?: string | null
+      description?: string | null
+    } | null> | null
+  } | null
+  closing?: {
+    title?: string | null
+    primaryCtaLabel?: string | null
+    primaryCtaHref?: string | null
+    secondaryCtaLabel?: string | null
+    secondaryCtaHref?: string | null
+  } | null
   seo?: CmsSeo
 }
 
 function text(value: string | null | undefined, fallback: string): string {
   const trimmed = value?.trim()
   return trimmed ? trimmed : fallback
+}
+
+function optionalText(value: string | null | undefined): string | undefined {
+  const trimmed = value?.trim()
+  return trimmed ? trimmed : undefined
+}
+
+function slugify(value: string): string {
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '')
+}
+
+const FEATURE_ICONS: BusinessFeatureIcon[] = [
+  'shield',
+  'lock',
+  'spark',
+  'users',
+  'template',
+  'globe',
+  'encrypt',
+  'chart',
+  'plug',
+  'support',
+  'workflow',
+  'chat',
+]
+
+function toFeatureIcon(
+  value: string | null | undefined,
+  fallback: BusinessFeatureIcon = 'shield',
+): BusinessFeatureIcon {
+  if (value && FEATURE_ICONS.includes(value as BusinessFeatureIcon)) {
+    return value as BusinessFeatureIcon
+  }
+  return fallback
 }
 
 function mapHomeFromCms(doc: CmsHome | null | undefined): HomePageContentData {
@@ -114,6 +178,33 @@ function mapHomeFromCms(doc: CmsHome | null | undefined): HomePageContentData {
       })
       .filter((item): item is NonNullable<typeof item> => Boolean(item)) ?? []
 
+  const testimonials: BusinessTestimonial[] = []
+  for (const item of doc.testimonials?.items ?? []) {
+    const quote = item?.quote?.trim()
+    const role = item?.role?.trim()
+    const company = item?.company?.trim()
+    if (!quote || !role || !company) continue
+    testimonials.push({
+      id: optionalText(item?.itemId) || slugify(role),
+      quote,
+      role,
+      company,
+    })
+  }
+
+  const features: BusinessFeature[] = []
+  for (const item of doc.features?.items ?? []) {
+    const title = item?.title?.trim()
+    const description = item?.description?.trim()
+    if (!title || !description) continue
+    features.push({
+      id: optionalText(item?.itemId) || slugify(title),
+      icon: toFeatureIcon(item?.icon),
+      title,
+      description,
+    })
+  }
+
   return {
     hero: {
       lineOne: text(doc.hero?.lineOne, defaults.hero.lineOne),
@@ -159,6 +250,26 @@ function mapHomeFromCms(doc: CmsHome | null | undefined): HomePageContentData {
         href: text(doc.lessons?.ctaHref, defaults.lessons.cta.href),
       },
       videoId: text(doc.lessons?.videoId, defaults.lessons.videoId),
+    },
+    testimonials: {
+      title: text(doc.testimonials?.title, defaults.testimonials.title),
+      items: testimonials.length > 0 ? testimonials : defaults.testimonials.items,
+    },
+    features: {
+      eyebrow: text(doc.features?.eyebrow, defaults.features.eyebrow),
+      title: text(doc.features?.title, defaults.features.title),
+      items: features.length > 0 ? features : defaults.features.items,
+    },
+    closing: {
+      title: text(doc.closing?.title, defaults.closing.title),
+      primaryCta: {
+        label: text(doc.closing?.primaryCtaLabel, defaults.closing.primaryCta.label),
+        href: text(doc.closing?.primaryCtaHref, defaults.closing.primaryCta.href),
+      },
+      secondaryCta: {
+        label: text(doc.closing?.secondaryCtaLabel, defaults.closing.secondaryCta.label),
+        href: text(doc.closing?.secondaryCtaHref, defaults.closing.secondaryCta.href),
+      },
     },
     seo: mapCmsSeo(doc.seo, defaults.seo),
   }

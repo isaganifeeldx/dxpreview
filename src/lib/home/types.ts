@@ -1,4 +1,9 @@
 import type { SeoData } from '@/lib/seo/types'
+import type {
+  BusinessCta,
+  BusinessFeature,
+  BusinessTestimonial,
+} from '@/lib/business/types'
 
 export type HomeCta = {
   label: string
@@ -61,6 +66,20 @@ export type HomePageContentData = {
     description: string
     cta: HomeCta
     videoId: string
+  }
+  testimonials: {
+    title: string
+    items: BusinessTestimonial[]
+  }
+  features: {
+    eyebrow: string
+    title: string
+    items: BusinessFeature[]
+  }
+  closing: {
+    title: string
+    primaryCta: BusinessCta
+    secondaryCta: BusinessCta
   }
   seo: SeoData
 }

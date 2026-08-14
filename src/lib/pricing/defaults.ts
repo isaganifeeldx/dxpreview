@@ -176,9 +176,9 @@ export const pricingPageDefaults: PricingPageContentData = {
       yearlyPrice: null,
       priceLabel: "Let's talk",
       priceSuffix: '',
-      cta: { label: 'Contact sales', href: '/contact' },
-      secondaryCta: { label: 'Request a demo', href: '/contact' },
-      compareCta: { label: 'Contact sales', href: '/contact' },
+      cta: { label: 'Contact sales', href: '/business' },
+      secondaryCta: { label: 'Request a demo', href: '/business' },
+      compareCta: { label: 'Contact sales', href: '/business' },
       featureHeading: 'Everything in Business, plus:',
       featureSections: [
         {

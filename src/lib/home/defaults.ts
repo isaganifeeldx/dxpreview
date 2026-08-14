@@ -1,5 +1,6 @@
 import type { HomePageContentData } from './types'
 import { emptySeoData } from '@/lib/seo/types'
+import { businessPageDefaults } from '@/lib/business/defaults'
 
 const DEFAULT_PROCESS_IMAGE = '/images/landing/appview.jpg'
 const DEFAULT_NUMBER_ICONS = [
@@ -101,6 +102,12 @@ export const homePageDefaults: HomePageContentData = {
       'Become a professional interior design expert and bring your creative ideas to life with our powerful design platform.',
     cta: { label: "Watch beginner's guide video", href: '/login' },
     videoId: 'H8t3cI9bm-Zo',
+  },
+  testimonials: businessPageDefaults.testimonials,
+  features: businessPageDefaults.features,
+  closing: {
+    ...businessPageDefaults.closing,
+    primaryCta: { label: 'Schedule a demo', href: '/business' },
   },
   seo: emptySeoData({
     title: 'DXI AI | AI Interior Design',

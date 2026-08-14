@@ -29,6 +29,11 @@ export function revalidatePricing() {
   revalidatePath('/sitemap.xml')
 }
 
+export function revalidateBusiness() {
+  revalidatePublicAndPages('/business')
+  revalidatePath('/sitemap.xml')
+}
+
 export function revalidatePrivacyPolicy() {
   revalidatePublicAndPages('/privacy-policy')
   revalidatePath('/sitemap.xml')
@@ -58,6 +63,7 @@ export function revalidateSiteSettings() {
   revalidatePath('/faq')
   revalidatePath('/contact')
   revalidatePath('/pricing')
+  revalidatePath('/business')
   revalidatePath('/articles')
   revalidatePath('/privacy-policy')
   revalidatePath('/terms-of-service')
