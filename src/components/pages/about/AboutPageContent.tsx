@@ -8,8 +8,8 @@ import { AboutPerkGlyph } from './icons'
 const siteGradient =
   'radial-gradient(1200px 520px at 12% -10%, rgba(174,200,255,0.45), transparent 60%), radial-gradient(900px 480px at 90% 10%, rgba(241,245,255,0.9), transparent 55%)'
 
-const outlineButton =
-  'inline-flex w-fit items-center justify-center rounded-full border border-[#2A3040]/30 px-5 py-2.5 text-[10px] font-medium uppercase tracking-[0.18em] text-[#2A3040] transition-colors hover:bg-[#2A3040] hover:text-white'
+const primaryButtonClass =
+  'inline-flex w-fit items-center justify-center rounded-full bg-[#2A3040] px-5 py-2.5 text-[10px] font-medium uppercase tracking-[0.18em] text-white transition-colors hover:bg-[#111a2e]'
 
 type AboutPageContentProps = {
   content: AboutPageContentData
@@ -31,7 +31,7 @@ export default function AboutPageContent({ content }: AboutPageContentProps) {
             {hero.description}
           </p>
           <div className="mt-6 flex justify-center sm:mt-8">
-            <Link href={hero.cta.href} className={outlineButton}>
+            <Link href={hero.cta.href} className={primaryButtonClass}>
               {hero.cta.label}
             </Link>
           </div>
@@ -132,7 +132,7 @@ export default function AboutPageContent({ content }: AboutPageContentProps) {
           </h2>
           <p className="mt-4 text-[14px] leading-relaxed text-[#6A758C] sm:text-[15px]">{locations.description}</p>
           <div className="mt-6 flex justify-center sm:mt-7">
-            <Link href={locations.cta.href} className={outlineButton}>
+            <Link href={locations.cta.href} className={primaryButtonClass}>
               {locations.cta.label}
             </Link>
           </div>
@@ -170,7 +170,7 @@ export default function AboutPageContent({ content }: AboutPageContentProps) {
               {voices.description}
             </p>
             <div className="mt-6 flex justify-center sm:mt-7 lg:justify-start">
-              <Link href={voices.cta.href} className={outlineButton}>
+              <Link href={voices.cta.href} className={primaryButtonClass}>
                 {voices.cta.label}
               </Link>
             </div>
@@ -201,7 +201,7 @@ export default function AboutPageContent({ content }: AboutPageContentProps) {
           </h2>
           <p className="mt-4 text-[14px] leading-relaxed text-[#6A758C] sm:text-[15px]">{perks.description}</p>
           <div className="mt-6 flex justify-center sm:mt-7">
-            <Link href={perks.cta.href} className={outlineButton}>
+            <Link href={perks.cta.href} className={primaryButtonClass}>
               {perks.cta.label}
             </Link>
           </div>
