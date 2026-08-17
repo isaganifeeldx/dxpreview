@@ -75,7 +75,7 @@ export const siteSettingsDefaults: SiteSettingsData = {
     ],
     companyColumnTitle: 'Company',
     companyColumn: [
-      { label: 'About us', href: '#' },
+      { label: 'About us', href: '/about' },
       { label: 'Request a demo', href: '/contact' },
       { label: 'DX Living', href: '#' },
       { label: 'FeelDX', href: '#' },

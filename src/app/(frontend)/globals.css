@@ -206,6 +206,64 @@ body {
   }
 }
 
+@keyframes aboutCultureScroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.about-culture-track {
+  animation: aboutCultureScroll 28s linear infinite;
+  width: max-content;
+  will-change: transform;
+}
+
+.about-culture-track:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-culture-track {
+    animation: none;
+    flex-wrap: nowrap;
+    max-width: 100%;
+    overflow-x: auto;
+    width: 100%;
+    padding-inline: 1rem;
+  }
+}
+
+@keyframes aboutVoicesScroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.about-voices-track {
+  animation: aboutVoicesScroll 45s linear infinite;
+  width: max-content;
+  will-change: transform;
+}
+
+.about-voices-carousel:hover .about-voices-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-voices-track {
+    animation: none;
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+}
+
 /* FAQ accordion — hide native disclosure marker */
 .faq-summary::-webkit-details-marker {
   display: none;

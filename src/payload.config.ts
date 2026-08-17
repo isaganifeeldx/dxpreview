@@ -13,6 +13,7 @@ import { Articles } from './collections/Articles'
 import { Media } from './collections/Media'
 import { Users } from './collections/Users'
 import { ArticlesPage } from './globals/ArticlesPage'
+import { About } from './globals/About'
 import { Business } from './globals/Business'
 import { Contact } from './globals/Contact'
 import { Faq } from './globals/Faq'
@@ -139,6 +140,7 @@ export default buildConfig({
   collections: [Articles, Media, Users],
   // Alphabetical by admin label within the Globals sidebar.
   globals: [
+    About,
     ArticlesPage,
     Business,
     Contact,

@@ -34,6 +34,11 @@ export function revalidateBusiness() {
   revalidatePath('/sitemap.xml')
 }
 
+export function revalidateAbout() {
+  revalidatePublicAndPages('/about')
+  revalidatePath('/sitemap.xml')
+}
+
 export function revalidatePrivacyPolicy() {
   revalidatePublicAndPages('/privacy-policy')
   revalidatePath('/sitemap.xml')
@@ -64,6 +69,7 @@ export function revalidateSiteSettings() {
   revalidatePath('/contact')
   revalidatePath('/pricing')
   revalidatePath('/business')
+  revalidatePath('/about')
   revalidatePath('/articles')
   revalidatePath('/privacy-policy')
   revalidatePath('/terms-of-service')

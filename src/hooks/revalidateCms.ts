@@ -1,5 +1,6 @@
 import type { CollectionAfterChangeHook, CollectionAfterDeleteHook, GlobalAfterChangeHook } from 'payload'
 import {
+  revalidateAbout,
   revalidateArticle,
   revalidateArticlesListing,
   revalidateBusiness,
@@ -38,6 +39,10 @@ export const revalidatePricingGlobal: GlobalAfterChangeHook = () => {
 
 export const revalidateBusinessGlobal: GlobalAfterChangeHook = () => {
   runSafe('business', revalidateBusiness)
+}
+
+export const revalidateAboutGlobal: GlobalAfterChangeHook = () => {
+  runSafe('about', revalidateAbout)
 }
 
 export const revalidatePrivacyPolicyGlobal: GlobalAfterChangeHook = () => {

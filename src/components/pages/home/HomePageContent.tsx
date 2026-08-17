@@ -451,6 +451,7 @@ export default function HomePageContent({ content }: HomePageContentProps) {
         title={content.closing.title}
         primaryCta={content.closing.primaryCta}
         secondaryCta={content.closing.secondaryCta}
+        variant="glass"
       />
     </>
   );

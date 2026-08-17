@@ -4,16 +4,23 @@ type BusinessClosingCtaProps = {
   title: string
   primaryCta: BusinessCta
   secondaryCta: BusinessCta
+  variant?: 'solid' | 'glass'
 }
 
 export default function BusinessClosingCta({
   title,
   primaryCta,
   secondaryCta,
+  variant = 'solid',
 }: BusinessClosingCtaProps) {
+  const panelClass =
+    variant === 'glass'
+      ? 'glass-panel !rounded-[16px] !px-5 !py-10 sm:!rounded-[20px] sm:!px-10 sm:!py-20'
+      : 'rounded-[20px] bg-white px-5 py-10 sm:rounded-[24px] sm:px-10 sm:py-20'
+
   return (
     <section className="px-4 pb-10 sm:px-6 lg:px-10 lg:pb-16">
-      <div className="mx-auto flex max-w-[1350px] flex-col items-center rounded-[20px] bg-white px-5 py-10 text-center sm:rounded-[24px] sm:px-10 sm:py-20">
+      <div className={`mx-auto flex max-w-[1350px] flex-col items-center text-center ${panelClass}`}>
         <h2 className="title-heading-normal max-w-[720px] !text-[26px] text-[#2A3040] sm:!text-[32px]">
           {title}
         </h2>
