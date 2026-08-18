@@ -50,7 +50,7 @@ export const siteSettingsDefaults: SiteSettingsData = {
     resourcesLabel: 'Resources',
     resourceLinks: [
       { label: 'Articles', href: '/articles' },
-      { label: 'Tutorials', href: '#' },
+      { label: 'Tutorials', href: '/user-guide' },
       { label: 'Inspiration', href: '#' },
       { label: 'Help', href: '#' },
     ],
@@ -69,7 +69,7 @@ export const siteSettingsDefaults: SiteSettingsData = {
     resourcesColumnTitle: 'Resources',
     resourcesColumn: [
       { label: 'Articles', href: '/articles' },
-      { label: 'Tutorials', href: '#' },
+      { label: 'Tutorials', href: '/user-guide' },
       { label: 'Inspiration', href: '#' },
       { label: 'Help', href: '#' },
     ],

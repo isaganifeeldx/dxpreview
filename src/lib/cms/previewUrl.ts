@@ -19,3 +19,10 @@ export const articlePreview: GeneratePreviewURL = (doc) => {
   if (!slug) return null
   return absolutePreviewUrl(`/articles/${slug}`)
 }
+
+/** Single user guide preview — requires a slug. */
+export const userGuidePreview: GeneratePreviewURL = (doc) => {
+  const slug = typeof doc?.slug === 'string' ? doc.slug.trim() : ''
+  if (!slug) return null
+  return absolutePreviewUrl(`/user-guide/${slug}`)
+}

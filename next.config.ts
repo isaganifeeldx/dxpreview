@@ -105,6 +105,16 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: '/pages/user-guide',
+        destination: '/user-guide',
+        permanent: true,
+      },
+      {
+        source: '/pages/user-guide/:slug',
+        destination: '/user-guide/:slug',
+        permanent: true,
+      },
+      {
         source: '/billing',
         destination: '/business',
         permanent: true,
@@ -128,6 +138,8 @@ const nextConfig: NextConfig = {
       { source: '/pricing', destination: '/pages/pricing' },
       { source: '/business', destination: '/pages/business' },
       { source: '/about', destination: '/pages/about' },
+      { source: '/user-guide', destination: '/pages/user-guide' },
+      { source: '/user-guide/:slug', destination: '/pages/user-guide/:slug' },
     ];
   },
   webpack: (webpackConfig) => {

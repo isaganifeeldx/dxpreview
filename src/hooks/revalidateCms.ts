@@ -11,6 +11,8 @@ import {
   revalidatePrivacyPolicy,
   revalidateSiteSettings,
   revalidateTermsOfService,
+  revalidateUserGuide,
+  revalidateUserGuideItem,
 } from '@/lib/cms/revalidate'
 
 function runSafe(label: string, fn: () => void) {
@@ -57,6 +59,10 @@ export const revalidateArticlesPageGlobal: GlobalAfterChangeHook = () => {
   runSafe('articles-page', revalidateArticlesListing)
 }
 
+export const revalidateUserGuidePageGlobal: GlobalAfterChangeHook = () => {
+  runSafe('user-guide-page', revalidateUserGuide)
+}
+
 export const revalidateSettingsGlobal: GlobalAfterChangeHook = () => {
   runSafe('settings', revalidateSiteSettings)
 }
@@ -69,4 +75,14 @@ export const revalidateArticleAfterChange: CollectionAfterChangeHook = ({ doc })
 export const revalidateArticleAfterDelete: CollectionAfterDeleteHook = ({ doc }) => {
   const slug = typeof doc?.slug === 'string' ? doc.slug : null
   runSafe(`article-delete:${slug ?? 'unknown'}`, () => revalidateArticle(slug))
+}
+
+export const revalidateUserGuideAfterChange: CollectionAfterChangeHook = ({ doc }) => {
+  const slug = typeof doc?.slug === 'string' ? doc.slug : null
+  runSafe(`user-guide:${slug ?? 'unknown'}`, () => revalidateUserGuideItem(slug))
+}
+
+export const revalidateUserGuideAfterDelete: CollectionAfterDeleteHook = ({ doc }) => {
+  const slug = typeof doc?.slug === 'string' ? doc.slug : null
+  runSafe(`user-guide-delete:${slug ?? 'unknown'}`, () => revalidateUserGuideItem(slug))
 }

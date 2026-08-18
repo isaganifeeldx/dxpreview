@@ -39,6 +39,18 @@ export function revalidateAbout() {
   revalidatePath('/sitemap.xml')
 }
 
+export function revalidateUserGuide() {
+  revalidatePublicAndPages('/user-guide')
+  revalidatePath('/sitemap.xml')
+}
+
+export function revalidateUserGuideItem(slug?: string | null) {
+  revalidateUserGuide()
+  if (slug?.trim()) {
+    revalidatePublicAndPages(`/user-guide/${slug.trim()}`)
+  }
+}
+
 export function revalidatePrivacyPolicy() {
   revalidatePublicAndPages('/privacy-policy')
   revalidatePath('/sitemap.xml')
@@ -70,6 +82,7 @@ export function revalidateSiteSettings() {
   revalidatePath('/pricing')
   revalidatePath('/business')
   revalidatePath('/about')
+  revalidatePath('/user-guide')
   revalidatePath('/articles')
   revalidatePath('/privacy-policy')
   revalidatePath('/terms-of-service')
