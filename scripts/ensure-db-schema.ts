@@ -120,7 +120,19 @@ async function assertDatabaseReachable(connectionString: string): Promise<boolea
       'Could not connect to Postgres.',
       `Host: ${databaseHost(connectionString)}`,
       `Last error: ${lastError instanceof Error ? lastError.message : String(lastError)}`,
-    ].join('\n'),
+      /localhost|127\.0\.0\.1/i.test(connectionString)
+        ? [
+            '',
+            'Local DATABASE_URI — is Docker Postgres running?',
+            '  npm run dev          (auto-starts dxi-postgres when possible)',
+            '  docker start dxi-postgres',
+            'First-time container:',
+            '  docker run -d --name dxi-postgres -e POSTGRES_USER=payload -e POSTGRES_PASSWORD=payload -e POSTGRES_DB=dxi_cms -p 5432:5432 postgres:16-alpine',
+          ].join('\n')
+        : '',
+    ]
+      .filter(Boolean)
+      .join('\n'),
   )
   return false
 }

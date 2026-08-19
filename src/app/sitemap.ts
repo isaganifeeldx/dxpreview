@@ -9,6 +9,8 @@ import { getPrivacyPageContent } from '@/lib/privacy/getPrivacyPageContent'
 import { getTermsPageContent } from '@/lib/terms/getTermsPageContent'
 import { getAboutPageContent } from '@/lib/about/getAboutPageContent'
 import { getUserGuidePageContent } from '@/lib/user-guide/getUserGuidePageContent'
+import { getTutorialPageContent } from '@/lib/tutorial/getTutorialPageContent'
+import { getAllTutorialCourses } from '@/lib/tutorial/getTutorials'
 import { getBusinessPageContent } from '@/lib/business/getBusinessPageContent'
 import { getPricingPageContent } from '@/lib/pricing/getPricingPageContent'
 import { getSiteUrl } from '@/lib/siteUrl'
@@ -37,7 +39,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const lastModified = new Date()
 
   try {
-    const [home, faq, contact, privacy, terms, articlesPage, articles, pricing, business, about, userGuide, userGuides] =
+    const [home, faq, contact, privacy, terms, articlesPage, articles, pricing, business, about, userGuide, userGuides, tutorial, tutorialCourses] =
       await Promise.all([
         getHomePageContent(),
         getFaqPageContent(),
@@ -51,6 +53,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         getAboutPageContent(),
         getUserGuidePageContent(),
         getAllUserGuides(),
+        getTutorialPageContent(),
+        getAllTutorialCourses(),
       ])
 
     const staticRoutes: StaticRoute[] = [
@@ -104,6 +108,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.7,
         isIndexable: !userGuide.seo.noIndex,
       },
+      {
+        path: '/tutorial',
+        changeFrequency: 'monthly',
+        priority: 0.7,
+        isIndexable: !tutorial.seo.noIndex,
+      },
     ]
 
     const staticEntries = staticRoutes
@@ -133,7 +143,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.6,
       }))
 
-    return [...staticEntries, ...articleEntries, ...userGuideEntries]
+    const tutorialCourseEntries = tutorialCourses.map((course) => ({
+      url: `${siteUrl}/tutorial/${course.slug}`,
+      lastModified,
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+    }))
+
+    return [...staticEntries, ...articleEntries, ...userGuideEntries, ...tutorialCourseEntries]
   } catch (error) {
     console.error('[sitemap] Failed to build CMS sitemap — returning core routes only.', error)
     return [
@@ -144,6 +161,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       { url: `${siteUrl}/business`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
       { url: `${siteUrl}/about`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
       { url: `${siteUrl}/user-guide`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
+      { url: `${siteUrl}/tutorial`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
       { url: `${siteUrl}/articles`, lastModified, changeFrequency: 'weekly', priority: 0.8 },
       { url: `${siteUrl}/privacy-policy`, lastModified, changeFrequency: 'yearly', priority: 0.3 },
       { url: `${siteUrl}/terms-of-service`, lastModified, changeFrequency: 'yearly', priority: 0.3 },

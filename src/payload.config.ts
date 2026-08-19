@@ -12,6 +12,7 @@ import sharp from 'sharp'
 import { Articles } from './collections/Articles'
 import { Media } from './collections/Media'
 import { Users } from './collections/Users'
+import { TutorialCourses } from './collections/TutorialCourses'
 import { UserGuides } from './collections/UserGuides'
 import { ArticlesPage } from './globals/ArticlesPage'
 import { About } from './globals/About'
@@ -23,6 +24,7 @@ import { Pricing } from './globals/Pricing'
 import { PrivacyPolicy } from './globals/PrivacyPolicy'
 import { Settings } from './globals/Settings'
 import { TermsOfService } from './globals/TermsOfService'
+import { TutorialPage } from './globals/TutorialPage'
 import { UserGuidePage } from './globals/UserGuidePage'
 import { numberedBlobUploadsPlugin } from './plugins/numberedBlobUploads'
 import { normalizeDatabaseUri } from './lib/cms/databaseUri'
@@ -139,7 +141,7 @@ export default buildConfig({
     // Avoid noisy hydration warnings from theme/CSS and browser extensions on /admin
     suppressHydrationWarning: true,
   },
-  collections: [Articles, Media, UserGuides, Users],
+  collections: [Articles, Media, TutorialCourses, UserGuides, Users],
   // Alphabetical by admin label within the Globals sidebar.
   globals: [
     About,
@@ -152,6 +154,7 @@ export default buildConfig({
     Pricing,
     Settings,
     TermsOfService,
+    TutorialPage,
     UserGuidePage,
   ],
   editor: lexicalEditor({

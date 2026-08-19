@@ -51,6 +51,18 @@ export function revalidateUserGuideItem(slug?: string | null) {
   }
 }
 
+export function revalidateTutorial() {
+  revalidatePublicAndPages('/tutorial')
+  revalidatePath('/sitemap.xml')
+}
+
+export function revalidateTutorialCourse(slug?: string | null) {
+  revalidateTutorial()
+  if (slug?.trim()) {
+    revalidatePublicAndPages(`/tutorial/${slug.trim()}`)
+  }
+}
+
 export function revalidatePrivacyPolicy() {
   revalidatePublicAndPages('/privacy-policy')
   revalidatePath('/sitemap.xml')
@@ -83,6 +95,7 @@ export function revalidateSiteSettings() {
   revalidatePath('/business')
   revalidatePath('/about')
   revalidatePath('/user-guide')
+  revalidatePath('/tutorial')
   revalidatePath('/articles')
   revalidatePath('/privacy-policy')
   revalidatePath('/terms-of-service')
