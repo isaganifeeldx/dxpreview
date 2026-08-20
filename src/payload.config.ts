@@ -10,6 +10,7 @@ import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
 import { Articles } from './collections/Articles'
+import { Inspirations } from './collections/Inspirations'
 import { Media } from './collections/Media'
 import { Users } from './collections/Users'
 import { TutorialCourses } from './collections/TutorialCourses'
@@ -20,6 +21,7 @@ import { Business } from './globals/Business'
 import { Contact } from './globals/Contact'
 import { Faq } from './globals/Faq'
 import { Home } from './globals/Home'
+import { InspirationPage } from './globals/InspirationPage'
 import { Pricing } from './globals/Pricing'
 import { PrivacyPolicy } from './globals/PrivacyPolicy'
 import { Settings } from './globals/Settings'
@@ -141,7 +143,7 @@ export default buildConfig({
     // Avoid noisy hydration warnings from theme/CSS and browser extensions on /admin
     suppressHydrationWarning: true,
   },
-  collections: [Articles, Media, TutorialCourses, UserGuides, Users],
+  collections: [Articles, Inspirations, Media, TutorialCourses, UserGuides, Users],
   // Alphabetical by admin label within the Globals sidebar.
   globals: [
     About,
@@ -150,6 +152,7 @@ export default buildConfig({
     Contact,
     Faq,
     Home,
+    InspirationPage,
     PrivacyPolicy,
     Pricing,
     Settings,

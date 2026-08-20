@@ -33,3 +33,10 @@ export const tutorialCoursePreview: GeneratePreviewURL = (doc) => {
   if (!slug) return null
   return absolutePreviewUrl(`/tutorial/${slug}`)
 }
+
+/** Single inspiration preview — requires a slug. */
+export const inspirationPreview: GeneratePreviewURL = (doc) => {
+  const slug = typeof doc?.slug === 'string' ? doc.slug.trim() : ''
+  if (!slug) return null
+  return absolutePreviewUrl(`/inspiration/${slug}`)
+}

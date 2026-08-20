@@ -63,6 +63,14 @@ export function revalidateTutorialCourse(slug?: string | null) {
   }
 }
 
+export function revalidateInspiration(slug?: string) {
+  revalidatePublicAndPages('/inspiration')
+  if (slug?.trim()) {
+    revalidatePublicAndPages(`/inspiration/${slug.trim()}`)
+  }
+  revalidatePath('/sitemap.xml')
+}
+
 export function revalidatePrivacyPolicy() {
   revalidatePublicAndPages('/privacy-policy')
   revalidatePath('/sitemap.xml')
@@ -96,6 +104,7 @@ export function revalidateSiteSettings() {
   revalidatePath('/about')
   revalidatePath('/user-guide')
   revalidatePath('/tutorial')
+  revalidatePath('/inspiration')
   revalidatePath('/articles')
   revalidatePath('/privacy-policy')
   revalidatePath('/terms-of-service')

@@ -248,13 +248,13 @@ export default function Header({ settings }: HeaderProps) {
     <>
       <header ref={headerRef} className="header-glass !sticky top-0 z-50 rounded-none p-0">
         <div className="relative mx-auto flex max-w-[1380px] items-center justify-between gap-3 px-4 py-3 sm:gap-4 sm:px-6 sm:py-4 lg:px-10">
-          <Link href="/" aria-label="DX Interiors home" onClick={closeMenu} className="relative z-10">
+          <Link href="/" aria-label="DX Interiors home" onClick={closeMenu} className="relative z-10 shrink-0">
             <Image
               src="/images/landing/logo.svg"
               alt="DX Interiors"
               width={173}
               height={16}
-              className="h-auto w-[160px]"
+              className="h-auto w-[128px] sm:w-[160px]"
               priority
             />
           </Link>
@@ -303,7 +303,7 @@ export default function Header({ settings }: HeaderProps) {
             </div>
           </nav>
 
-          <div className="relative z-10 flex items-center gap-2 sm:gap-3">
+          <div className="relative z-10 flex shrink-0 items-center gap-1.5 sm:gap-3">
             <Link
               href={login.href}
               className="hidden rounded-full px-4 py-1.5 text-sm text-slate-700 transition-colors hover:text-slate-900 md:inline-flex"
@@ -318,7 +318,7 @@ export default function Header({ settings }: HeaderProps) {
             </Link>
             <Link
               href={startFree.href}
-              className="rounded-full bg-[#2A3040] px-3 py-1.5 text-xs text-white transition-colors hover:bg-[#111a2e] sm:px-4 sm:text-sm"
+              className="inline-flex shrink-0 whitespace-nowrap rounded-full bg-[#2A3040] px-2.5 py-1.5 text-xs text-white transition-colors hover:bg-[#111a2e] sm:px-4 sm:text-sm"
             >
               {startFree.label}
             </Link>

@@ -51,7 +51,7 @@ export const siteSettingsDefaults: SiteSettingsData = {
     resourceLinks: [
       { label: 'Articles', href: '/articles' },
       { label: 'Tutorials', href: '/tutorial' },
-      { label: 'Inspiration', href: '#' },
+      { label: 'Inspiration', href: '/inspiration' },
       { label: 'Help', href: '#' },
     ],
     login: { label: 'Log in', href: '#' },
@@ -70,7 +70,7 @@ export const siteSettingsDefaults: SiteSettingsData = {
     resourcesColumn: [
       { label: 'Articles', href: '/articles' },
       { label: 'Tutorials', href: '/tutorial' },
-      { label: 'Inspiration', href: '#' },
+      { label: 'Inspiration', href: '/inspiration' },
       { label: 'Help', href: '#' },
     ],
     companyColumnTitle: 'Company',

@@ -15,6 +15,7 @@ import {
   revalidateTutorialCourse,
   revalidateUserGuide,
   revalidateUserGuideItem,
+  revalidateInspiration,
 } from '@/lib/cms/revalidate'
 
 function runSafe(label: string, fn: () => void) {
@@ -69,6 +70,10 @@ export const revalidateTutorialPageGlobal: GlobalAfterChangeHook = () => {
   runSafe('tutorial-page', revalidateTutorial)
 }
 
+export const revalidateInspirationPageGlobal: GlobalAfterChangeHook = () => {
+  runSafe('inspiration-page', revalidateInspiration)
+}
+
 export const revalidateSettingsGlobal: GlobalAfterChangeHook = () => {
   runSafe('settings', revalidateSiteSettings)
 }
@@ -101,4 +106,14 @@ export const revalidateTutorialCourseAfterChange: CollectionAfterChangeHook = ({
 export const revalidateTutorialCourseAfterDelete: CollectionAfterDeleteHook = ({ doc }) => {
   const slug = typeof doc?.slug === 'string' ? doc.slug : null
   runSafe(`tutorial-course-delete:${slug ?? 'unknown'}`, () => revalidateTutorialCourse(slug))
+}
+
+export const revalidateInspirationAfterChange: CollectionAfterChangeHook = ({ doc }) => {
+  const slug = typeof doc?.slug === 'string' ? doc.slug : null
+  runSafe(`inspiration:${slug ?? 'unknown'}`, () => revalidateInspiration(slug))
+}
+
+export const revalidateInspirationAfterDelete: CollectionAfterDeleteHook = ({ doc }) => {
+  const slug = typeof doc?.slug === 'string' ? doc.slug : null
+  runSafe(`inspiration-delete:${slug ?? 'unknown'}`, () => revalidateInspiration(slug))
 }

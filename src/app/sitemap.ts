@@ -11,6 +11,7 @@ import { getAboutPageContent } from '@/lib/about/getAboutPageContent'
 import { getUserGuidePageContent } from '@/lib/user-guide/getUserGuidePageContent'
 import { getTutorialPageContent } from '@/lib/tutorial/getTutorialPageContent'
 import { getAllTutorialCourses } from '@/lib/tutorial/getTutorials'
+import { getInspirationPageContent } from '@/lib/inspiration/getInspirationPageContent'
 import { getBusinessPageContent } from '@/lib/business/getBusinessPageContent'
 import { getPricingPageContent } from '@/lib/pricing/getPricingPageContent'
 import { getSiteUrl } from '@/lib/siteUrl'
@@ -39,7 +40,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const lastModified = new Date()
 
   try {
-    const [home, faq, contact, privacy, terms, articlesPage, articles, pricing, business, about, userGuide, userGuides, tutorial, tutorialCourses] =
+    const [home, faq, contact, privacy, terms, articlesPage, articles, pricing, business, about, userGuide, userGuides, tutorial, tutorialCourses, inspiration] =
       await Promise.all([
         getHomePageContent(),
         getFaqPageContent(),
@@ -55,6 +56,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         getAllUserGuides(),
         getTutorialPageContent(),
         getAllTutorialCourses(),
+        getInspirationPageContent(),
       ])
 
     const staticRoutes: StaticRoute[] = [
@@ -114,6 +116,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.7,
         isIndexable: !tutorial.seo.noIndex,
       },
+      {
+        path: '/inspiration',
+        changeFrequency: 'monthly',
+        priority: 0.7,
+        isIndexable: !inspiration.seo.noIndex,
+      },
     ]
 
     const staticEntries = staticRoutes
@@ -150,7 +158,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.6,
     }))
 
-    return [...staticEntries, ...articleEntries, ...userGuideEntries, ...tutorialCourseEntries]
+    const inspirationEntries = inspiration.items
+      .filter((item) => !item.seo.noIndex)
+      .map((item) => ({
+        url: `${siteUrl}/inspiration/${item.slug}`,
+        lastModified,
+        changeFrequency: 'monthly' as const,
+        priority: 0.6,
+      }))
+
+    return [
+      ...staticEntries,
+      ...articleEntries,
+      ...userGuideEntries,
+      ...tutorialCourseEntries,
+      ...inspirationEntries,
+    ]
   } catch (error) {
     console.error('[sitemap] Failed to build CMS sitemap — returning core routes only.', error)
     return [
@@ -162,6 +185,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       { url: `${siteUrl}/about`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
       { url: `${siteUrl}/user-guide`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
       { url: `${siteUrl}/tutorial`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
+      { url: `${siteUrl}/inspiration`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
       { url: `${siteUrl}/articles`, lastModified, changeFrequency: 'weekly', priority: 0.8 },
       { url: `${siteUrl}/privacy-policy`, lastModified, changeFrequency: 'yearly', priority: 0.3 },
       { url: `${siteUrl}/terms-of-service`, lastModified, changeFrequency: 'yearly', priority: 0.3 },
