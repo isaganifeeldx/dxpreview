@@ -134,7 +134,7 @@ export const businessPageDefaults: BusinessPageContentData = {
   closing: {
     title: 'Ready to scale your design studio?',
     primaryCta: { label: 'Schedule a demo', href: '#talk-to-team' },
-    secondaryCta: { label: 'View plans', href: '/pricing' },
+    secondaryCta: { label: 'View plans', href: '/plans' },
   },
   seo: emptySeoData({
     title: 'Business | DX Interiors',

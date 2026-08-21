@@ -1,6 +1,11 @@
 import { shouldSkipCmsAtBuild } from '@/lib/cms/buildTime'
 import { getPayloadClient } from '@/lib/payload'
-import { siteSettingsDefaults, type MenuLink, type SiteSettingsData } from './defaults'
+import {
+  siteSettingsDefaults,
+  type FloatingCtaAction,
+  type MenuLink,
+  type SiteSettingsData,
+} from './defaults'
 
 type CmsLink = { label?: string | null; href?: string | null } | null
 
@@ -36,6 +41,19 @@ type CmsSettings = {
     legalLinks?: CmsLink[] | null
     copyright?: string | null
   } | null
+  floatingCta?: {
+    enabled?: boolean | null
+    whatsappLabel?: string | null
+    whatsappHref?: string | null
+    messengerLabel?: string | null
+    messengerHref?: string | null
+    supportLabel?: string | null
+    supportHref?: string | null
+    submitFormLabel?: string | null
+    submitFormHref?: string | null
+    callLabel?: string | null
+    callHref?: string | null
+  } | null
   tracking?: {
     googleTagHead?: string | null
     googleTagBody?: string | null
@@ -67,6 +85,17 @@ function mapLinks(rows: CmsLink[] | null | undefined, fallback: MenuLink[]): Men
   return mapped.length > 0 ? mapped : fallback
 }
 
+function mapFloatingAction(
+  label: string | null | undefined,
+  href: string | null | undefined,
+  fallback: FloatingCtaAction,
+): FloatingCtaAction {
+  return {
+    label: text(label, fallback.label),
+    href: text(href, fallback.href),
+  }
+}
+
 function mapSettings(doc: CmsSettings | null | undefined): SiteSettingsData {
   const defaults = siteSettingsDefaults
   if (!doc) return defaults
@@ -87,6 +116,8 @@ function mapSettings(doc: CmsSettings | null | undefined): SiteSettingsData {
           href: string
         } => Boolean(item),
       ) ?? []
+
+  const floating = doc.floatingCta
 
   return {
     header: {
@@ -129,6 +160,30 @@ function mapSettings(doc: CmsSettings | null | undefined): SiteSettingsData {
       legalLinks: mapLinks(doc.footer?.legalLinks, defaults.footer.legalLinks),
       copyright: text(doc.footer?.copyright, defaults.footer.copyright),
     },
+    floatingCta: {
+      enabled: floating?.enabled ?? defaults.floatingCta.enabled,
+      whatsapp: mapFloatingAction(
+        floating?.whatsappLabel,
+        floating?.whatsappHref,
+        defaults.floatingCta.whatsapp,
+      ),
+      messenger: mapFloatingAction(
+        floating?.messengerLabel,
+        floating?.messengerHref,
+        defaults.floatingCta.messenger,
+      ),
+      support: mapFloatingAction(
+        floating?.supportLabel,
+        floating?.supportHref,
+        defaults.floatingCta.support,
+      ),
+      submitForm: mapFloatingAction(
+        floating?.submitFormLabel,
+        floating?.submitFormHref,
+        defaults.floatingCta.submitForm,
+      ),
+      call: mapFloatingAction(floating?.callLabel, floating?.callHref, defaults.floatingCta.call),
+    },
     tracking: {
       googleTagHead: optionalScript(doc.tracking?.googleTagHead),
       googleTagBody: optionalScript(doc.tracking?.googleTagBody),
@@ -146,6 +201,8 @@ export async function getSiteSettings(): Promise<SiteSettingsData> {
     const doc = (await payload.findGlobal({
       slug: 'settings',
       depth: 0,
+      // Site shell needs tracking snippets; REST/GraphQL stay locked down via access.
+      overrideAccess: true,
     })) as CmsSettings
     return mapSettings(doc)
   } catch (error) {

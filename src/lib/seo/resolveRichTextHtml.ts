@@ -1,5 +1,6 @@
 import { convertLexicalToHTML } from '@payloadcms/richtext-lexical/html'
 import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical'
+import { sanitizeCmsHtml } from '@/lib/sanitize/sanitizeCmsHtml'
 
 function isLexicalState(value: unknown): value is SerializedEditorState {
   return (
@@ -22,18 +23,18 @@ function isEmptyLexical(data: SerializedEditorState): boolean {
   return plain.length === 0
 }
 
-/** Convert Lexical rich text (or HTML string) to HTML for article bodies. */
+/** Convert Lexical rich text (or HTML string) to sanitized HTML for article bodies. */
 export function resolveRichTextHtml(
   value: unknown,
   fallbackHtml = '',
 ): string {
+  let html = fallbackHtml
+
   if (isLexicalState(value) && !isEmptyLexical(value)) {
-    return convertLexicalToHTML({ data: value })
+    html = convertLexicalToHTML({ data: value })
+  } else if (typeof value === 'string' && value.trim()) {
+    html = value.trim()
   }
 
-  if (typeof value === 'string' && value.trim()) {
-    return value.trim()
-  }
-
-  return fallbackHtml
+  return sanitizeCmsHtml(html)
 }

@@ -102,7 +102,7 @@ export const Pricing: GlobalConfig = {
   admin: {
     description: 'Editable content for the public Plans and pricing page.',
     group: 'Pages',
-    preview: pagePreview('/pricing'),
+    preview: pagePreview('/plans'),
     components: {
       views: {
         edit: adminOnlyApiView,

@@ -32,13 +32,19 @@ export default function InspirationShareButton() {
   }
 
   return (
-    <button
-      type="button"
-      onClick={handleShare}
-      className="inline-flex min-h-10 items-center gap-1.5 text-[13px] font-medium text-[#6A758C] transition-colors hover:text-[#2A3040]"
-    >
-      <ShareIcon />
-      {copied ? 'Link copied' : 'Share'}
-    </button>
+    <div className="inline-flex flex-col items-start gap-1">
+      <button
+        type="button"
+        onClick={handleShare}
+        aria-label={copied ? 'Link copied to clipboard' : 'Share this inspiration'}
+        className="inline-flex min-h-10 items-center gap-1.5 text-[13px] font-medium text-[#6A758C] transition-colors hover:text-[#2A3040]"
+      >
+        <ShareIcon />
+        {copied ? 'Link copied' : 'Share'}
+      </button>
+      <span className="sr-only" aria-live="polite">
+        {copied ? 'Link copied to clipboard' : ''}
+      </span>
+    </div>
   )
 }

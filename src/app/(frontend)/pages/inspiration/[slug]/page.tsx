@@ -54,11 +54,13 @@ export async function generateMetadata({
 
 export default async function InspirationDetailPage({ params }: InspirationDetailPageProps) {
   const { slug } = await params
-  const item = await getInspirationBySlug(slug)
+  const [item, allItems, pageContent] = await Promise.all([
+    getInspirationBySlug(slug),
+    getAllInspirationItems(),
+    getInspirationPageContent(),
+  ])
   if (!item) notFound()
 
-  const allItems = await getAllInspirationItems()
-  const pageContent = await getInspirationPageContent()
   const relatedItems = getRelatedInspirations(allItems, item.slug, 4)
   const defaultJsonLd = buildInspirationItemJsonLd(item)
 

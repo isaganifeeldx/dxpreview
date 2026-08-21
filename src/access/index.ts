@@ -53,3 +53,17 @@ export const publicReadAuthenticatedUpdate = {
   read: () => true as boolean | Promise<boolean>,
   update: ({ req: { user } }: { req: { user?: unknown } }) => Boolean(user),
 }
+
+/**
+ * Privileged globals (e.g. Settings with tracking snippets):
+ * REST/GraphQL require a logged-in CMS user; Local API still uses overrideAccess.
+ */
+export const authenticatedReadAuthenticatedUpdate = {
+  read: ({ req: { user } }: { req: { user?: unknown } }) => Boolean(user),
+  update: ({ req: { user } }: { req: { user?: unknown } }) => Boolean(user),
+}
+
+/** Field-level: only authenticated CMS users may read via REST/GraphQL. */
+export const authenticatedFieldRead = {
+  read: ({ req: { user } }: { req: { user?: unknown } }) => Boolean(user),
+}

@@ -4,6 +4,7 @@ import LividEmbed from '@/components/ui/LividEmbed';
 import BusinessClosingCta from '@/components/pages/business/BusinessClosingCta';
 import BusinessFeatures from '@/components/pages/business/BusinessFeatures';
 import BusinessTestimonials from '@/components/pages/business/BusinessTestimonials';
+import HomeGalleryCarousel from '@/components/pages/home/HomeGalleryCarousel';
 import type { HomePageContentData, HomeProcessCard } from '@/lib/home/types';
 
 const heroFeatureIcons = [
@@ -102,8 +103,6 @@ const heroFeatureIcons = [
     </svg>
   ),
 ];
-
-const GALLERY_COLUMN_COUNT = 4;
 
 const primaryButtonClass =
   'w-fit md:w-auto inline-flex items-center justify-center rounded-full bg-[#2A3040] px-5 py-2.5 text-[10px] font-medium tracking-[0.18em] text-white uppercase transition-colors hover:bg-[#111a2e]';
@@ -237,10 +236,6 @@ type HomePageContentProps = {
 
 export default function HomePageContent({ content }: HomePageContentProps) {
   const { hero, trust, process: processSection, discover, gallery, lessons } = content;
-
-  const galleryColumns = Array.from({ length: GALLERY_COLUMN_COUNT }, (_, columnIndex) =>
-    gallery.images.filter((_, index) => index % GALLERY_COLUMN_COUNT === columnIndex),
-  );
 
   return (
     <>
@@ -382,30 +377,7 @@ export default function HomePageContent({ content }: HomePageContentProps) {
         <h2 className="title-heading-normal px-2 text-center text-[26px] text-slate-900 sm:text-[32px]">
           {gallery.title}
         </h2>
-        <div className="mx-auto mt-8 flex max-w-7xl flex-wrap gap-3 sm:mt-10 sm:gap-4 lg:flex-nowrap">
-          {galleryColumns.map((column, columnIndex) => (
-            <div
-              key={`gallery-column-${columnIndex}`}
-              className="flex w-[calc(50%-0.375rem)] flex-col gap-3 sm:w-[calc(50%-0.5rem)] sm:gap-4 lg:min-h-[860px] lg:w-auto lg:flex-1"
-            >
-              {column.map((item, index) => (
-                <div
-                  key={`${item.alt}-${columnIndex}-${index}`}
-                  className="relative aspect-video w-full shrink-0 overflow-hidden rounded-[18px] border border-slate-200 bg-white shadow-sm sm:rounded-[26px] lg:aspect-auto lg:min-h-0 lg:shrink lg:flex-[var(--gallery-grow)_1_0%]"
-                  style={{ ['--gallery-grow' as string]: item.grow }}
-                >
-                  <Image
-                    src={item.src}
-                    alt={item.alt}
-                    fill
-                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 25vw"
-                    className="object-cover"
-                  />
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
+        <HomeGalleryCarousel images={gallery.images} title={gallery.title} />
       </section>
 
       <section className="bg-white px-4 py-12 sm:px-6 lg:px-10 lg:py-24">

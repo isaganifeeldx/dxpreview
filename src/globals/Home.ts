@@ -608,7 +608,7 @@ export const Home: GlobalConfig = {
                       name: 'secondaryCtaHref',
                       type: 'text',
                       label: 'Secondary CTA URL',
-                      defaultValue: '/pricing',
+                      defaultValue: '/plans',
                       admin: { width: '50%' },
                     },
                   ],

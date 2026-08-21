@@ -66,6 +66,7 @@ export default function BusinessPageContent({ content }: BusinessPageContentProp
         title={closing.title}
         primaryCta={closing.primaryCta}
         secondaryCta={closing.secondaryCta}
+        variant="glass"
       />
     </div>
   )

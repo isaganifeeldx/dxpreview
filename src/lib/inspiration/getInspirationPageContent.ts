@@ -1,7 +1,8 @@
+import { cache } from 'react'
 import { shouldSkipCmsAtBuild } from '@/lib/cms/buildTime'
 import { getPayloadClient } from '@/lib/payload'
 import { mapCmsSeo, type CmsSeo } from '@/lib/seo/mapCmsSeo'
-import { inspirationItems as staticItems, inspirationPageDefaults } from './defaults'
+import { inspirationPageDefaults } from './defaults'
 import { getAllInspirationItems } from './getInspirations'
 import type { InspirationPageContentData } from './types'
 
@@ -36,7 +37,7 @@ function stringArray(
   return mapped && mapped.length > 0 ? mapped : fallback
 }
 
-export async function getInspirationPageContent(): Promise<InspirationPageContentData> {
+export const getInspirationPageContent = cache(async (): Promise<InspirationPageContentData> => {
   const items = await getAllInspirationItems()
   const defaults = inspirationPageDefaults
 
@@ -86,4 +87,4 @@ export async function getInspirationPageContent(): Promise<InspirationPageConten
     )
     return base
   }
-}
+})

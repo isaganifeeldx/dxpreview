@@ -12,7 +12,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
   return buildMetadataFromSeo({
     seo: content.seo,
-    path: '/pricing',
+    path: '/plans',
     fallbackTitle: content.seo.title,
     fallbackDescription: content.seo.description,
     fallbackImageUrl: content.seo.ogImageUrl ?? '/images/landing/render-1.jpg',

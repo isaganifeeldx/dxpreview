@@ -3,6 +3,11 @@ export type MenuLink = {
   href: string
 }
 
+export type FloatingCtaAction = {
+  label: string
+  href: string
+}
+
 export type SiteSettingsData = {
   header: {
     navLinks: MenuLink[]
@@ -32,6 +37,14 @@ export type SiteSettingsData = {
     legalLinks: MenuLink[]
     copyright: string
   }
+  floatingCta: {
+    enabled: boolean
+    whatsapp: FloatingCtaAction
+    messenger: FloatingCtaAction
+    support: FloatingCtaAction
+    submitForm: FloatingCtaAction
+    call: FloatingCtaAction
+  }
   tracking: {
     googleTagHead: string
     googleTagBody: string
@@ -44,7 +57,7 @@ export const siteSettingsDefaults: SiteSettingsData = {
   header: {
     navLinks: [
       { label: 'Product', href: '#' },
-      { label: 'Plans', href: '/pricing' },
+      { label: 'Plans', href: '/plans' },
       { label: 'Business', href: '/business' },
     ],
     resourcesLabel: 'Resources',
@@ -62,7 +75,7 @@ export const siteSettingsDefaults: SiteSettingsData = {
     linkColumnTitle: 'Link',
     linkColumn: [
       { label: 'Product', href: '#' },
-      { label: 'Plans', href: '/pricing' },
+      { label: 'Plans', href: '/plans' },
       { label: 'Business', href: '/business' },
       { label: 'FAQs', href: '/faq' },
     ],
@@ -98,6 +111,14 @@ export const siteSettingsDefaults: SiteSettingsData = {
       { label: 'User Agreement', href: '#' },
     ],
     copyright: '© 2026 DX Living. All rights reserved',
+  },
+  floatingCta: {
+    enabled: true,
+    whatsapp: { label: 'Whatsapp', href: 'https://wa.me/1800333539' },
+    messenger: { label: 'Messenger', href: 'https://m.me/dxlivingaustralia' },
+    support: { label: 'Support', href: 'mailto:sales@dxinteriors.ai' },
+    submitForm: { label: 'Submit Form', href: '/contact' },
+    call: { label: 'Call', href: 'tel:1800333539' },
   },
   tracking: {
     googleTagHead: '',

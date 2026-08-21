@@ -1,14 +1,19 @@
 /**
  * Sync Payload Postgres schema to whatever DATABASE_URI points at
- * (local, Neon, future RDS).
+ * (local, Neon, future RDS, EC2-hosted Postgres).
  *
- * Local: always push so new collections/fields appear automatically.
- * Vercel builds: skipped by default — build machines (often US) timing out to
- * Neon (e.g. Sydney) is common. Sync locally with `npm run db:push` instead.
+ * Always verifies the database is reachable before continuing. A failed
+ * connection exits with code 1 so `npm run build` fails locally, on EC2,
+ * and on Vercel.
+ *
+ * Schema push:
+ *   Local / EC2: push by default (adds missing tables/columns).
+ *   Vercel: skip push by default (region/timeout risk) unless
+ *           PAYLOAD_REQUIRE_SCHEMA_PUSH=true. Sync with `npm run db:push` locally.
  *
  * Flags / env:
  *   --only-if-empty                   Only push when `users` table is missing
- *   PAYLOAD_SKIP_SCHEMA_PUSH=true     Skip entirely
+ *   PAYLOAD_SKIP_SCHEMA_PUSH=true     Skip schema push (connection check still runs)
  *   PAYLOAD_REQUIRE_SCHEMA_PUSH=true  Force schema sync during Vercel builds
  *
  * Used by:
@@ -273,34 +278,45 @@ async function pushSchema(): Promise<void> {
 }
 
 async function main() {
-  if (skipPush) {
-    console.log('PAYLOAD_SKIP_SCHEMA_PUSH=true — skipping database schema sync.')
-    process.exit(0)
-  }
-
-  // Vercel build (iad1 etc.) often cannot reach Neon in time — don't block next build.
-  if (isVercel && !requireSchemaPush) {
-    console.log(
-      'Vercel build detected — skipping database schema sync (default).\n' +
-        'Schema is synced locally via `npm run db:push` / `npm run build` on your machine.\n' +
-        'Set PAYLOAD_REQUIRE_SCHEMA_PUSH=true only if you need sync during Vercel builds.',
-    )
-    process.exit(0)
-  }
-
   const rawUri = process.env.DATABASE_URI
-  if (!rawUri) {
-    console.error('Missing DATABASE_URI. Set it to your Postgres/Neon/RDS connection string.')
+  if (!rawUri?.trim()) {
+    console.error(
+      'Missing DATABASE_URI — refusing to continue.\n' +
+        'Set it to your Postgres/Neon/RDS connection string' +
+        (isVercel
+          ? ' in Project → Settings → Environment Variables for this environment.'
+          : ' in `.env` / `.env.local` (or the host environment).'),
+    )
     process.exit(1)
   }
 
   const databaseUri = normalizeDatabaseUri(rawUri)
   process.env.DATABASE_URI = databaseUri
-  console.log(`Schema sync target host: ${databaseHost(databaseUri)}`)
+  console.log(`Database check host: ${databaseHost(databaseUri)}`)
 
   const reachable = await assertDatabaseReachable(databaseUri)
   if (!reachable) {
+    console.error(
+      'Database unreachable — failing build/schema step.\n' +
+        'Fix DATABASE_URI, Postgres/Neon status, network/firewall, then retry.',
+    )
     process.exit(1)
+  }
+
+  console.log('Database reachable.')
+
+  const skipSchemaPush = skipPush || (isVercel && !requireSchemaPush)
+  if (skipSchemaPush) {
+    console.log(
+      skipPush
+        ? 'PAYLOAD_SKIP_SCHEMA_PUSH=true — skipping database schema sync.'
+        : [
+            'Skipping database schema sync on Vercel (default).',
+            'Schema is synced via `npm run db:push` / non-Vercel `npm run build`.',
+            'Set PAYLOAD_REQUIRE_SCHEMA_PUSH=true to sync during Vercel builds.',
+          ].join('\n'),
+    )
+    process.exit(0)
   }
 
   if (onlyIfEmpty) {
@@ -311,7 +327,11 @@ async function main() {
     }
     console.log('No users table found — creating Payload schema…')
   } else {
-    console.log('Syncing Payload schema (adds missing tables/columns if needed)…')
+    console.log(
+      isVercel
+        ? 'PAYLOAD_REQUIRE_SCHEMA_PUSH=true — syncing Payload schema on Vercel…'
+        : 'Syncing Payload schema (adds missing tables/columns if needed)…',
+    )
   }
 
   await pushSchema()

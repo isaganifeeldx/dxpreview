@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import { sanitizeTrackingSnippet } from '@/lib/sanitize/sanitizeTrackingSnippet'
 
 type TrackingScriptsProps = {
   headHtml?: string
@@ -8,7 +9,7 @@ type TrackingScriptsProps = {
 }
 
 function injectSnippet(html: string, target: ParentNode, marker: string): () => void {
-  const trimmed = html.trim()
+  const trimmed = sanitizeTrackingSnippet(html)
   if (!trimmed) return () => undefined
 
   const template = document.createElement('template')
@@ -22,6 +23,8 @@ function injectSnippet(html: string, target: ParentNode, marker: string): () => 
     if (node instanceof HTMLScriptElement) {
       const script = document.createElement('script')
       for (const { name, value } of Array.from(node.attributes)) {
+        if (/^on/i.test(name)) continue
+        if ((name === 'src' || name === 'href') && /^\s*javascript:/i.test(value)) continue
         script.setAttribute(name, value)
       }
       script.dataset.dxiTracking = marker
@@ -47,7 +50,8 @@ function injectSnippet(html: string, target: ParentNode, marker: string): () => 
 }
 
 /**
- * Injects CMS-pasted Google Tag / Meta Pixel snippets so <script> tags execute.
+ * Injects CMS-pasted Google Tag / Meta Pixel / Ahrefs snippets so <script> tags execute.
+ * Snippets are sanitized (allowlisted hosts, no event-handler attrs) before injection.
  */
 export default function TrackingScripts({ headHtml = '', bodyHtml = '' }: TrackingScriptsProps) {
   useEffect(() => {

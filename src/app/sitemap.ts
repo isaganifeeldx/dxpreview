@@ -87,7 +87,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         isIndexable: !articlesPage.seo.noIndex,
       },
       {
-        path: '/pricing',
+        path: '/plans',
         changeFrequency: 'monthly',
         priority: 0.8,
         isIndexable: !pricing.seo.noIndex,
@@ -180,7 +180,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       { url: siteUrl, lastModified, changeFrequency: 'weekly', priority: 1 },
       { url: `${siteUrl}/faq`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
       { url: `${siteUrl}/contact`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
-      { url: `${siteUrl}/pricing`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
+      { url: `${siteUrl}/plans`, lastModified, changeFrequency: 'monthly', priority: 0.8 },
       { url: `${siteUrl}/business`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
       { url: `${siteUrl}/about`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
       { url: `${siteUrl}/user-guide`, lastModified, changeFrequency: 'monthly', priority: 0.7 },

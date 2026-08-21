@@ -13,7 +13,7 @@ export function buildPricingPageJsonLd({
   seo,
 }: BuildPricingJsonLdInput): Record<string, unknown> {
   const siteUrl = getSiteUrl()
-  const pageUrl = seo?.canonicalUrl || `${siteUrl}/pricing`
+  const pageUrl = seo?.canonicalUrl || `${siteUrl}/plans`
   const title = seo?.title || content.title
   const description = seo?.description || ''
 

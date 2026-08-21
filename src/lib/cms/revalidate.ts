@@ -25,7 +25,8 @@ export function revalidateContact() {
 }
 
 export function revalidatePricing() {
-  revalidatePublicAndPages('/pricing')
+  revalidatePath('/plans')
+  revalidatePath('/pages/pricing')
   revalidatePath('/sitemap.xml')
 }
 
@@ -99,7 +100,7 @@ export function revalidateSiteSettings() {
   revalidatePath('/pages/home', 'layout')
   revalidatePath('/faq')
   revalidatePath('/contact')
-  revalidatePath('/pricing')
+  revalidatePath('/plans')
   revalidatePath('/business')
   revalidatePath('/about')
   revalidatePath('/user-guide')

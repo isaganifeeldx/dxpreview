@@ -91,7 +91,17 @@ const nextConfig: NextConfig = {
       },
       {
         source: '/pages/pricing',
-        destination: '/pricing',
+        destination: '/plans',
+        permanent: true,
+      },
+      {
+        source: '/pricing',
+        destination: '/plans',
+        permanent: true,
+      },
+      {
+        source: '/plan',
+        destination: '/plans',
         permanent: true,
       },
       {
@@ -155,7 +165,7 @@ const nextConfig: NextConfig = {
       { source: '/terms-of-service', destination: '/pages/terms-of-service' },
       { source: '/articles', destination: '/pages/articles' },
       { source: '/articles/:slug', destination: '/pages/articles/:slug' },
-      { source: '/pricing', destination: '/pages/pricing' },
+      { source: '/plans', destination: '/pages/pricing' },
       { source: '/business', destination: '/pages/business' },
       { source: '/about', destination: '/pages/about' },
       { source: '/user-guide', destination: '/pages/user-guide' },
