@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import ArticleTableOfContents from '@/components/pages/articles/ArticleTableOfContents'
 import RecentUserGuides from '@/components/pages/user-guide/RecentUserGuides'
+import PageClosingCta from '@/components/pages/shared/PageClosingCta'
 import JsonLdScripts from '@/components/seo/JsonLdScripts'
 import { buildArticleToc } from '@/lib/articles/buildArticleToc'
 import {
@@ -11,6 +12,7 @@ import {
   getRecentUserGuides,
   getUserGuideBySlug,
 } from '@/lib/user-guide/getUserGuides'
+import { getUserGuidePageContent } from '@/lib/user-guide/getUserGuidePageContent'
 import { buildMetadataFromSeo } from '@/lib/seo/buildMetadata'
 import { buildUserGuideItemJsonLd } from '@/lib/seo/buildUserGuideJsonLd'
 
@@ -58,6 +60,7 @@ export default async function UserGuideDetailPage({ params }: UserGuideDetailPag
 
   const allGuides = await getAllUserGuides()
   const recentGuides = getRecentUserGuides(allGuides, guide.slug, 3)
+  const { closing } = await getUserGuidePageContent()
   const defaultJsonLd = buildUserGuideItemJsonLd(guide)
   const { contentHtml, toc } = buildArticleToc(guide.contentHtml)
 
@@ -108,6 +111,8 @@ export default async function UserGuideDetailPage({ params }: UserGuideDetailPag
 
         <RecentUserGuides guides={recentGuides} />
       </div>
+
+      <PageClosingCta {...closing} />
     </>
   )
 }

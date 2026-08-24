@@ -1,4 +1,5 @@
 import { faqIntro, faqItems } from '@/data/faqData'
+import { pageClosingCtaDefaults } from '@/lib/cta/defaults'
 import { emptySeoData } from '@/lib/seo/types'
 import type { FaqPageContentData } from './types'
 
@@ -7,6 +8,7 @@ export const faqPageDefaults: FaqPageContentData = {
   intro: faqIntro,
   searchPlaceholder: 'Type your question here',
   items: faqItems,
+  closing: pageClosingCtaDefaults,
   seo: emptySeoData({
     title: 'FAQ | DX Interiors',
     description: 'Frequently asked questions about DX Interiors.',

@@ -62,12 +62,7 @@ export default function BusinessPageContent({ content }: BusinessPageContentProp
         items={features.items}
         headingId="business-features-heading"
       />
-      <BusinessClosingCta
-        title={closing.title}
-        primaryCta={closing.primaryCta}
-        secondaryCta={closing.secondaryCta}
-        variant="glass"
-      />
+      <BusinessClosingCta {...closing} variant="glass" />
     </div>
   )
 }

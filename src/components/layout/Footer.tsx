@@ -82,7 +82,7 @@ export default function Footer({ settings }: FooterProps) {
   } = settings;
 
   return (
-    <footer className="bg-[#2A3040] text-slate-200 px-4 lg:px-10" aria-label="Footer">
+    <footer id="site-footer" className="bg-[#2A3040] text-slate-200 px-4 lg:px-10" aria-label="Footer">
       <div className="mx-auto flex max-w-[1380px] flex-col gap-10 py-10 sm:gap-12 sm:px-6 sm:py-14 lg:flex-row lg:items-start lg:justify-between lg:gap-16  lg:py-16">
         <div className="flex flex-col gap-6 lg:min-h-[160px] sm:justify-between lg:min-w-[220px] items-center lg:items-start">
           <Image

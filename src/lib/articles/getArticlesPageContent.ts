@@ -1,4 +1,5 @@
 import { shouldSkipCmsAtBuild } from '@/lib/cms/buildTime'
+import { mapClosingCta, type CmsClosingCta } from '@/lib/cta/mapClosingCta'
 import { getPayloadClient } from '@/lib/payload'
 import { mapCmsSeo, type CmsSeo } from '@/lib/seo/mapCmsSeo'
 import { articlesPageDefaults } from './defaults'
@@ -8,6 +9,7 @@ import type { ArticlesPageContentData } from './types'
 type CmsArticlesPage = {
   heading?: string | null
   searchPlaceholder?: string | null
+  closing?: CmsClosingCta
   seo?: CmsSeo
 }
 
@@ -35,6 +37,7 @@ export async function getArticlesPageContent(): Promise<ArticlesPageContentData>
       heading: text(doc.heading, defaults.heading),
       searchPlaceholder: text(doc.searchPlaceholder, defaults.searchPlaceholder),
       articles,
+      closing: mapClosingCta(doc.closing, defaults.closing),
       seo: mapCmsSeo(doc.seo, defaults.seo),
     }
   } catch (error) {

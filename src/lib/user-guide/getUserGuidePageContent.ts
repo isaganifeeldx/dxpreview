@@ -20,6 +20,7 @@ type CmsUserGuidePage = {
     description?: string | null
     primaryCta?: { label?: string | null; href?: string | null } | null
     secondaryCta?: { label?: string | null; href?: string | null } | null
+    showSecondaryCta?: boolean | null
   } | null
   seo?: CmsSeo
 }
@@ -75,6 +76,7 @@ export async function getUserGuidePageContent(): Promise<UserGuidePageContentDat
         description: text(doc.closing?.description, defaults.closing.description),
         primaryCta: cta(doc.closing?.primaryCta, defaults.closing.primaryCta),
         secondaryCta: cta(doc.closing?.secondaryCta, defaults.closing.secondaryCta),
+        showSecondaryCta: doc.closing?.showSecondaryCta ?? defaults.closing.showSecondaryCta,
       },
       seo: mapCmsSeo(doc.seo, defaults.seo),
     }

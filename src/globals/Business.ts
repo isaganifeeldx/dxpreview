@@ -1,4 +1,5 @@
 import type { GlobalConfig } from 'payload'
+import { closingCtaGroupFields } from '@/fields/closingCta'
 import { adminOnlyApiView, publicReadAuthenticatedUpdate } from '@/access'
 import { seoFields } from '@/fields/seo'
 import { revalidateBusinessGlobal } from '@/hooks/revalidateCms'
@@ -220,51 +221,15 @@ export const Business: GlobalConfig = {
               name: 'closing',
               type: 'group',
               label: false,
-              fields: [
-                {
-                  name: 'title',
-                  type: 'text',
-                  defaultValue: d.closing.title,
+              fields: closingCtaGroupFields({
+                title: d.closing.title,
+                primaryCta: { label: d.closing.primaryCtaLabel, href: d.closing.primaryCtaHref },
+                secondaryCta: {
+                  label: d.closing.secondaryCtaLabel,
+                  href: d.closing.secondaryCtaHref,
                 },
-                {
-                  type: 'row',
-                  fields: [
-                    {
-                      name: 'primaryCtaLabel',
-                      type: 'text',
-                      label: 'Primary CTA label',
-                      defaultValue: d.closing.primaryCtaLabel,
-                      admin: { width: '50%' },
-                    },
-                    {
-                      name: 'primaryCtaHref',
-                      type: 'text',
-                      label: 'Primary CTA URL',
-                      defaultValue: d.closing.primaryCtaHref,
-                      admin: { width: '50%' },
-                    },
-                  ],
-                },
-                {
-                  type: 'row',
-                  fields: [
-                    {
-                      name: 'secondaryCtaLabel',
-                      type: 'text',
-                      label: 'Secondary CTA label',
-                      defaultValue: d.closing.secondaryCtaLabel,
-                      admin: { width: '50%' },
-                    },
-                    {
-                      name: 'secondaryCtaHref',
-                      type: 'text',
-                      label: 'Secondary CTA URL',
-                      defaultValue: d.closing.secondaryCtaHref,
-                      admin: { width: '50%' },
-                    },
-                  ],
-                },
-              ],
+                showSecondaryCta: true,
+              }),
             },
           ],
         },

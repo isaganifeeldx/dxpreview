@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import ArticleTableOfContents from '@/components/pages/articles/ArticleTableOfContents'
 import RecentArticles from '@/components/pages/articles/RecentArticles'
+import PageClosingCta from '@/components/pages/shared/PageClosingCta'
 import JsonLdScripts from '@/components/seo/JsonLdScripts'
 import { buildArticleToc } from '@/lib/articles/buildArticleToc'
 import {
@@ -11,6 +12,7 @@ import {
   getArticleBySlug,
   getRecentArticles,
 } from '@/lib/articles/getArticles'
+import { getArticlesPageContent } from '@/lib/articles/getArticlesPageContent'
 import { buildArticleJsonLd } from '@/lib/seo/buildArticleJsonLd'
 import { buildMetadataFromSeo } from '@/lib/seo/buildMetadata'
 
@@ -58,6 +60,7 @@ export default async function ArticleDetailPage({ params }: ArticleDetailPagePro
 
   const allArticles = await getAllArticles()
   const recentArticles = getRecentArticles(allArticles, article.slug, 3)
+  const { closing } = await getArticlesPageContent()
   const defaultJsonLd = buildArticleJsonLd(article)
   const { contentHtml, toc } = buildArticleToc(article.contentHtml)
 
@@ -106,6 +109,8 @@ export default async function ArticleDetailPage({ params }: ArticleDetailPagePro
 
         <RecentArticles articles={recentArticles} />
       </div>
+
+      <PageClosingCta {...closing} />
     </>
   )
 }

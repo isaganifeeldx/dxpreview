@@ -8,10 +8,16 @@ export interface LegalPageContentProps {
   contentHtml: string;
 }
 
-export default function LegalPageContent({ title, ariaLabel, contentHtml }: LegalPageContentProps) {
+export default function LegalPageContent({
+  title,
+  ariaLabel,
+  contentHtml,
+}: LegalPageContentProps) {
   return (
-    <LegalPageShell title={title} ariaLabel={ariaLabel}>
-      <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
-    </LegalPageShell>
+    <>
+      <LegalPageShell title={title} ariaLabel={ariaLabel}>
+        <div dangerouslySetInnerHTML={{ __html: contentHtml }} />
+      </LegalPageShell>
+    </>
   );
 }

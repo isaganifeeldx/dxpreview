@@ -1,3 +1,4 @@
+import { pageClosingCtaDefaults } from '@/lib/cta/defaults'
 import { emptySeoData } from '@/lib/seo/types'
 import { enrichInspirationItem, inspirationModelsIntro } from './inspirationDetailDefaults'
 import type { InspirationPageContentData } from './types'
@@ -154,6 +155,7 @@ export const inspirationPageDefaults: InspirationPageContentData = {
   colors: inspirationColors,
   sortOptions: inspirationSortOptions,
   items: inspirationItems,
+  closing: pageClosingCtaDefaults,
   seo: emptySeoData({
     title: 'Inspiration | DX Interiors',
     description:

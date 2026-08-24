@@ -1,4 +1,5 @@
 import { shouldSkipCmsAtBuild } from '@/lib/cms/buildTime'
+import { mapClosingCta, type CmsClosingCta } from '@/lib/cta/mapClosingCta'
 import { getPayloadClient } from '@/lib/payload'
 import { mapCmsSeo, type CmsSeo } from '@/lib/seo/mapCmsSeo'
 import { tutorialPageDefaults } from './defaults'
@@ -16,6 +17,7 @@ type CmsTutorialPage = {
   otherHeading?: string | null
   otherDescription?: string | null
   searchPlaceholder?: string | null
+  closing?: CmsClosingCta
   seo?: CmsSeo
 }
 
@@ -37,6 +39,7 @@ export async function getTutorialPageContent(): Promise<TutorialPageContentData>
     otherDescription: defaults.otherDescription,
     searchPlaceholder: defaults.searchPlaceholder,
     courses,
+    closing: defaults.closing,
     seo: defaults.seo,
   }
 
@@ -63,6 +66,7 @@ export async function getTutorialPageContent(): Promise<TutorialPageContentData>
       otherDescription: text(doc.otherDescription, defaults.otherDescription),
       searchPlaceholder: text(doc.searchPlaceholder, defaults.searchPlaceholder),
       courses,
+      closing: mapClosingCta(doc.closing, defaults.closing),
       seo: mapCmsSeo(doc.seo, defaults.seo),
     }
   } catch (error) {

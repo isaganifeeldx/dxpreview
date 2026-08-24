@@ -1,10 +1,12 @@
 import { privacyPolicyContent } from '@/data/legalContent'
+import { pageClosingCtaDefaults } from '@/lib/cta/defaults'
 import { emptySeoData } from '@/lib/seo/types'
 import type { PrivacyPageContentData } from './types'
 
 export const privacyPageDefaults: PrivacyPageContentData = {
   title: 'PRIVACY POLICY',
   body: privacyPolicyContent,
+  closing: pageClosingCtaDefaults,
   seo: emptySeoData({
     title: 'Privacy Policy | DX Interiors',
     description:

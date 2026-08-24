@@ -71,6 +71,7 @@ export const userGuidePageDefaults: UserGuidePageContentData = {
       'If a guide does not cover your question, our team is one email away and replies within 24 hours on business days.',
     primaryCta: { label: 'Contact support', href: '/contact' },
     secondaryCta: { label: 'Start designing', href: '/' },
+    showSecondaryCta: true,
   },
   seo: emptySeoData({
     title: 'User Guide | DX Interiors',

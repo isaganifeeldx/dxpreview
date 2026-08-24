@@ -1,5 +1,6 @@
 import type { FaqCategoryId, FaqItem } from '@/data/faqData'
 import { shouldSkipCmsAtBuild } from '@/lib/cms/buildTime'
+import { mapClosingCta, type CmsClosingCta } from '@/lib/cta/mapClosingCta'
 import { getPayloadClient } from '@/lib/payload'
 import { mapCmsSeo, type CmsSeo } from '@/lib/seo/mapCmsSeo'
 import { faqPageDefaults } from './defaults'
@@ -24,6 +25,7 @@ type CmsFaq = {
     answer?: string | null
     category?: string | null
   } | null> | null
+  closing?: CmsClosingCta
   seo?: CmsSeo
 }
 
@@ -72,6 +74,7 @@ function mapFaqFromCms(doc: CmsFaq | null | undefined): FaqPageContentData {
     intro: text(doc.intro, defaults.intro),
     searchPlaceholder: text(doc.searchPlaceholder, defaults.searchPlaceholder),
     items: items.length > 0 ? items : defaults.items,
+    closing: mapClosingCta(doc.closing, defaults.closing),
     seo: mapCmsSeo(doc.seo, defaults.seo),
   }
 }

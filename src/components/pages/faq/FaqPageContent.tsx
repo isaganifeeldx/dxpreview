@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import PageClosingCta from '@/components/pages/shared/PageClosingCta';
 import FaqAccordion from '@/components/ui/FaqAccordion';
 import type { FaqPageContentData } from '@/lib/faq/types';
 
@@ -16,7 +17,7 @@ type FaqPageContentProps = {
 };
 
 export default function FaqPageContent({ content }: FaqPageContentProps) {
-  const { title, intro, searchPlaceholder, items } = content;
+  const { title, intro, searchPlaceholder, items, closing } = content;
   const [searchQuery, setSearchQuery] = useState('');
 
   const filteredItems = useMemo(() => {
@@ -81,6 +82,8 @@ export default function FaqPageContent({ content }: FaqPageContentProps) {
           )}
         </div>
       </section>
+
+      <PageClosingCta {...closing} />
     </div>
   );
 }

@@ -80,9 +80,18 @@ export const UserGuidePage: GlobalConfig = {
                   ],
                 },
                 {
+                  name: 'showSecondaryCta',
+                  type: 'checkbox',
+                  label: 'Show secondary button',
+                  defaultValue: true,
+                },
+                {
                   name: 'secondaryCta',
                   type: 'group',
                   label: 'Secondary button',
+                  admin: {
+                    condition: (_data, siblingData) => siblingData?.showSecondaryCta !== false,
+                  },
                   fields: [
                     {
                       name: 'label',

@@ -1,3 +1,4 @@
+import type { PageClosingCtaData } from '@/lib/cta/defaults'
 import type { SeoData } from '@/lib/seo/types'
 
 export type PlanId = 'free' | 'pro' | 'business' | 'enterprise'
@@ -98,5 +99,6 @@ export type PricingPageContentData = {
     title: string
     items: PricingFaqItem[]
   }
+  closing: PageClosingCtaData
   seo: SeoData
 }

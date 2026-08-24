@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation'
 import InspirationDetailSidebar from '@/components/pages/inspiration/InspirationDetailSidebar'
 import InspirationModelGrid from '@/components/pages/inspiration/InspirationModelGrid'
 import InspirationShareButton from '@/components/pages/inspiration/InspirationShareButton'
+import PageClosingCta from '@/components/pages/shared/PageClosingCta'
 import JsonLdScripts from '@/components/seo/JsonLdScripts'
 import {
   getAllInspirationItems,
@@ -63,6 +64,7 @@ export default async function InspirationDetailPage({ params }: InspirationDetai
 
   const relatedItems = getRelatedInspirations(allItems, item.slug, 4)
   const defaultJsonLd = buildInspirationItemJsonLd(item)
+  const { closing } = pageContent
 
   return (
     <>
@@ -116,6 +118,8 @@ export default async function InspirationDetailPage({ params }: InspirationDetai
           </div>
         </div>
       </div>
+
+      <PageClosingCta {...closing} />
     </>
   )
 }

@@ -89,6 +89,7 @@ export default async function TutorialCoursePage({ params, searchParams }: Tutor
         otherCourses={otherCourses}
         otherHeading={pageContent.otherHeading}
         otherDescription={pageContent.otherDescription}
+        closing={pageContent.closing}
         initialLessonSlug={lesson}
       />
     </>

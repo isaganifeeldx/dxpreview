@@ -1,4 +1,5 @@
 import { shouldSkipCmsAtBuild } from '@/lib/cms/buildTime'
+import { mapClosingCta, type CmsClosingCta } from '@/lib/cta/mapClosingCta'
 import { getPayloadClient } from '@/lib/payload'
 import { mapCmsSeo, type CmsSeo } from '@/lib/seo/mapCmsSeo'
 import { contactPageDefaults } from './defaults'
@@ -13,6 +14,7 @@ type CmsContact = {
     phone?: string | null
     email?: string | null
   } | null
+  closing?: CmsClosingCta
   seo?: CmsSeo
 }
 
@@ -36,6 +38,7 @@ function mapContactFromCms(doc: CmsContact | null | undefined): ContactPageConte
       phone: text(doc.quickEnquiries?.phone, defaults.quickEnquiries.phone),
       email: text(doc.quickEnquiries?.email, defaults.quickEnquiries.email),
     },
+    closing: mapClosingCta(doc.closing, defaults.closing),
     seo: mapCmsSeo(doc.seo, defaults.seo),
   }
 }

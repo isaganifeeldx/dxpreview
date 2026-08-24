@@ -126,6 +126,8 @@ function isExternalHref(href: string) {
 
 export default function ContactFloatingMenu({ settings }: ContactFloatingMenuProps) {
   const [open, setOpen] = useState(false)
+  const [overFooter, setOverFooter] = useState(false)
+  const [nearPageBottom, setNearPageBottom] = useState(false)
   const rootRef = useRef<HTMLDivElement>(null)
   const menuId = useId()
 
@@ -193,7 +195,41 @@ export default function ContactFloatingMenu({ settings }: ContactFloatingMenuPro
     }
   }, [open])
 
+  useEffect(() => {
+    const footer = document.getElementById('site-footer')
+    const menu = rootRef.current
+    if (!footer || !menu) return undefined
+
+    const updateOverlap = () => {
+      const footerRect = footer.getBoundingClientRect()
+      const menuRect = menu.getBoundingClientRect()
+      const overlaps =
+        menuRect.bottom > footerRect.top + 8 && menuRect.top < footerRect.bottom - 8
+      setOverFooter(overlaps)
+
+      const scrollBottom = window.scrollY + window.innerHeight
+      const pageHeight = document.documentElement.scrollHeight
+      setNearPageBottom(scrollBottom >= pageHeight - 520)
+    }
+
+    updateOverlap()
+    window.addEventListener('scroll', updateOverlap, { passive: true })
+    window.addEventListener('resize', updateOverlap)
+    return () => {
+      window.removeEventListener('scroll', updateOverlap)
+      window.removeEventListener('resize', updateOverlap)
+    }
+  }, [])
+
   if (!settings?.enabled || actions.length === 0) return null
+
+  const toggleClass = open
+    ? overFooter || nearPageBottom
+      ? 'bg-[#2A3040] text-white hover:bg-[#111a2e]'
+      : 'bg-white text-[#2A3040] hover:bg-[#F4F6FA]'
+    : overFooter
+      ? 'bg-white text-[#2A3040] ring-1 ring-[#000000]/10 hover:bg-[#F4F6FA]'
+      : 'bg-[#2A3040] text-white hover:bg-[#111a2e]'
 
   return (
     <div
@@ -257,11 +293,7 @@ export default function ContactFloatingMenu({ settings }: ContactFloatingMenuPro
 
       <button
         type="button"
-        className={`pointer-events-auto flex h-14 w-14 items-center justify-center rounded-full shadow-[0_10px_28px_rgba(42,48,64,0.28)] transition-colors duration-200 ${
-          open
-            ? 'bg-white text-[#2A3040] hover:bg-[#F4F6FA]'
-            : 'bg-[#2A3040] text-white hover:bg-[#111a2e]'
-        }`}
+        className={`pointer-events-auto flex h-14 w-14 items-center justify-center rounded-full shadow-[0_10px_28px_rgba(42,48,64,0.28)] transition-colors duration-200 ${toggleClass}`}
         aria-expanded={open}
         aria-controls={menuId}
         aria-label={open ? 'Close contact menu' : 'Open contact menu'}

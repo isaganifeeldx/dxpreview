@@ -1,3 +1,4 @@
+import type { PageClosingCtaData } from '@/lib/cta/defaults'
 import type { SeoData } from '@/lib/seo/types'
 
 export type TutorialLesson = {
@@ -42,5 +43,6 @@ export type TutorialPageContentData = {
   otherDescription: string
   searchPlaceholder: string
   courses: TutorialCourse[]
+  closing: PageClosingCtaData
   seo: SeoData
 }

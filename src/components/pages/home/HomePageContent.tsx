@@ -419,12 +419,7 @@ export default function HomePageContent({ content }: HomePageContentProps) {
         items={content.features.items}
         headingId="home-features-heading"
       />
-      <BusinessClosingCta
-        title={content.closing.title}
-        primaryCta={content.closing.primaryCta}
-        secondaryCta={content.closing.secondaryCta}
-        variant="glass"
-      />
+      <BusinessClosingCta {...content.closing} variant="glass" />
     </>
   );
 }

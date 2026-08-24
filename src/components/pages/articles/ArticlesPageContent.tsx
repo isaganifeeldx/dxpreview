@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import PageClosingCta from '@/components/pages/shared/PageClosingCta';
 import type { ArticleItem, ArticlesPageContentData } from '@/lib/articles/types';
 
 const SearchIcon = () => (
@@ -236,6 +237,8 @@ export default function ArticlesPageContent({ content }: ArticlesPageContentProp
           )}
         </div>
       </section>
+
+      <PageClosingCta {...content.closing} />
     </div>
   );
 }

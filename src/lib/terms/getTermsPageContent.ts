@@ -1,4 +1,5 @@
 import { shouldSkipCmsAtBuild } from '@/lib/cms/buildTime'
+import { mapClosingCta, type CmsClosingCta } from '@/lib/cta/mapClosingCta'
 import { getPayloadClient } from '@/lib/payload'
 import { mapCmsSeo, type CmsSeo } from '@/lib/seo/mapCmsSeo'
 import { termsPageDefaults } from './defaults'
@@ -7,6 +8,7 @@ import type { TermsPageContentData } from './types'
 type CmsTerms = {
   title?: string | null
   body?: unknown
+  closing?: CmsClosingCta
   seo?: CmsSeo
 }
 
@@ -23,6 +25,7 @@ function mapTermsFromCms(doc: CmsTerms | null | undefined): TermsPageContentData
     title: text(doc.title, defaults.title),
     // Keep raw CMS body (Lexical JSON or string); page converts to HTML for display.
     body: doc.body ?? defaults.body,
+    closing: mapClosingCta(doc.closing, defaults.closing),
     seo: mapCmsSeo(doc.seo, defaults.seo),
   }
 }

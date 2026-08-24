@@ -3,8 +3,10 @@
 import { useMemo, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import type { PageClosingCtaData } from '@/lib/cta/defaults'
 import type { TutorialCourse, TutorialLesson } from '@/lib/tutorial/types'
 import { youtubeEmbedUrl } from '@/lib/tutorial/youtube'
+import PageClosingCta from '@/components/pages/shared/PageClosingCta'
 import TutorialCourseCard from './TutorialCourseCard'
 
 const siteGradient =
@@ -22,6 +24,7 @@ type TutorialCoursePageContentProps = {
   otherCourses: TutorialCourse[]
   otherHeading: string
   otherDescription: string
+  closing: PageClosingCtaData
   initialLessonSlug?: string
 }
 
@@ -30,6 +33,7 @@ export default function TutorialCoursePageContent({
   otherCourses,
   otherHeading,
   otherDescription,
+  closing,
   initialLessonSlug,
 }: TutorialCoursePageContentProps) {
   const initialLesson =
@@ -166,6 +170,8 @@ export default function TutorialCoursePageContent({
           </div>
         </section>
       ) : null}
+
+      <PageClosingCta {...closing} />
     </div>
   )
 }

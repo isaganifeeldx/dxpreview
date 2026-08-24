@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { flattenTutorialLessons } from '@/lib/tutorial/flattenTutorialLessons'
 import type { TutorialPageContentData } from '@/lib/tutorial/types'
+import PageClosingCta from '@/components/pages/shared/PageClosingCta'
 import TutorialCarousel from './TutorialCarousel'
 import TutorialLessonCard from './TutorialLessonCard'
 
@@ -209,6 +210,8 @@ export default function TutorialPageContent({ content }: TutorialPageContentProp
           ) : null}
         </div>
       </section>
+
+      <PageClosingCta {...content.closing} />
     </div>
   )
 }

@@ -1,4 +1,5 @@
 import { articles as staticArticles } from '@/data/articlesData'
+import { pageClosingCtaDefaults } from '@/lib/cta/defaults'
 import { emptySeoData } from '@/lib/seo/types'
 import type { ArticleItem, ArticlesPageContentData } from './types'
 
@@ -38,6 +39,7 @@ export const articlesPageDefaults: ArticlesPageContentData = {
   heading: 'Articles',
   searchPlaceholder: 'Search Articles',
   articles: staticArticles.map(toFallbackArticleItem),
+  closing: pageClosingCtaDefaults,
   seo: emptySeoData({
     title: 'Articles | DX Interiors',
     description:

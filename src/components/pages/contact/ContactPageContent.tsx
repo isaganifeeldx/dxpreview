@@ -6,6 +6,7 @@ import {
   submitContactToHubSpot,
   type ContactFormData,
 } from '@/components/pages/contact/HubSpotContact';
+import PageClosingCta from '@/components/pages/shared/PageClosingCta';
 import type { ContactPageContentData } from '@/lib/contact/types';
 
 const primaryButtonClass =
@@ -246,6 +247,8 @@ export default function ContactPageContent({ content }: ContactPageContentProps)
           </div>
         </div>
       </section>
+
+      <PageClosingCta {...content.closing} />
     </div>
   );
 }

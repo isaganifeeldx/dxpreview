@@ -1,3 +1,4 @@
+import { pageClosingCtaDefaults } from '@/lib/cta/defaults'
 import { emptySeoData } from '@/lib/seo/types'
 import type { TutorialCourse, TutorialLesson, TutorialPageContentData } from './types'
 
@@ -201,6 +202,7 @@ export const tutorialPageDefaults: TutorialPageContentData = {
   otherDescription: 'Start your design in minutes.',
   searchPlaceholder: 'Search courses and lessons…',
   courses: tutorialCourses,
+  closing: pageClosingCtaDefaults,
   seo: emptySeoData({
     title: 'Tutorials | DX Interiors',
     description:

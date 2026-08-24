@@ -1,4 +1,5 @@
 import { shouldSkipCmsAtBuild } from '@/lib/cms/buildTime'
+import { mapClosingCta, type CmsClosingCta } from '@/lib/cta/mapClosingCta'
 import { getPayloadClient } from '@/lib/payload'
 import { mapCmsSeo, type CmsSeo } from '@/lib/seo/mapCmsSeo'
 import { businessPageDefaults } from './defaults'
@@ -56,13 +57,7 @@ type CmsBusiness = {
       description?: string | null
     } | null> | null
   } | null
-  closing?: {
-    title?: string | null
-    primaryCtaLabel?: string | null
-    primaryCtaHref?: string | null
-    secondaryCtaLabel?: string | null
-    secondaryCtaHref?: string | null
-  } | null
+  closing?: CmsClosingCta
   seo?: CmsSeo
 }
 
@@ -154,17 +149,7 @@ function mapBusinessFromCms(doc: CmsBusiness | null | undefined): BusinessPageCo
       title: text(doc.features?.title, defaults.features.title),
       items: features.length > 0 ? features : defaults.features.items,
     },
-    closing: {
-      title: text(doc.closing?.title, defaults.closing.title),
-      primaryCta: {
-        label: text(doc.closing?.primaryCtaLabel, defaults.closing.primaryCta.label),
-        href: text(doc.closing?.primaryCtaHref, defaults.closing.primaryCta.href),
-      },
-      secondaryCta: {
-        label: text(doc.closing?.secondaryCtaLabel, defaults.closing.secondaryCta.label),
-        href: text(doc.closing?.secondaryCtaHref, defaults.closing.secondaryCta.href),
-      },
-    },
+    closing: mapClosingCta(doc.closing, defaults.closing),
     seo: mapCmsSeo(doc.seo, defaults.seo),
   }
 }

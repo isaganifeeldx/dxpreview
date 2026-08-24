@@ -1,4 +1,5 @@
 import type { PricingPageContentData } from './types'
+import { pageClosingCtaDefaults } from '@/lib/cta/defaults'
 import { emptySeoData } from '@/lib/seo/types'
 
 const included = true
@@ -577,6 +578,7 @@ export const pricingPageDefaults: PricingPageContentData = {
       },
     ],
   },
+  closing: pageClosingCtaDefaults,
   seo: emptySeoData({
     title: 'Plans and pricing | DX Interiors',
     description:

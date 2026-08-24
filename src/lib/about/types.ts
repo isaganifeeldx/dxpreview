@@ -1,3 +1,4 @@
+import type { PageClosingCtaData } from '@/lib/cta/defaults'
 import type { SeoData } from '@/lib/seo/types'
 
 export type AboutCta = {
@@ -81,5 +82,6 @@ export type AboutPageContentData = {
     cta: AboutCta
     items: AboutPerk[]
   }
+  closing: PageClosingCtaData
   seo: SeoData
 }

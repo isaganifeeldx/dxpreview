@@ -46,6 +46,7 @@ export type UserGuidePageContentData = {
     description: string
     primaryCta: UserGuideCta
     secondaryCta: UserGuideCta
+    showSecondaryCta: boolean
   }
   seo: SeoData
 }

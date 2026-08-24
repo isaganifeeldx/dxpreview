@@ -1,3 +1,4 @@
+import type { PageClosingCtaData } from '@/lib/cta/defaults'
 import type { SeoData } from '@/lib/seo/types'
 import type {
   BusinessCta,
@@ -76,10 +77,6 @@ export type HomePageContentData = {
     title: string
     items: BusinessFeature[]
   }
-  closing: {
-    title: string
-    primaryCta: BusinessCta
-    secondaryCta: BusinessCta
-  }
+  closing: PageClosingCtaData
   seo: SeoData
 }

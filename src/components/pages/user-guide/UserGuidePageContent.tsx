@@ -121,9 +121,11 @@ export default function UserGuidePageContent({ content }: UserGuidePageContentPr
             <Link href={closing.primaryCta.href} className={primaryButtonClass}>
               {closing.primaryCta.label}
             </Link>
-            <Link href={closing.secondaryCta.href} className={outlineButtonClass}>
-              {closing.secondaryCta.label}
-            </Link>
+            {closing.showSecondaryCta ? (
+              <Link href={closing.secondaryCta.href} className={outlineButtonClass}>
+                {closing.secondaryCta.label}
+              </Link>
+            ) : null}
           </div>
         </div>
       </section>

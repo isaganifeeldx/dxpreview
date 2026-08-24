@@ -1,4 +1,5 @@
 import { shouldSkipCmsAtBuild } from '@/lib/cms/buildTime'
+import { mapClosingCta, type CmsClosingCta } from '@/lib/cta/mapClosingCta'
 import { getMediaUrl } from '@/lib/media'
 import { getPayloadClient } from '@/lib/payload'
 import { mapCmsSeo, type CmsSeo } from '@/lib/seo/mapCmsSeo'
@@ -95,6 +96,7 @@ type CmsAbout = {
       description?: string | null
     } | null> | null
   } | null
+  closing?: CmsClosingCta
   seo?: CmsSeo
 }
 
@@ -267,6 +269,7 @@ function mapAboutFromCms(doc: CmsAbout | null | undefined): AboutPageContentData
       },
       items: perks.length > 0 ? perks : defaults.perks.items,
     },
+    closing: mapClosingCta(doc.closing, defaults.closing),
     seo: mapCmsSeo(doc.seo, defaults.seo),
   }
 }

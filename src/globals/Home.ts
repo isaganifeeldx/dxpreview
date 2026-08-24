@@ -1,4 +1,5 @@
 import type { GlobalConfig } from 'payload'
+import { closingCtaGroupFields } from '@/fields/closingCta'
 import { adminOnlyApiView, publicReadAuthenticatedUpdate } from '@/access'
 import { seoFields } from '@/fields/seo'
 import { revalidateHomeGlobal } from '@/hooks/revalidateCms'
@@ -569,51 +570,7 @@ export const Home: GlobalConfig = {
             {
               name: 'closing',
               type: 'group',
-              fields: [
-                {
-                  name: 'title',
-                  type: 'text',
-                  defaultValue: 'Ready to scale your design studio?',
-                },
-                {
-                  type: 'row',
-                  fields: [
-                    {
-                      name: 'primaryCtaLabel',
-                      type: 'text',
-                      label: 'Primary CTA label',
-                      defaultValue: 'Schedule a demo',
-                      admin: { width: '50%' },
-                    },
-                    {
-                      name: 'primaryCtaHref',
-                      type: 'text',
-                      label: 'Primary CTA URL',
-                      defaultValue: '/business',
-                      admin: { width: '50%' },
-                    },
-                  ],
-                },
-                {
-                  type: 'row',
-                  fields: [
-                    {
-                      name: 'secondaryCtaLabel',
-                      type: 'text',
-                      label: 'Secondary CTA label',
-                      defaultValue: 'View plans',
-                      admin: { width: '50%' },
-                    },
-                    {
-                      name: 'secondaryCtaHref',
-                      type: 'text',
-                      label: 'Secondary CTA URL',
-                      defaultValue: '/plans',
-                      admin: { width: '50%' },
-                    },
-                  ],
-                },
-              ],
+              fields: closingCtaGroupFields(),
             },
           ],
         },

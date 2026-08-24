@@ -1,4 +1,5 @@
 import { shouldSkipCmsAtBuild } from '@/lib/cms/buildTime'
+import { mapClosingCta, type CmsClosingCta } from '@/lib/cta/mapClosingCta'
 import { getMediaUrl } from '@/lib/media'
 import { getPayloadClient } from '@/lib/payload'
 import { mapCmsSeo, type CmsSeo } from '@/lib/seo/mapCmsSeo'
@@ -123,6 +124,7 @@ type CmsPricing = {
       answer?: string | null
     } | null> | null
   } | null
+  closing?: CmsClosingCta
   seo?: CmsSeo
 }
 
@@ -396,6 +398,7 @@ function mapPricingFromCms(doc: CmsPricing | null | undefined): PricingPageConte
       title: text(doc.faq?.title, defaults.faq.title),
       items: faqItems.length > 0 ? faqItems : defaults.faq.items,
     },
+    closing: mapClosingCta(doc.closing, defaults.closing),
     seo: mapCmsSeo(doc.seo, defaults.seo),
   }
 }

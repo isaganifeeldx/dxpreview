@@ -1,4 +1,5 @@
 import { contactContent } from '@/data/contactData'
+import { pageClosingCtaDefaults } from '@/lib/cta/defaults'
 import { emptySeoData } from '@/lib/seo/types'
 import type { ContactPageContentData } from './types'
 
@@ -6,6 +7,7 @@ export const contactPageDefaults: ContactPageContentData = {
   banner: contactContent.banner,
   introduction: contactContent.introduction,
   quickEnquiries: contactContent.quickEnquiries,
+  closing: pageClosingCtaDefaults,
   seo: emptySeoData({
     title: 'Contact | DX Interiors',
     description:

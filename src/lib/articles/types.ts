@@ -1,3 +1,4 @@
+import type { PageClosingCtaData } from '@/lib/cta/defaults'
 import type { SeoData } from '@/lib/seo/types'
 
 export type ArticleItem = {
@@ -18,5 +19,6 @@ export type ArticlesPageContentData = {
   heading: string
   searchPlaceholder: string
   articles: ArticleItem[]
+  closing: PageClosingCtaData
   seo: SeoData
 }

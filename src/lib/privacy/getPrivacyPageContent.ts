@@ -1,4 +1,5 @@
 import { shouldSkipCmsAtBuild } from '@/lib/cms/buildTime'
+import { mapClosingCta, type CmsClosingCta } from '@/lib/cta/mapClosingCta'
 import { getPayloadClient } from '@/lib/payload'
 import { mapCmsSeo, type CmsSeo } from '@/lib/seo/mapCmsSeo'
 import { privacyPageDefaults } from './defaults'
@@ -7,6 +8,7 @@ import type { PrivacyPageContentData } from './types'
 type CmsPrivacy = {
   title?: string | null
   body?: unknown
+  closing?: CmsClosingCta
   seo?: CmsSeo
 }
 
@@ -22,6 +24,7 @@ function mapPrivacyFromCms(doc: CmsPrivacy | null | undefined): PrivacyPageConte
   return {
     title: text(doc.title, defaults.title),
     body: doc.body ?? defaults.body,
+    closing: mapClosingCta(doc.closing, defaults.closing),
     seo: mapCmsSeo(doc.seo, defaults.seo),
   }
 }

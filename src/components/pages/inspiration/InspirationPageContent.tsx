@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import type { InspirationFilters, InspirationPageContentData } from '@/lib/inspiration/types'
+import PageClosingCta from '@/components/pages/shared/PageClosingCta'
 import InspirationCard from './InspirationCard'
 import InspirationFilterDropdowns from './InspirationFilterDropdowns'
 import InspirationFilterPanel from './InspirationFilterPanel'
@@ -280,6 +281,8 @@ export default function InspirationPageContent({ content }: InspirationPageConte
         filters={filters}
         onApply={setFilters}
       />
+
+      <PageClosingCta {...content.closing} />
     </div>
   )
 }

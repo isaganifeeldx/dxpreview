@@ -4,6 +4,7 @@ type BusinessClosingCtaProps = {
   title: string
   primaryCta: BusinessCta
   secondaryCta: BusinessCta
+  showSecondaryCta?: boolean
   variant?: 'solid' | 'glass'
 }
 
@@ -11,6 +12,7 @@ export default function BusinessClosingCta({
   title,
   primaryCta,
   secondaryCta,
+  showSecondaryCta = true,
   variant = 'solid',
 }: BusinessClosingCtaProps) {
   const panelClass =
@@ -31,12 +33,14 @@ export default function BusinessClosingCta({
           >
             {primaryCta.label}
           </a>
-          <a
-            href={secondaryCta.href}
-            className="inline-flex w-full items-center justify-center rounded-full border border-[#000000]/20 bg-white px-5 py-2.5 text-[10px] font-medium uppercase tracking-[0.18em] text-[#2A3040] transition-colors hover:bg-[#111a2e] hover:text-white sm:w-fit"
-          >
-            {secondaryCta.label}
-          </a>
+          {showSecondaryCta ? (
+            <a
+              href={secondaryCta.href}
+              className="inline-flex w-full items-center justify-center rounded-full border border-[#000000]/20 bg-white px-5 py-2.5 text-[10px] font-medium uppercase tracking-[0.18em] text-[#2A3040] transition-colors hover:bg-[#111a2e] hover:text-white sm:w-fit"
+            >
+              {secondaryCta.label}
+            </a>
+          ) : null}
         </div>
       </div>
     </section>

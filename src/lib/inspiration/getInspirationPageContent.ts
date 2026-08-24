@@ -1,5 +1,6 @@
 import { cache } from 'react'
 import { shouldSkipCmsAtBuild } from '@/lib/cms/buildTime'
+import { mapClosingCta, type CmsClosingCta } from '@/lib/cta/mapClosingCta'
 import { getPayloadClient } from '@/lib/payload'
 import { mapCmsSeo, type CmsSeo } from '@/lib/seo/mapCmsSeo'
 import { inspirationPageDefaults } from './defaults'
@@ -18,6 +19,7 @@ type CmsInspirationPage = {
   designStyles?: Array<{ value?: string | null }> | null
   colors?: Array<{ value?: string | null }> | null
   sortOptions?: Array<{ value?: string | null }> | null
+  closing?: CmsClosingCta
   seo?: CmsSeo
 }
 
@@ -51,6 +53,7 @@ export const getInspirationPageContent = cache(async (): Promise<InspirationPage
     colors: defaults.colors,
     sortOptions: defaults.sortOptions,
     items,
+    closing: defaults.closing,
     seo: defaults.seo,
   }
 
@@ -78,6 +81,7 @@ export const getInspirationPageContent = cache(async (): Promise<InspirationPage
       colors: stringArray(doc.colors, defaults.colors),
       sortOptions: stringArray(doc.sortOptions, defaults.sortOptions),
       items,
+      closing: mapClosingCta(doc.closing, defaults.closing),
       seo: mapCmsSeo(doc.seo, defaults.seo),
     }
   } catch (error) {

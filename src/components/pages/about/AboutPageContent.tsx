@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import type { AboutPageContentData } from '@/lib/about/types'
+import PageClosingCta from '@/components/pages/shared/PageClosingCta'
 import AboutCultureSlider from './AboutCultureSlider'
 import AboutVoicesCarousel from './AboutVoicesCarousel'
 import { AboutPerkGlyph } from './icons'
@@ -16,7 +17,7 @@ type AboutPageContentProps = {
 }
 
 export default function AboutPageContent({ content }: AboutPageContentProps) {
-  const { hero, mission, culture, locations, voices, perks } = content
+  const { hero, mission, culture, locations, voices, perks, closing } = content
 
   return (
     <div className="min-h-screen overflow-x-clip">
@@ -219,6 +220,8 @@ export default function AboutPageContent({ content }: AboutPageContentProps) {
           ))}
         </div>
       </section>
+
+      <PageClosingCta {...closing} />
     </div>
   )
 }

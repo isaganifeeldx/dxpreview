@@ -1,5 +1,6 @@
 import type { GlobalConfig } from 'payload'
 import { adminOnlyApiView, publicReadAuthenticatedUpdate } from '@/access'
+import { closingCtaTab } from '@/fields/closingCta'
 import { seoFields } from '@/fields/seo'
 import { revalidateInspirationPageGlobal } from '@/hooks/revalidateCms'
 import { pagePreview } from '@/lib/cms/previewUrl'
@@ -119,6 +120,7 @@ export const InspirationPage: GlobalConfig = {
             },
           ],
         },
+        closingCtaTab(),
         {
           label: 'SEO',
           fields: [

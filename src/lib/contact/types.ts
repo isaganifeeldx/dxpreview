@@ -1,3 +1,4 @@
+import type { PageClosingCtaData } from '@/lib/cta/defaults'
 import type { SeoData } from '@/lib/seo/types'
 
 export type ContactPageContentData = {
@@ -11,5 +12,6 @@ export type ContactPageContentData = {
     phone: string
     email: string
   }
+  closing: PageClosingCtaData
   seo: SeoData
 }

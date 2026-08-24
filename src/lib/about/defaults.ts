@@ -1,3 +1,4 @@
+import { pageClosingCtaDefaults } from '@/lib/cta/defaults'
 import { emptySeoData } from '@/lib/seo/types'
 import type { AboutPageContentData } from './types'
 
@@ -183,6 +184,7 @@ export const aboutPageDefaults: AboutPageContentData = {
       },
     ],
   },
+  closing: pageClosingCtaDefaults,
   seo: emptySeoData({
     title: 'About | DX Interiors',
     description:

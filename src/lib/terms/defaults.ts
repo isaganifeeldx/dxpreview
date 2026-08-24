@@ -1,10 +1,12 @@
 import { termsOfServiceContent } from '@/data/legalContent'
+import { pageClosingCtaDefaults } from '@/lib/cta/defaults'
 import { emptySeoData } from '@/lib/seo/types'
 import type { TermsPageContentData } from './types'
 
 export const termsPageDefaults: TermsPageContentData = {
   title: 'TERMS OF SERVICE',
   body: termsOfServiceContent,
+  closing: pageClosingCtaDefaults,
   seo: emptySeoData({
     title: 'Terms of Service | DX Interiors',
     description:

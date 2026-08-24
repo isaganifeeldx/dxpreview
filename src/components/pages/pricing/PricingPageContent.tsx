@@ -7,6 +7,7 @@ import BillingToggle from './BillingToggle'
 import FeatureComparison from './FeatureComparison'
 import PricingCards from './PricingCards'
 import PricingFaq from './PricingFaq'
+import PageClosingCta from '@/components/pages/shared/PageClosingCta'
 import PromoBanners from './PromoBanners'
 
 type PricingPageContentProps = {
@@ -84,6 +85,7 @@ export default function PricingPageContent({ content }: PricingPageContentProps)
 
       <PromoBanners promos={content.promos} />
       <PricingFaq title={content.faq.title} items={content.faq.items} />
+      <PageClosingCta {...content.closing} />
     </div>
   )
 }
