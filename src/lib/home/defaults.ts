@@ -73,11 +73,60 @@ export const homePageDefaults: HomePageContentData = {
     ],
   },
   discover: {
-    title: 'Discover & Define',
-    description:
-      'We dive deep into your business, goals, and challenges to identify where AI can create the most impact.',
-    cta: { label: 'Getting Started', href: '/login' },
-    videoId: 'H8t3cI9bm-Zo',
+    title: 'A complete generative AI suite with powerful built-in capabilities',
+    items: [
+      {
+        id: 'style-discovery',
+        label: 'Style Discovery',
+        imageSrc: '/images/landing/render-1.jpg',
+        imageAlt: 'Photoreal interior style discovery preview',
+        prompt:
+          'Warm contemporary living room, centered sofa, layered #linentextiles and soft daylight through tall windows.',
+        generateLabel: 'Generate',
+        generateHref: '/login',
+      },
+      {
+        id: 'room-concepts',
+        label: 'Room Concepts',
+        imageSrc: '/images/landing/render-2.jpg',
+        imageAlt: 'AI-generated room concept preview',
+        prompt:
+          'Open-plan kitchen and dining, matte black fixtures, oak island, #minimalpalette with soft pendant lighting.',
+        generateLabel: 'Generate',
+        generateHref: '/login',
+      },
+      {
+        id: 'material-matching',
+        label: 'Material Matching',
+        imageSrc: '/images/landing/render-3.jpg',
+        imageAlt: 'Material matching interior preview',
+        prompt:
+          'Bedroom suite with brushed brass accents, #travertine surfaces, and muted sage drapery for a calm evening mood.',
+        generateLabel: 'Generate',
+        generateHref: '/login',
+      },
+      {
+        id: 'lighting-scenes',
+        label: 'Lighting Scenes',
+        imageSrc: '/images/landing/render-4.jpg',
+        imageAlt: 'Lighting scene interior preview',
+        prompt:
+          'Night-time lounge, recessed cove lighting, amber lamps, and a #statementchair beside the window.',
+        generateLabel: 'Generate',
+        generateHref: '/login',
+      },
+      {
+        id: 'walkthroughs',
+        label: 'Walkthroughs',
+        badge: 'Soon',
+        imageSrc: '/images/landing/appview.jpg',
+        imageAlt: 'Coming soon walkthrough preview',
+        prompt:
+          'Cinematic walkthrough through a sunlit apartment, slow camera path from foyer into the living room.',
+        generateLabel: 'Generate',
+        generateHref: '/login',
+      },
+    ],
   },
   gallery: {
     title: 'Inspiring interior design ideas for every room!',

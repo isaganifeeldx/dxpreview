@@ -225,38 +225,79 @@ export const Home: GlobalConfig = {
                 {
                   name: 'title',
                   type: 'text',
-                  defaultValue: 'Discover & Define',
-                },
-                {
-                  name: 'description',
-                  type: 'textarea',
                   defaultValue:
-                    'We dive deep into your business, goals, and challenges to identify where AI can create the most impact.',
+                    'A complete generative AI suite with powerful built-in capabilities',
                 },
                 {
-                  type: 'row',
+                  name: 'items',
+                  type: 'array',
+                  label: 'Capability tabs',
+                  labels: { singular: 'Tab', plural: 'Tabs' },
+                  admin: {
+                    description:
+                      'Left-side tabs for the Discover suite. Each tab shows its own preview image and prompt.',
+                    initCollapsed: true,
+                  },
                   fields: [
                     {
-                      name: 'ctaLabel',
+                      name: 'itemId',
                       type: 'text',
-                      label: 'CTA label',
-                      defaultValue: 'Getting Started',
-                      admin: { width: '50%' },
+                      label: 'Item id',
                     },
                     {
-                      name: 'ctaHref',
+                      name: 'label',
                       type: 'text',
-                      label: 'CTA link',
-                      defaultValue: '/login',
-                      admin: { width: '50%' },
+                      required: true,
+                      label: 'Tab label',
+                    },
+                    {
+                      name: 'badge',
+                      type: 'text',
+                      label: 'Badge (optional)',
+                      admin: {
+                        description: 'e.g. Soon',
+                      },
+                    },
+                    {
+                      name: 'image',
+                      type: 'upload',
+                      relationTo: 'media',
+                      label: 'Preview image',
+                    },
+                    {
+                      name: 'imageAlt',
+                      type: 'text',
+                      label: 'Image alt text',
+                    },
+                    {
+                      name: 'prompt',
+                      type: 'textarea',
+                      label: 'Prompt text',
+                      admin: {
+                        description:
+                          'Shown in the preview prompt bar. Wrap tags like #style in the text as needed.',
+                      },
+                    },
+                    {
+                      type: 'row',
+                      fields: [
+                        {
+                          name: 'generateLabel',
+                          type: 'text',
+                          label: 'Generate button label',
+                          defaultValue: 'Generate',
+                          admin: { width: '50%' },
+                        },
+                        {
+                          name: 'generateHref',
+                          type: 'text',
+                          label: 'Generate button URL',
+                          defaultValue: '/login',
+                          admin: { width: '50%' },
+                        },
+                      ],
                     },
                   ],
-                },
-                {
-                  name: 'videoId',
-                  type: 'text',
-                  label: 'Livid video ID',
-                  defaultValue: 'H8t3cI9bm-Zo',
                 },
               ],
             },

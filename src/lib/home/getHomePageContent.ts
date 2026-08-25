@@ -38,10 +38,16 @@ type CmsHome = {
   } | null
   discover?: {
     title?: string | null
-    description?: string | null
-    ctaLabel?: string | null
-    ctaHref?: string | null
-    videoId?: string | null
+    items?: Array<{
+      itemId?: string | null
+      label?: string | null
+      badge?: string | null
+      image?: number | CmsMedia
+      imageAlt?: string | null
+      prompt?: string | null
+      generateLabel?: string | null
+      generateHref?: string | null
+    } | null> | null
   } | null
   gallery?: {
     title?: string | null
@@ -200,6 +206,25 @@ function mapHomeFromCms(doc: CmsHome | null | undefined): HomePageContentData {
     })
   }
 
+  const discoverItems =
+    doc.discover?.items
+      ?.map((item, index) => {
+        const label = item?.label?.trim()
+        if (!label) return null
+        const fallback = defaults.discover.items[index % defaults.discover.items.length]
+        return {
+          id: optionalText(item?.itemId) || `discover-${index + 1}`,
+          label,
+          badge: optionalText(item?.badge),
+          imageSrc: getMediaUrl(item?.image) ?? fallback.imageSrc,
+          imageAlt: text(item?.imageAlt, fallback.imageAlt),
+          prompt: text(item?.prompt, fallback.prompt),
+          generateLabel: text(item?.generateLabel, fallback.generateLabel),
+          generateHref: text(item?.generateHref, fallback.generateHref),
+        }
+      })
+      .filter((item): item is NonNullable<typeof item> => Boolean(item)) ?? []
+
   return {
     hero: {
       lineOne: text(doc.hero?.lineOne, defaults.hero.lineOne),
@@ -226,12 +251,7 @@ function mapHomeFromCms(doc: CmsHome | null | undefined): HomePageContentData {
     },
     discover: {
       title: text(doc.discover?.title, defaults.discover.title),
-      description: text(doc.discover?.description, defaults.discover.description),
-      cta: {
-        label: text(doc.discover?.ctaLabel, defaults.discover.cta.label),
-        href: text(doc.discover?.ctaHref, defaults.discover.cta.href),
-      },
-      videoId: text(doc.discover?.videoId, defaults.discover.videoId),
+      items: discoverItems.length > 0 ? discoverItems : defaults.discover.items,
     },
     gallery: {
       title: text(doc.gallery?.title, defaults.gallery.title),

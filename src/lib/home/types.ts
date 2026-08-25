@@ -34,6 +34,17 @@ export type HomeGalleryImage = {
   grow: number
 }
 
+export type HomeDiscoverItem = {
+  id: string
+  label: string
+  badge?: string
+  imageSrc: string
+  imageAlt: string
+  prompt: string
+  generateLabel: string
+  generateHref: string
+}
+
 export type HomePageContentData = {
   hero: {
     lineOne: string
@@ -54,9 +65,7 @@ export type HomePageContentData = {
   }
   discover: {
     title: string
-    description: string
-    cta: HomeCta
-    videoId: string
+    items: HomeDiscoverItem[]
   }
   gallery: {
     title: string

@@ -4,6 +4,7 @@ import LividEmbed from '@/components/ui/LividEmbed';
 import BusinessClosingCta from '@/components/pages/business/BusinessClosingCta';
 import BusinessFeatures from '@/components/pages/business/BusinessFeatures';
 import BusinessTestimonials from '@/components/pages/business/BusinessTestimonials';
+import HomeDiscoverSuite from '@/components/pages/home/HomeDiscoverSuite';
 import HomeGalleryCarousel from '@/components/pages/home/HomeGalleryCarousel';
 import type { HomePageContentData, HomeProcessCard } from '@/lib/home/types';
 
@@ -345,33 +346,7 @@ export default function HomePageContent({ content }: HomePageContentProps) {
         </div>
       </section>
 
-      <section className="px-4 py-12 sm:px-6 lg:px-10 lg:py-20">
-        <div className="glass-panel mx-auto grid max-w-[1350px] items-center gap-6 !rounded-[16px] !p-5 sm:gap-8 sm:!p-6 lg:grid-cols-[3fr_7fr]">
-          <div className="lg:max-w-lg px-2 sm:px-6 lg:px-10">
-            <h2 className="title-heading-normal text-[#2A3040] text-[26px] leading-tight text-slate-900 sm:text-3xl md:text-[34px] text-center lg:text-left">
-              {discover.title}
-            </h2>
-            <p className="mt-4 lg:max-w-[290px] text-[16px] leading-6 text-[#2A3040] sm:text-[16px] text-center lg:text-left">
-              {discover.description}
-            </p>
-            <div className="mt-8 text-center lg:text-left">
-              <Link href={discover.cta.href} className={primaryButtonClass}>
-                {discover.cta.label}
-              </Link>
-            </div>
-          </div>
-
-          <div className="overflow-hidden rounded-[16px] border border-white/70 shadow-[0_20px_60px_rgba(148,184,214,0.2)]">
-            <LividEmbed
-              videoId={discover.videoId}
-              title={discover.title}
-              fill
-              background
-              autoplay={false}
-            />
-          </div>
-        </div>
-      </section>
+      <HomeDiscoverSuite title={discover.title} items={discover.items} />
 
       <section className="bg-white px-4 py-12 sm:px-6 lg:px-10 lg:pb-20 lg:py-16">
         <h2 className="title-heading-normal px-2 text-center text-[26px] text-slate-900 sm:text-[32px]">
