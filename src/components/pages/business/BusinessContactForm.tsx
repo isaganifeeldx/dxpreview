@@ -1,10 +1,40 @@
 'use client'
 
+import Link from 'next/link'
 import { useState } from 'react'
 import type { BusinessFormCopy } from '@/lib/business/types'
 
 const fieldClassName =
   'w-full rounded-[12px] border border-[#2A3040]/15 bg-white px-3 py-3 text-[16px] text-[#2A3040] placeholder:text-[#9AA3B5] focus:border-[#AEC8FF] focus:outline-none sm:px-4 sm:text-[14px]'
+
+function renderConsentNote(note: string) {
+  const parts = note.split(/(Privacy Policy|Terms of Service)/g)
+  return parts.map((part, index) => {
+    if (part === 'Privacy Policy') {
+      return (
+        <Link
+          key={`${part}-${index}`}
+          href="/privacy-policy"
+          className="underline decoration-[#6A758C]/50 underline-offset-2 transition-colors hover:text-[#2A3040]"
+        >
+          Privacy Policy
+        </Link>
+      )
+    }
+    if (part === 'Terms of Service') {
+      return (
+        <Link
+          key={`${part}-${index}`}
+          href="/terms-of-service"
+          className="underline decoration-[#6A758C]/50 underline-offset-2 transition-colors hover:text-[#2A3040]"
+        >
+          Terms of Service
+        </Link>
+      )
+    }
+    return <span key={`${part}-${index}`}>{part}</span>
+  })
+}
 
 type BusinessContactFormProps = {
   form: BusinessFormCopy
@@ -155,6 +185,10 @@ export default function BusinessContactForm({ form }: BusinessContactFormProps) 
         >
           {isSubmitting ? 'Sending…' : form.submitLabel}
         </button>
+
+        <p className="sm:col-span-2 text-center text-[11px] leading-relaxed text-[#6A758C] sm:text-[12px]">
+          {renderConsentNote(form.consentNote)}
+        </p>
       </form>
     </div>
   )

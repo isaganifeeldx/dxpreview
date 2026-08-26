@@ -19,6 +19,7 @@ export type BusinessFormCopy = {
   messageLabel: string
   submitLabel: string
   successMessage: string
+  consentNote: string
 }
 
 export type BusinessTestimonial = {

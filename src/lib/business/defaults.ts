@@ -26,6 +26,8 @@ export const businessPageDefaults: BusinessPageContentData = {
     messageLabel: 'What are you looking for?',
     submitLabel: 'Schedule a demo',
     successMessage: "Thanks — we'll be in touch shortly to schedule your demo.",
+    consentNote:
+      'By clicking Schedule a demo, you agree to our Privacy Policy and Terms of Service.',
   },
   testimonials: {
     title: 'Trusted by design leaders',
