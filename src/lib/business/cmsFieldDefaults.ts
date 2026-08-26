@@ -42,6 +42,9 @@ export function buildBusinessCmsFieldDefaults(
       secondaryCtaLabel: source.closing.secondaryCta.label,
       secondaryCtaHref: source.closing.secondaryCta.href,
     },
+    form: {
+      consentNote: source.form.consentNote,
+    },
     seo: {
       title: source.seo.title,
       description: source.seo.description,

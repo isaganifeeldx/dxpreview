@@ -57,6 +57,9 @@ type CmsBusiness = {
       description?: string | null
     } | null> | null
   } | null
+  form?: {
+    consentNote?: string | null
+  } | null
   closing?: CmsClosingCta
   seo?: CmsSeo
 }
@@ -139,7 +142,10 @@ function mapBusinessFromCms(doc: CmsBusiness | null | undefined): BusinessPageCo
       description: text(doc.hero?.description, defaults.hero.description),
       stats: stats.length > 0 ? stats : defaults.hero.stats,
     },
-    form: defaults.form,
+    form: {
+      ...defaults.form,
+      consentNote: text(doc.form?.consentNote, defaults.form.consentNote),
+    },
     testimonials: {
       title: text(doc.testimonials?.title, defaults.testimonials.title),
       items: testimonials.length > 0 ? testimonials : defaults.testimonials.items,

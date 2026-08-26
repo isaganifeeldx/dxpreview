@@ -112,6 +112,28 @@ export const Business: GlobalConfig = {
           ],
         },
         {
+          label: 'Form',
+          fields: [
+            {
+              name: 'form',
+              type: 'group',
+              label: false,
+              fields: [
+                {
+                  name: 'consentNote',
+                  type: 'textarea',
+                  label: 'Consent note',
+                  defaultValue: d.form.consentNote,
+                  admin: {
+                    description:
+                      'Shown under the Schedule a demo button. Include the exact phrases “Privacy Policy” and “Terms of Service” to auto-link those pages.',
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        {
           label: 'Testimonials',
           fields: [
             {
