@@ -4,6 +4,7 @@ import { closingCtaTab } from '@/fields/closingCta'
 import { seoFields } from '@/fields/seo'
 import { revalidateContactGlobal } from '@/hooks/revalidateCms'
 import { pagePreview } from '@/lib/cms/previewUrl'
+import { contactPageDefaults as d } from '@/lib/contact/defaults'
 
 export const Contact: GlobalConfig = {
   slug: 'contact',
@@ -39,8 +40,7 @@ export const Contact: GlobalConfig = {
               name: 'introduction',
               type: 'textarea',
               label: 'Introduction',
-              defaultValue:
-                'From dream to reality, we bring your vision to life through expert craftsmanship and guidance at every stage of the journey.',
+              defaultValue: d.introduction,
             },
             {
               name: 'quickEnquiries',
@@ -50,13 +50,12 @@ export const Contact: GlobalConfig = {
                 {
                   name: 'heading',
                   type: 'text',
-                  defaultValue: 'For Quick Enquiries',
+                  defaultValue: d.quickEnquiries.heading,
                 },
                 {
                   name: 'content',
                   type: 'textarea',
-                  defaultValue:
-                    'Have a question or need assistance fast? Reach out to us directly, our team is available from 8:30 AM to 6:00 PM to provide quick support and answers.',
+                  defaultValue: d.quickEnquiries.content,
                 },
                 {
                   type: 'row',
@@ -64,16 +63,47 @@ export const Contact: GlobalConfig = {
                     {
                       name: 'phone',
                       type: 'text',
-                      defaultValue: '1800 333 539',
+                      defaultValue: d.quickEnquiries.phone,
                       admin: { width: '50%' },
                     },
                     {
                       name: 'email',
                       type: 'email',
-                      defaultValue: 'sales@dxinteriors.ai',
+                      defaultValue: d.quickEnquiries.email,
                       admin: { width: '50%' },
                     },
                   ],
+                },
+                {
+                  name: 'address',
+                  type: 'textarea',
+                  label: 'Address',
+                  defaultValue: d.quickEnquiries.address,
+                  admin: {
+                    description: 'Shown below the email in the quick enquiries section.',
+                  },
+                },
+              ],
+            },
+          ],
+        },
+        {
+          label: 'Form',
+          fields: [
+            {
+              name: 'form',
+              type: 'group',
+              label: false,
+              fields: [
+                {
+                  name: 'consentNote',
+                  type: 'textarea',
+                  label: 'Consent note',
+                  defaultValue: d.form.consentNote,
+                  admin: {
+                    description:
+                      'Shown under the Submit button. Include the exact phrase “Privacy Policy” to auto-link that page.',
+                  },
                 },
               ],
             },

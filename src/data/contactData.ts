@@ -8,6 +8,7 @@ export interface ContactPageContentData {
     content: string;
     phone: string;
     email: string;
+    address: string;
   };
 }
 
@@ -24,5 +25,6 @@ export const contactContent: ContactPageContentData = {
       'Have a question or need assistance fast? Reach out to us directly, our team is available from 8:30 AM to 6:00 PM to provide quick support and answers.',
     phone: '1800 333 539',
     email: 'sales@dxinteriors.ai',
+    address: 'Suite 70, 44 Lakeview Drive, Scoresby VIC 3179, Australia',
   },
 };

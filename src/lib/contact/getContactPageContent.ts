@@ -8,11 +8,15 @@ import type { ContactPageContentData } from './types'
 type CmsContact = {
   title?: string | null
   introduction?: string | null
+  form?: {
+    consentNote?: string | null
+  } | null
   quickEnquiries?: {
     heading?: string | null
     content?: string | null
     phone?: string | null
     email?: string | null
+    address?: string | null
   } | null
   closing?: CmsClosingCta
   seo?: CmsSeo
@@ -32,11 +36,15 @@ function mapContactFromCms(doc: CmsContact | null | undefined): ContactPageConte
       title: text(doc.title, defaults.banner.title),
     },
     introduction: text(doc.introduction, defaults.introduction),
+    form: {
+      consentNote: text(doc.form?.consentNote, defaults.form.consentNote),
+    },
     quickEnquiries: {
       heading: text(doc.quickEnquiries?.heading, defaults.quickEnquiries.heading),
       content: text(doc.quickEnquiries?.content, defaults.quickEnquiries.content),
       phone: text(doc.quickEnquiries?.phone, defaults.quickEnquiries.phone),
       email: text(doc.quickEnquiries?.email, defaults.quickEnquiries.email),
+      address: text(doc.quickEnquiries?.address, defaults.quickEnquiries.address),
     },
     closing: mapClosingCta(doc.closing, defaults.closing),
     seo: mapCmsSeo(doc.seo, defaults.seo),

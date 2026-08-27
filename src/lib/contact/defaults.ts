@@ -6,6 +6,10 @@ import type { ContactPageContentData } from './types'
 export const contactPageDefaults: ContactPageContentData = {
   banner: contactContent.banner,
   introduction: contactContent.introduction,
+  form: {
+    consentNote:
+      'By submitting, you agree to our Privacy Policy. We reply to every enquiry within one business day.',
+  },
   quickEnquiries: contactContent.quickEnquiries,
   closing: pageClosingCtaDefaults,
   seo: emptySeoData({
