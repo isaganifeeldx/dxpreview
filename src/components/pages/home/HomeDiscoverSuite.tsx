@@ -111,6 +111,8 @@ export default function HomeDiscoverSuite({ title, items }: HomeDiscoverSuitePro
   const [displayedId, setDisplayedId] = useState(items[0]?.id ?? '')
   const [visible, setVisible] = useState(true)
   const tabRefs = useRef<Record<string, HTMLButtonElement | null>>({})
+  const navRef = useRef<HTMLElement>(null)
+  const skipInitialTabScroll = useRef(true)
 
   const displayedItem = useMemo(
     () => items.find((item) => item.id === displayedId) ?? items[0],
@@ -131,11 +133,21 @@ export default function HomeDiscoverSuite({ title, items }: HomeDiscoverSuitePro
 
   useEffect(() => {
     const activeTab = tabRefs.current[activeId]
-    if (!activeTab) return
-    activeTab.scrollIntoView({
+    const nav = navRef.current
+    if (!activeTab || !nav) return
+
+    if (skipInitialTabScroll.current) {
+      skipInitialTabScroll.current = false
+      return
+    }
+
+    const isHorizontalNav = nav.scrollWidth > nav.clientWidth
+    if (!isHorizontalNav) return
+
+    const tabCenter = activeTab.offsetLeft + activeTab.offsetWidth / 2
+    nav.scrollTo({
+      left: tabCenter - nav.clientWidth / 2,
       behavior: 'smooth',
-      inline: 'center',
-      block: 'nearest',
     })
   }, [activeId])
 
@@ -150,6 +162,7 @@ export default function HomeDiscoverSuite({ title, items }: HomeDiscoverSuitePro
 
         <div className="mt-8 grid items-start gap-5 sm:mt-10 sm:gap-8 lg:mt-14 lg:grid-cols-[minmax(200px,260px)_minmax(0,1fr)] lg:items-center lg:gap-12 xl:gap-16">
           <nav
+            ref={navRef}
             aria-label="Discover capabilities"
             className="-mx-4 flex snap-x snap-mandatory flex-row gap-2 overflow-x-auto px-4 pb-1 [-ms-overflow-style:none] [scrollbar-width:none] lg:mx-0 lg:flex-col lg:gap-2 lg:overflow-visible lg:px-0 lg:pb-0 lg:snap-none [&::-webkit-scrollbar]:hidden"
           >
