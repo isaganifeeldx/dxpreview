@@ -4,19 +4,21 @@ type BusinessTestimonialsProps = {
   title: string
   items: BusinessTestimonial[]
   headingId?: string
+  titleClassName?: string
 }
 
 export default function BusinessTestimonials({
   title,
   items,
   headingId = 'testimonials-heading',
+  titleClassName = '!text-[26px] sm:!text-[32px]',
 }: BusinessTestimonialsProps) {
   return (
     <section className="px-4 py-10 sm:px-6 lg:px-10 lg:py-16" aria-labelledby={headingId}>
       <div className="mx-auto max-w-[1350px]">
         <h2
           id={headingId}
-          className="title-heading-normal !text-[26px] text-[#2A3040] sm:!text-[32px]"
+          className={`title-heading-normal text-[#2A3040] ${titleClassName}`}
         >
           {title}
         </h2>

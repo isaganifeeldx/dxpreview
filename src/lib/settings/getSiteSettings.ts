@@ -12,6 +12,8 @@ type CmsLink = { label?: string | null; href?: string | null } | null
 type CmsSettings = {
   header?: {
     navLinks?: CmsLink[] | null
+    productLabel?: string | null
+    productLinks?: CmsLink[] | null
     resourcesLabel?: string | null
     resourceLinks?: CmsLink[] | null
     loginLabel?: string | null
@@ -85,6 +87,15 @@ function mapLinks(rows: CmsLink[] | null | undefined, fallback: MenuLink[]): Men
   return mapped.length > 0 ? mapped : fallback
 }
 
+/** Drop flat nav items that duplicate a dropdown label (e.g. legacy "Product" in navLinks). */
+function excludeDropdownLabels(links: MenuLink[], ...dropdownLabels: string[]): MenuLink[] {
+  const blocked = new Set(
+    dropdownLabels.map((label) => label.trim().toLowerCase()).filter(Boolean),
+  )
+  if (blocked.size === 0) return links
+  return links.filter((link) => !blocked.has(link.label.trim().toLowerCase()))
+}
+
 function mapFloatingAction(
   label: string | null | undefined,
   href: string | null | undefined,
@@ -119,10 +130,20 @@ function mapSettings(doc: CmsSettings | null | undefined): SiteSettingsData {
 
   const floating = doc.floatingCta
 
+  const productLabel = text(doc.header?.productLabel, defaults.header.productLabel)
+  const resourcesLabel = text(doc.header?.resourcesLabel, defaults.header.resourcesLabel)
+  const navLinks = excludeDropdownLabels(
+    mapLinks(doc.header?.navLinks, defaults.header.navLinks),
+    productLabel,
+    resourcesLabel,
+  )
+
   return {
     header: {
-      navLinks: mapLinks(doc.header?.navLinks, defaults.header.navLinks),
-      resourcesLabel: text(doc.header?.resourcesLabel, defaults.header.resourcesLabel),
+      navLinks,
+      productLabel,
+      productLinks: mapLinks(doc.header?.productLinks, defaults.header.productLinks),
+      resourcesLabel,
       resourceLinks: mapLinks(doc.header?.resourceLinks, defaults.header.resourceLinks),
       login: {
         label: text(doc.header?.loginLabel, defaults.header.login.label),

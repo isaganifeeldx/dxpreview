@@ -2,39 +2,14 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
+import { submitBusinessToHubSpot } from '@/components/pages/business/HubSpotBusiness'
 import type { BusinessFormCopy } from '@/lib/business/types'
 
 const fieldClassName =
   'w-full rounded-[12px] border border-[#2A3040]/15 bg-white px-3 py-3 text-[16px] text-[#2A3040] placeholder:text-[#9AA3B5] focus:border-[#AEC8FF] focus:outline-none sm:px-4 sm:text-[14px]'
 
-function renderConsentNote(note: string) {
-  const parts = note.split(/(Privacy Policy|Terms of Service)/g)
-  return parts.map((part, index) => {
-    if (part === 'Privacy Policy') {
-      return (
-        <Link
-          key={`${part}-${index}`}
-          href="/privacy-policy"
-          className="underline decoration-[#6A758C]/50 underline-offset-2 transition-colors hover:text-[#2A3040]"
-        >
-          Privacy Policy
-        </Link>
-      )
-    }
-    if (part === 'Terms of Service') {
-      return (
-        <Link
-          key={`${part}-${index}`}
-          href="/terms-of-service"
-          className="underline decoration-[#6A758C]/50 underline-offset-2 transition-colors hover:text-[#2A3040]"
-        >
-          Terms of Service
-        </Link>
-      )
-    }
-    return <span key={`${part}-${index}`}>{part}</span>
-  })
-}
+const checkboxClassName =
+  'mt-0.5 h-4 w-4 shrink-0 rounded border border-[#2A3040]/25 text-[#2A3040] focus:ring-[#AEC8FF]'
 
 type BusinessContactFormProps = {
   form: BusinessFormCopy
@@ -47,6 +22,8 @@ export default function BusinessContactForm({ form }: BusinessContactFormProps) 
     company: '',
     teamSize: '',
     message: '',
+    communicationsConsent: false,
+    processConsent: false,
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
@@ -55,8 +32,14 @@ export default function BusinessContactForm({ form }: BusinessContactFormProps) 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
   ) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
+    const target = e.target
+    const { name, value, type } = target
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]:
+        type === 'checkbox' && target instanceof HTMLInputElement ? target.checked : value,
+    }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -71,6 +54,9 @@ export default function BusinessContactForm({ form }: BusinessContactFormProps) 
     if (!formData.company.trim()) missing.push(form.companyLabel)
     if (!formData.teamSize.trim()) missing.push(form.teamSizeLabel)
     if (!formData.message.trim()) missing.push(form.messageLabel)
+    if (!formData.processConsent) {
+      missing.push('consent to store and process your personal data')
+    }
 
     if (missing.length > 0) {
       setSubmitStatus('error')
@@ -79,11 +65,31 @@ export default function BusinessContactForm({ form }: BusinessContactFormProps) 
       return
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 400))
-    setSubmitStatus('success')
-    setSubmissionMessage(form.successMessage)
-    setFormData({ name: '', email: '', company: '', teamSize: '', message: '' })
-    setIsSubmitting(false)
+    try {
+      const result = await submitBusinessToHubSpot(formData)
+
+      if (result.success) {
+        setSubmitStatus('success')
+        setSubmissionMessage(form.successMessage)
+        setFormData({
+          name: '',
+          email: '',
+          company: '',
+          teamSize: '',
+          message: '',
+          communicationsConsent: false,
+          processConsent: false,
+        })
+      } else {
+        setSubmitStatus('error')
+        setSubmissionMessage(result.error || 'Something went wrong. Please try again.')
+      }
+    } catch {
+      setSubmitStatus('error')
+      setSubmissionMessage('Something went wrong. Please try again or contact us directly.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -168,6 +174,55 @@ export default function BusinessContactForm({ form }: BusinessContactFormProps) 
           />
         </label>
 
+        <div className="space-y-4 sm:col-span-2">
+          <p className="text-[11px] leading-relaxed text-[#6A758C]">
+            By checking the boxes below, you agree to receive communications from FeelDX Pty Ltd.
+            You can unsubscribe anytime.
+          </p>
+
+          <label className="flex items-start gap-3 text-[12px] leading-relaxed text-[#2A3040] sm:text-[13px]">
+            <input
+              type="checkbox"
+              name="communicationsConsent"
+              checked={formData.communicationsConsent}
+              onChange={handleChange}
+              className={checkboxClassName}
+            />
+            <span>I agree to receive other communications from FeelDX Pty Ltd.</span>
+          </label>
+
+          <p className="text-[11px] leading-relaxed text-[#6A758C]">
+            To process your request, we need your permission to store and process your personal
+            data. Please check the box below to confirm your consent:
+          </p>
+
+          <label className="flex items-start gap-3 text-[12px] leading-relaxed text-[#2A3040] sm:text-[13px]">
+            <input
+              type="checkbox"
+              name="processConsent"
+              checked={formData.processConsent}
+              onChange={handleChange}
+              required
+              className={checkboxClassName}
+            />
+            <span>
+              I agree to allow FeelDX Pty Ltd to store and process my personal data.
+              <span className="text-[#B42318]">*</span>
+            </span>
+          </label>
+
+          <p className="text-[11px] leading-relaxed text-[#6A758C] sm:text-[12px]">
+            We care about your privacy. Learn how we handle your data in our{' '}
+            <Link
+              href="/privacy-policy"
+              className="underline decoration-[#6A758C]/50 underline-offset-2 transition-colors hover:text-[#2A3040]"
+            >
+              Privacy Policy
+            </Link>
+            .
+          </p>
+        </div>
+
         {submitStatus !== 'idle' ? (
           <p
             className={`sm:col-span-2 text-[13px] ${
@@ -185,10 +240,6 @@ export default function BusinessContactForm({ form }: BusinessContactFormProps) 
         >
           {isSubmitting ? 'Sending…' : form.submitLabel}
         </button>
-
-        <p className="sm:col-span-2 text-center text-[11px] leading-relaxed text-[#6A758C] sm:text-[12px]">
-          {renderConsentNote(form.consentNote)}
-        </p>
       </form>
     </div>
   )

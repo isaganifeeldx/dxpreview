@@ -40,6 +40,17 @@ export const Settings: GlobalConfig = {
               fields: [
                 menuLinkRowsField('navLinks', 'Main menu links', d.header.navLinks),
                 {
+                  name: 'productLabel',
+                  type: 'text',
+                  label: 'Product dropdown label',
+                  defaultValue: d.header.productLabel,
+                },
+                menuLinkRowsField(
+                  'productLinks',
+                  'Product dropdown links',
+                  d.header.productLinks,
+                ),
+                {
                   name: 'resourcesLabel',
                   type: 'text',
                   label: 'Resources dropdown label',

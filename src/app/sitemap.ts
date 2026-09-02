@@ -122,6 +122,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.7,
         isIndexable: !inspiration.seo.noIndex,
       },
+      {
+        path: '/product/dx-interiors',
+        changeFrequency: 'monthly',
+        priority: 0.9,
+        isIndexable: true,
+      },
+      {
+        path: '/product/spacesense-ai',
+        changeFrequency: 'monthly',
+        priority: 0.9,
+        isIndexable: true,
+      },
     ]
 
     const staticEntries = staticRoutes
@@ -186,6 +198,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       { url: `${siteUrl}/user-guide`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
       { url: `${siteUrl}/tutorial`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
       { url: `${siteUrl}/inspiration`, lastModified, changeFrequency: 'monthly', priority: 0.7 },
+      { url: `${siteUrl}/product/dx-interiors`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
+      { url: `${siteUrl}/product/spacesense-ai`, lastModified, changeFrequency: 'monthly', priority: 0.9 },
       { url: `${siteUrl}/articles`, lastModified, changeFrequency: 'weekly', priority: 0.8 },
       { url: `${siteUrl}/privacy-policy`, lastModified, changeFrequency: 'yearly', priority: 0.3 },
       { url: `${siteUrl}/terms-of-service`, lastModified, changeFrequency: 'yearly', priority: 0.3 },

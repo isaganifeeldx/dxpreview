@@ -4,15 +4,139 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import Link from 'next/link';
-import type { SiteSettingsData } from '@/lib/settings/defaults';
+import type { MenuLink, SiteSettingsData } from '@/lib/settings/defaults';
 
 type HeaderProps = {
   settings: SiteSettingsData['header'];
 };
 
+const ChevronIcon = ({ open }: { open: boolean }) => (
+  <svg
+    width="12"
+    height="12"
+    viewBox="0 0 12 12"
+    fill="none"
+    aria-hidden
+    className={`transition-transform ${open ? 'rotate-180' : ''}`}
+  >
+    <path
+      d="M3 4.5L6 7.5L9 4.5"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+function NavDropdown({
+  label,
+  links,
+  isOpen,
+  onToggle,
+  onClose,
+  buttonRef,
+  menuRef,
+  menuPosition,
+}: {
+  label: string;
+  links: MenuLink[];
+  isOpen: boolean;
+  onToggle: () => void;
+  onClose: () => void;
+  buttonRef: React.RefObject<HTMLButtonElement | null>;
+  menuRef: React.RefObject<HTMLDivElement | null>;
+  menuPosition: { top: number; left: number };
+}) {
+  return (
+    <>
+      <div className="relative">
+        <button
+          ref={buttonRef}
+          type="button"
+          className="inline-flex items-center gap-1.5 transition-colors hover:text-slate-900"
+          aria-expanded={isOpen}
+          aria-haspopup="menu"
+          onClick={onToggle}
+        >
+          {label}
+          <ChevronIcon open={isOpen} />
+        </button>
+      </div>
+      {isOpen
+        ? createPortal(
+            <div
+              ref={menuRef}
+              role="menu"
+              className="header-glass !fixed z-[100] min-w-[200px] -translate-x-1/2 rounded-[16px] p-2"
+              style={{ top: menuPosition.top, left: menuPosition.left }}
+            >
+              {links.map((link) => (
+                <Link
+                  key={`${link.label}-${link.href}`}
+                  href={link.href}
+                  role="menuitem"
+                  onClick={onClose}
+                  className="relative z-10 block rounded-xl px-3 py-2.5 text-sm text-slate-700 transition-colors hover:bg-white/55 hover:text-slate-900"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>,
+            document.body,
+          )
+        : null}
+    </>
+  );
+}
+
+function MobileNavAccordion({
+  label,
+  links,
+  isOpen,
+  onToggle,
+  onNavigate,
+}: {
+  label: string;
+  links: MenuLink[];
+  isOpen: boolean;
+  onToggle: () => void;
+  onNavigate: () => void;
+}) {
+  return (
+    <>
+      <button
+        type="button"
+        className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm text-slate-700 transition-colors hover:bg-white/55 hover:text-slate-900"
+        aria-expanded={isOpen}
+        onClick={onToggle}
+      >
+        {label}
+        <ChevronIcon open={isOpen} />
+      </button>
+      {isOpen ? (
+        <div className="relative ml-2 mt-1 space-y-1 rounded-[14px] border border-white/50 bg-white/40 p-2">
+          {links.map((link) => (
+            <Link
+              key={`${link.label}-${link.href}`}
+              href={link.href}
+              onClick={onNavigate}
+              className="relative z-10 block rounded-lg px-3 py-2 text-sm text-slate-700 transition-colors hover:bg-white/55"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </div>
+      ) : null}
+    </>
+  );
+}
+
 export default function Header({ settings }: HeaderProps) {
   const {
     navLinks,
+    productLabel,
+    productLinks,
     resourcesLabel,
     resourceLinks,
     login,
@@ -21,25 +145,51 @@ export default function Header({ settings }: HeaderProps) {
   } = settings;
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [productOpen, setProductOpen] = useState(false);
   const [resourcesOpen, setResourcesOpen] = useState(false);
+  const [mobileProductOpen, setMobileProductOpen] = useState(false);
   const [mobileResourcesOpen, setMobileResourcesOpen] = useState(false);
-  const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
+  const [productMenuPosition, setProductMenuPosition] = useState({ top: 0, left: 0 });
+  const [resourcesMenuPosition, setResourcesMenuPosition] = useState({ top: 0, left: 0 });
   const [mobileMenuTop, setMobileMenuTop] = useState(0);
   const [mounted, setMounted] = useState(false);
 
   const headerRef = useRef<HTMLElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
   const mobileToggleRef = useRef<HTMLButtonElement>(null);
+  const productButtonRef = useRef<HTMLButtonElement>(null);
+  const productMenuRef = useRef<HTMLDivElement>(null);
   const resourcesButtonRef = useRef<HTMLButtonElement>(null);
   const resourcesMenuRef = useRef<HTMLDivElement>(null);
 
   const closeMenu = () => {
     setMenuOpen(false);
+    setMobileProductOpen(false);
     setMobileResourcesOpen(false);
   };
 
   useEffect(() => {
     setMounted(true);
+  }, []);
+
+  useLayoutEffect(() => {
+    const header = headerRef.current;
+    if (!header) return;
+
+    const updateHeaderHeight = () => {
+      document.documentElement.style.setProperty('--site-header-height', `${header.offsetHeight}px`);
+    };
+
+    updateHeaderHeight();
+    window.addEventListener('resize', updateHeaderHeight);
+
+    const observer = new ResizeObserver(updateHeaderHeight);
+    observer.observe(header);
+
+    return () => {
+      window.removeEventListener('resize', updateHeaderHeight);
+      observer.disconnect();
+    };
   }, []);
 
   useLayoutEffect(() => {
@@ -61,16 +211,30 @@ export default function Header({ settings }: HeaderProps) {
   }, [menuOpen]);
 
   useLayoutEffect(() => {
+    if (!productOpen || !productButtonRef.current) return;
+
+    const updatePosition = () => {
+      const rect = productButtonRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      setProductMenuPosition({ top: rect.bottom + 12, left: rect.left + rect.width / 2 });
+    };
+
+    updatePosition();
+    window.addEventListener('resize', updatePosition);
+    window.addEventListener('scroll', updatePosition, true);
+    return () => {
+      window.removeEventListener('resize', updatePosition);
+      window.removeEventListener('scroll', updatePosition, true);
+    };
+  }, [productOpen]);
+
+  useLayoutEffect(() => {
     if (!resourcesOpen || !resourcesButtonRef.current) return;
 
     const updatePosition = () => {
       const rect = resourcesButtonRef.current?.getBoundingClientRect();
       if (!rect) return;
-
-      setMenuPosition({
-        top: rect.bottom + 12,
-        left: rect.left + rect.width / 2,
-      });
+      setResourcesMenuPosition({ top: rect.bottom + 12, left: rect.left + rect.width / 2 });
     };
 
     updatePosition();
@@ -83,13 +247,36 @@ export default function Header({ settings }: HeaderProps) {
   }, [resourcesOpen]);
 
   useEffect(() => {
+    if (!productOpen) return;
+
+    const handlePointerDown = (event: MouseEvent) => {
+      const target = event.target as Node;
+      if (!productButtonRef.current?.contains(target) && !productMenuRef.current?.contains(target)) {
+        setProductOpen(false);
+      }
+    };
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setProductOpen(false);
+    };
+
+    document.addEventListener('mousedown', handlePointerDown);
+    document.addEventListener('keydown', handleEscape);
+    return () => {
+      document.removeEventListener('mousedown', handlePointerDown);
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [productOpen]);
+
+  useEffect(() => {
     if (!resourcesOpen) return;
 
     const handlePointerDown = (event: MouseEvent) => {
       const target = event.target as Node;
-      const clickedButton = resourcesButtonRef.current?.contains(target);
-      const clickedMenu = resourcesMenuRef.current?.contains(target);
-      if (!clickedButton && !clickedMenu) {
+      if (
+        !resourcesButtonRef.current?.contains(target) &&
+        !resourcesMenuRef.current?.contains(target)
+      ) {
         setResourcesOpen(false);
       }
     };
@@ -138,30 +325,15 @@ export default function Header({ settings }: HeaderProps) {
     };
   }, [menuOpen]);
 
-  const resourcesDropdown =
-    mounted && resourcesOpen
-      ? createPortal(
-          <div
-            ref={resourcesMenuRef}
-            role="menu"
-            className="header-glass !fixed z-[100] min-w-[200px] -translate-x-1/2 rounded-[16px] p-2"
-            style={{ top: menuPosition.top, left: menuPosition.left }}
-          >
-            {resourceLinks.map((link) => (
-              <Link
-                key={`${link.label}-${link.href}`}
-                href={link.href}
-                role="menuitem"
-                onClick={() => setResourcesOpen(false)}
-                className="relative z-10 block rounded-xl px-3 py-2.5 text-sm text-slate-700 transition-colors hover:bg-white/55 hover:text-slate-900"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>,
-          document.body,
-        )
-      : null;
+  const toggleProduct = () => {
+    setProductOpen((open) => !open);
+    setResourcesOpen(false);
+  };
+
+  const toggleResources = () => {
+    setResourcesOpen((open) => !open);
+    setProductOpen(false);
+  };
 
   const mobileMenu =
     mounted && menuOpen
@@ -172,6 +344,17 @@ export default function Header({ settings }: HeaderProps) {
             style={{ top: mobileMenuTop }}
           >
             <nav className="relative z-10 flex flex-col gap-1" aria-label="Mobile">
+              <MobileNavAccordion
+                label={productLabel}
+                links={productLinks}
+                isOpen={mobileProductOpen}
+                onToggle={() => {
+                  setMobileProductOpen((open) => !open);
+                  setMobileResourcesOpen(false);
+                }}
+                onNavigate={closeMenu}
+              />
+
               {navLinks.map((link) => (
                 <Link
                   key={`${link.label}-${link.href}`}
@@ -183,45 +366,16 @@ export default function Header({ settings }: HeaderProps) {
                 </Link>
               ))}
 
-              <button
-                type="button"
-                className="flex items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm text-slate-700 transition-colors hover:bg-white/55 hover:text-slate-900"
-                aria-expanded={mobileResourcesOpen}
-                onClick={() => setMobileResourcesOpen((open) => !open)}
-              >
-                {resourcesLabel}
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 12 12"
-                  fill="none"
-                  aria-hidden
-                  className={`transition-transform ${mobileResourcesOpen ? 'rotate-180' : ''}`}
-                >
-                  <path
-                    d="M3 4.5L6 7.5L9 4.5"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </button>
-
-              {mobileResourcesOpen ? (
-                <div className="relative ml-2 mt-1 space-y-1 rounded-[14px] border border-white/50 bg-white/40 p-2">
-                  {resourceLinks.map((link) => (
-                    <Link
-                      key={`${link.label}-${link.href}`}
-                      href={link.href}
-                      onClick={closeMenu}
-                      className="relative z-10 block rounded-lg px-3 py-2 text-sm text-slate-700 transition-colors hover:bg-white/55"
-                    >
-                      {link.label}
-                    </Link>
-                  ))}
-                </div>
-              ) : null}
+              <MobileNavAccordion
+                label={resourcesLabel}
+                links={resourceLinks}
+                isOpen={mobileResourcesOpen}
+                onToggle={() => {
+                  setMobileResourcesOpen((open) => !open);
+                  setMobileProductOpen(false);
+                }}
+                onNavigate={closeMenu}
+              />
             </nav>
             <div className="relative z-10 mt-3 flex flex-col gap-2 border-t border-slate-200/60 pt-3">
               <Link
@@ -263,6 +417,21 @@ export default function Header({ settings }: HeaderProps) {
             className="absolute left-1/2 top-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-6 text-sm text-slate-600 lg:flex"
             aria-label="Main"
           >
+            {mounted ? (
+              <NavDropdown
+                label={productLabel}
+                links={productLinks}
+                isOpen={productOpen}
+                onToggle={toggleProduct}
+                onClose={() => setProductOpen(false)}
+                buttonRef={productButtonRef}
+                menuRef={productMenuRef}
+                menuPosition={productMenuPosition}
+              />
+            ) : (
+              <span>{productLabel}</span>
+            )}
+
             {navLinks.map((link) => (
               <Link
                 key={`${link.label}-${link.href}`}
@@ -273,34 +442,20 @@ export default function Header({ settings }: HeaderProps) {
               </Link>
             ))}
 
-            <div className="relative">
-              <button
-                ref={resourcesButtonRef}
-                type="button"
-                className="inline-flex items-center gap-1.5 transition-colors hover:text-slate-900"
-                aria-expanded={resourcesOpen}
-                aria-haspopup="menu"
-                onClick={() => setResourcesOpen((open) => !open)}
-              >
-                {resourcesLabel}
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 12 12"
-                  fill="none"
-                  aria-hidden
-                  className={`transition-transform ${resourcesOpen ? 'rotate-180' : ''}`}
-                >
-                  <path
-                    d="M3 4.5L6 7.5L9 4.5"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </button>
-            </div>
+            {mounted ? (
+              <NavDropdown
+                label={resourcesLabel}
+                links={resourceLinks}
+                isOpen={resourcesOpen}
+                onToggle={toggleResources}
+                onClose={() => setResourcesOpen(false)}
+                buttonRef={resourcesButtonRef}
+                menuRef={resourcesMenuRef}
+                menuPosition={resourcesMenuPosition}
+              />
+            ) : (
+              <span>{resourcesLabel}</span>
+            )}
           </nav>
 
           <div className="relative z-10 flex shrink-0 items-center gap-1.5 sm:gap-3">
@@ -345,7 +500,6 @@ export default function Header({ settings }: HeaderProps) {
         </div>
       </header>
 
-      {resourcesDropdown}
       {mobileMenu}
     </>
   );

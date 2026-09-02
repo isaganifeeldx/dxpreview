@@ -145,6 +145,16 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: '/pages/product/dx-interiors',
+        destination: '/product/dx-interiors',
+        permanent: true,
+      },
+      {
+        source: '/pages/product/spacesense-ai',
+        destination: '/product/spacesense-ai',
+        permanent: true,
+      },
+      {
         source: '/billing',
         destination: '/business',
         permanent: true,
@@ -174,6 +184,8 @@ const nextConfig: NextConfig = {
       { source: '/tutorial/:slug', destination: '/pages/tutorial/:slug' },
       { source: '/inspiration', destination: '/pages/inspiration' },
       { source: '/inspiration/:slug', destination: '/pages/inspiration/:slug' },
+      { source: '/product/dx-interiors', destination: '/pages/product/dx-interiors' },
+      { source: '/product/spacesense-ai', destination: '/pages/product/spacesense-ai' },
     ];
   },
   webpack: (webpackConfig) => {

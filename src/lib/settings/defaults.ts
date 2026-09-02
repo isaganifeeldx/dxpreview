@@ -11,6 +11,8 @@ export type FloatingCtaAction = {
 export type SiteSettingsData = {
   header: {
     navLinks: MenuLink[]
+    productLabel: string
+    productLinks: MenuLink[]
     resourcesLabel: string
     resourceLinks: MenuLink[]
     login: MenuLink
@@ -56,9 +58,13 @@ export type SiteSettingsData = {
 export const siteSettingsDefaults: SiteSettingsData = {
   header: {
     navLinks: [
-      { label: 'Product', href: '#' },
       { label: 'Plans', href: '/plans' },
       { label: 'Business', href: '/business' },
+    ],
+    productLabel: 'Product',
+    productLinks: [
+      { label: 'DX Interiors', href: '/product/dx-interiors' },
+      { label: 'SpaceSense AI', href: '/product/spacesense-ai' },
     ],
     resourcesLabel: 'Resources',
     resourceLinks: [
@@ -74,7 +80,8 @@ export const siteSettingsDefaults: SiteSettingsData = {
   footer: {
     linkColumnTitle: 'Link',
     linkColumn: [
-      { label: 'Product', href: '#' },
+      { label: 'DX Interiors', href: '/product/dx-interiors' },
+      { label: 'SpaceSense AI', href: '/product/spacesense-ai' },
       { label: 'Plans', href: '/plans' },
       { label: 'Business', href: '/business' },
       { label: 'FAQs', href: '/faq' },
