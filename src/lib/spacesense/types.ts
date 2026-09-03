@@ -1,4 +1,5 @@
 import type { BusinessCta } from '@/lib/business/types'
+import type { PageClosingCtaData } from '@/lib/cta/defaults'
 import type { SeoData } from '@/lib/seo/types'
 
 export type SpaceSenseHero = {
@@ -66,11 +67,6 @@ export type SpaceSensePageContentData = {
     title: string
     items: SpaceSenseFaqItem[]
   }
-  closing: {
-    title: string
-    primaryCta: BusinessCta
-    secondaryCta: BusinessCta
-    showSecondaryCta?: boolean
-  }
+  closing: PageClosingCtaData
   seo: SeoData
 }

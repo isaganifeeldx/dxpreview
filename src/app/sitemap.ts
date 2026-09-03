@@ -13,6 +13,8 @@ import { getTutorialPageContent } from '@/lib/tutorial/getTutorialPageContent'
 import { getAllTutorialCourses } from '@/lib/tutorial/getTutorials'
 import { getInspirationPageContent } from '@/lib/inspiration/getInspirationPageContent'
 import { getBusinessPageContent } from '@/lib/business/getBusinessPageContent'
+import { getInteriorsPageContent } from '@/lib/interiors/getInteriorsPageContent'
+import { getSpaceSensePageContent } from '@/lib/spacesense/getSpaceSensePageContent'
 import { getPricingPageContent } from '@/lib/pricing/getPricingPageContent'
 import { getSiteUrl } from '@/lib/siteUrl'
 
@@ -40,7 +42,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const lastModified = new Date()
 
   try {
-    const [home, faq, contact, privacy, terms, articlesPage, articles, pricing, business, about, userGuide, userGuides, tutorial, tutorialCourses, inspiration] =
+    const [home, faq, contact, privacy, terms, articlesPage, articles, pricing, business, about, userGuide, userGuides, tutorial, tutorialCourses, inspiration, interiors, spacesense] =
       await Promise.all([
         getHomePageContent(),
         getFaqPageContent(),
@@ -57,6 +59,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         getTutorialPageContent(),
         getAllTutorialCourses(),
         getInspirationPageContent(),
+        getInteriorsPageContent(),
+        getSpaceSensePageContent(),
       ])
 
     const staticRoutes: StaticRoute[] = [
@@ -126,13 +130,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         path: '/product/dx-interiors',
         changeFrequency: 'monthly',
         priority: 0.9,
-        isIndexable: true,
+        isIndexable: !interiors.seo.noIndex,
       },
       {
         path: '/product/spacesense-ai',
         changeFrequency: 'monthly',
         priority: 0.9,
-        isIndexable: true,
+        isIndexable: !spacesense.seo.noIndex,
       },
     ]
 

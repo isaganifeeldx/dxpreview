@@ -19,12 +19,14 @@ import { ArticlesPage } from './globals/ArticlesPage'
 import { About } from './globals/About'
 import { Business } from './globals/Business'
 import { Contact } from './globals/Contact'
+import { DxInteriors } from './globals/DxInteriors'
 import { Faq } from './globals/Faq'
 import { Home } from './globals/Home'
 import { InspirationPage } from './globals/InspirationPage'
 import { Pricing } from './globals/Pricing'
 import { PrivacyPolicy } from './globals/PrivacyPolicy'
 import { Settings } from './globals/Settings'
+import { SpaceSense } from './globals/SpaceSense'
 import { TermsOfService } from './globals/TermsOfService'
 import { TutorialPage } from './globals/TutorialPage'
 import { UserGuidePage } from './globals/UserGuidePage'
@@ -150,12 +152,14 @@ export default buildConfig({
     ArticlesPage,
     Business,
     Contact,
+    DxInteriors,
     Faq,
     Home,
     InspirationPage,
     PrivacyPolicy,
     Pricing,
     Settings,
+    SpaceSense,
     TermsOfService,
     TutorialPage,
     UserGuidePage,

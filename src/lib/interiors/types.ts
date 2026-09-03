@@ -1,4 +1,5 @@
 import type { BusinessCta, BusinessFeature, BusinessTestimonial } from '@/lib/business/types'
+import type { PageClosingCtaData } from '@/lib/cta/defaults'
 import type { SeoData } from '@/lib/seo/types'
 
 export type InteriorsHero = {
@@ -9,11 +10,23 @@ export type InteriorsHero = {
   secondaryCta: BusinessCta
 }
 
+export type InteriorsCapabilityIcon =
+  | 'surface'
+  | 'cleanup'
+  | 'staging'
+  | 'renders'
+  | 'style'
+  | 'layout'
+  | 'layers'
+  | 'spark'
+
 export type InteriorsCapabilityPill = {
   id: string
   title: string
   subtitle: string
-  iconTone: 'blue' | 'slate' | 'lavender' | 'warm' | 'neutral'
+  /** Uploaded SVG/image URL from CMS. Empty string uses the built-in fallback glyph. */
+  iconSrc: string
+  iconAlt: string
 }
 
 export type InteriorsSplitFeature = {
@@ -44,6 +57,7 @@ export type InteriorsComparisonSide = {
 }
 
 export type InteriorsStat = {
+  id: string
   value: string
   label: string
 }
@@ -84,11 +98,6 @@ export type InteriorsPageContentData = {
     title: string
     items: BusinessFeature[]
   }
-  closing: {
-    title: string
-    primaryCta: BusinessCta
-    secondaryCta: BusinessCta
-    showSecondaryCta?: boolean
-  }
+  closing: PageClosingCtaData
   seo: SeoData
 }

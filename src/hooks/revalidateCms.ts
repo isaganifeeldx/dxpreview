@@ -16,6 +16,8 @@ import {
   revalidateUserGuide,
   revalidateUserGuideItem,
   revalidateInspiration,
+  revalidateDxInteriors,
+  revalidateSpaceSense,
 } from '@/lib/cms/revalidate'
 
 function runSafe(label: string, fn: () => void) {
@@ -72,6 +74,14 @@ export const revalidateTutorialPageGlobal: GlobalAfterChangeHook = () => {
 
 export const revalidateInspirationPageGlobal: GlobalAfterChangeHook = () => {
   runSafe('inspiration-page', revalidateInspiration)
+}
+
+export const revalidateDxInteriorsGlobal: GlobalAfterChangeHook = () => {
+  runSafe('dx-interiors', revalidateDxInteriors)
+}
+
+export const revalidateSpaceSenseGlobal: GlobalAfterChangeHook = () => {
+  runSafe('spacesense-ai', revalidateSpaceSense)
 }
 
 export const revalidateSettingsGlobal: GlobalAfterChangeHook = () => {

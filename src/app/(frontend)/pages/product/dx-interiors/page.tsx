@@ -1,13 +1,14 @@
 import type { Metadata } from 'next'
 import InteriorsPageContent from '@/components/pages/interiors/InteriorsPageContent'
 import JsonLdScripts from '@/components/seo/JsonLdScripts'
-import { interiorsPageDefaults } from '@/lib/interiors/defaults'
+import { getInteriorsPageContent } from '@/lib/interiors/getInteriorsPageContent'
+import { buildInteriorsPageJsonLd } from '@/lib/seo/buildInteriorsJsonLd'
 import { buildMetadataFromSeo } from '@/lib/seo/buildMetadata'
 
 export const revalidate = 60
 
 export async function generateMetadata(): Promise<Metadata> {
-  const content = interiorsPageDefaults
+  const content = await getInteriorsPageContent()
 
   return buildMetadataFromSeo({
     seo: content.seo,
@@ -20,12 +21,16 @@ export async function generateMetadata(): Promise<Metadata> {
   })
 }
 
-export default function DxInteriorsPage() {
-  const content = interiorsPageDefaults
+export default async function DxInteriorsPage() {
+  const content = await getInteriorsPageContent()
+  const defaultJsonLd = buildInteriorsPageJsonLd({
+    content,
+    seo: content.seo,
+  })
 
   return (
     <>
-      <JsonLdScripts seo={content.seo} />
+      <JsonLdScripts seo={content.seo} defaultJsonLd={defaultJsonLd} />
       <InteriorsPageContent content={content} />
     </>
   )

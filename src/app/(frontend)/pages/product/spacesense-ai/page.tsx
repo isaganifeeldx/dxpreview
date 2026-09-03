@@ -1,13 +1,14 @@
 import type { Metadata } from 'next'
 import SpaceSensePageContent from '@/components/pages/spacesense/SpaceSensePageContent'
 import JsonLdScripts from '@/components/seo/JsonLdScripts'
-import { spaceSensePageDefaults } from '@/lib/spacesense/defaults'
+import { getSpaceSensePageContent } from '@/lib/spacesense/getSpaceSensePageContent'
+import { buildSpaceSensePageJsonLd } from '@/lib/seo/buildSpaceSenseJsonLd'
 import { buildMetadataFromSeo } from '@/lib/seo/buildMetadata'
 
 export const revalidate = 60
 
 export async function generateMetadata(): Promise<Metadata> {
-  const content = spaceSensePageDefaults
+  const content = await getSpaceSensePageContent()
 
   return buildMetadataFromSeo({
     seo: content.seo,
@@ -20,12 +21,16 @@ export async function generateMetadata(): Promise<Metadata> {
   })
 }
 
-export default function SpaceSenseAiPage() {
-  const content = spaceSensePageDefaults
+export default async function SpaceSenseAiPage() {
+  const content = await getSpaceSensePageContent()
+  const defaultJsonLd = buildSpaceSensePageJsonLd({
+    content,
+    seo: content.seo,
+  })
 
   return (
     <>
-      <JsonLdScripts seo={content.seo} />
+      <JsonLdScripts seo={content.seo} defaultJsonLd={defaultJsonLd} />
       <SpaceSensePageContent content={content} />
     </>
   )

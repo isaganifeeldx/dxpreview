@@ -2,7 +2,11 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import { submitBusinessToHubSpot } from '@/components/pages/business/HubSpotBusiness'
+import {
+  BUSINESS_COMMUNICATIONS_CONSENT_TEXT,
+  BUSINESS_PROCESS_CONSENT_TEXT,
+  submitBusinessToHubSpot,
+} from '@/components/pages/business/HubSpotBusiness'
 import type { BusinessFormCopy } from '@/lib/business/types'
 
 const fieldClassName =
@@ -176,7 +180,7 @@ export default function BusinessContactForm({ form }: BusinessContactFormProps) 
 
         <div className="space-y-4 sm:col-span-2">
           <p className="text-[11px] leading-relaxed text-[#6A758C]">
-            By checking the boxes below, you agree to receive communications from FeelDX Pty Ltd.
+            By checking the boxes below, you agree to receive communications from DX Interiors.
             You can unsubscribe anytime.
           </p>
 
@@ -188,7 +192,7 @@ export default function BusinessContactForm({ form }: BusinessContactFormProps) 
               onChange={handleChange}
               className={checkboxClassName}
             />
-            <span>I agree to receive other communications from FeelDX Pty Ltd.</span>
+            <span>{BUSINESS_COMMUNICATIONS_CONSENT_TEXT}</span>
           </label>
 
           <p className="text-[11px] leading-relaxed text-[#6A758C]">
@@ -206,7 +210,7 @@ export default function BusinessContactForm({ form }: BusinessContactFormProps) 
               className={checkboxClassName}
             />
             <span>
-              I agree to allow FeelDX Pty Ltd to store and process my personal data.
+              {BUSINESS_PROCESS_CONSENT_TEXT}
               <span className="text-[#B42318]">*</span>
             </span>
           </label>

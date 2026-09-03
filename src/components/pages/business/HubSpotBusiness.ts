@@ -13,9 +13,9 @@ const HUBSPOT_FORM_ID = '68e34dcc-39f7-4846-85d4-f60a0e063638'
 const HUBSPOT_SUBMIT_URL = `https://api.hsforms.com/submissions/v3/integration/submit/${HUBSPOT_PORTAL_ID}/${HUBSPOT_FORM_ID}`
 
 export const BUSINESS_COMMUNICATIONS_CONSENT_TEXT =
-  'I agree to receive other communications from FeelDX Pty Ltd.'
+  'I agree to receive other communications from DX Interiors.'
 export const BUSINESS_PROCESS_CONSENT_TEXT =
-  'I agree to allow FeelDX Pty Ltd to store and process my personal data.'
+  'I agree to allow DX Interiors to store and process my personal data.'
 
 // Matches the communication subscription on the HubSpot business form.
 const HUBSPOT_COMMUNICATIONS_SUBSCRIPTION_TYPE_ID = 1

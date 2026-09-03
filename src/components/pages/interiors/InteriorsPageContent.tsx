@@ -93,7 +93,7 @@ export default function InteriorsPageContent({ content }: InteriorsPageContentPr
         <div className="mx-auto max-w-[1350px]">
           <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:gap-8 md:grid-cols-4 md:gap-6">
             {stats.map((stat) => (
-              <div key={stat.label} className="px-1 text-center sm:px-0">
+              <div key={stat.id} className="px-1 text-center sm:px-0">
                 <p className="lao-mn text-[24px] leading-none text-[#2A3040] sm:text-[32px] md:text-[36px]">
                   {stat.value}
                 </p>

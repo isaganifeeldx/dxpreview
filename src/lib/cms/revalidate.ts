@@ -72,6 +72,16 @@ export function revalidateInspiration(slug?: string) {
   revalidatePath('/sitemap.xml')
 }
 
+export function revalidateDxInteriors() {
+  revalidatePublicAndPages('/product/dx-interiors')
+  revalidatePath('/sitemap.xml')
+}
+
+export function revalidateSpaceSense() {
+  revalidatePublicAndPages('/product/spacesense-ai')
+  revalidatePath('/sitemap.xml')
+}
+
 export function revalidatePrivacyPolicy() {
   revalidatePublicAndPages('/privacy-policy')
   revalidatePath('/sitemap.xml')
@@ -106,6 +116,8 @@ export function revalidateSiteSettings() {
   revalidatePath('/user-guide')
   revalidatePath('/tutorial')
   revalidatePath('/inspiration')
+  revalidatePath('/product/dx-interiors')
+  revalidatePath('/product/spacesense-ai')
   revalidatePath('/articles')
   revalidatePath('/privacy-policy')
   revalidatePath('/terms-of-service')
