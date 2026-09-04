@@ -3,6 +3,7 @@ import {
   EXPERIMENTAL_TableFeature,
   lexicalEditor,
 } from '@payloadcms/richtext-lexical'
+import { s3Storage } from '@payloadcms/storage-s3'
 import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 import path from 'path'
 import { buildConfig } from 'payload'
@@ -32,18 +33,35 @@ import { TutorialPage } from './globals/TutorialPage'
 import { UserGuidePage } from './globals/UserGuidePage'
 import { numberedBlobUploadsPlugin } from './plugins/numberedBlobUploads'
 import { normalizeDatabaseUri } from './lib/cms/databaseUri'
+import {
+  buildS3ClientConfig,
+  getMediaStorageMode,
+  getS3Acl,
+  getS3Bucket,
+  getS3PublicUrl,
+} from './lib/cms/mediaStorage'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 const blobToken = (process.env.BLOB_READ_WRITE_TOKEN || '').trim()
-/** Accept real Vercel Blob RW tokens; avoid disabling the plugin on minor format drift. */
-const hasValidBlobToken = blobToken.startsWith('vercel_blob_rw_')
 const isVercel = process.env.VERCEL === '1'
+const mediaStorageMode = getMediaStorageMode()
+const useBlob = mediaStorageMode === 'blob'
+const useS3 = mediaStorageMode === 's3'
+const s3Bucket = getS3Bucket()
+const s3PublicUrl = getS3PublicUrl()
+const s3Acl = getS3Acl()
 
-if (isVercel && !hasValidBlobToken) {
+if (isVercel && !useBlob) {
   console.warn(
     '[payload] BLOB_READ_WRITE_TOKEN is missing or invalid. Media will use local disk and break on Vercel — connect a Blob store and set the token for Production + Preview.',
+  )
+}
+
+if (!isVercel && process.env.NODE_ENV === 'production' && !useS3) {
+  console.warn(
+    '[payload] S3_BUCKET is unset. Media uses local disk — set S3_BUCKET (+ region/credentials or IAM role) for EC2 production.',
   )
 }
 
@@ -220,7 +238,7 @@ export default buildConfig({
   plugins: [
     vercelBlobStorage({
       // Required on Vercel — local disk uploads do not persist in serverless.
-      enabled: hasValidBlobToken,
+      enabled: useBlob,
       collections: {
         media: true,
       },
@@ -230,7 +248,26 @@ export default buildConfig({
       // Numbered names + overwrite are handled by numberedBlobUploadsPlugin.
       addRandomSuffix: false,
     }),
-    numberedBlobUploadsPlugin(blobToken),
+    // Only patches Blob client uploads when Blob mode is active.
+    numberedBlobUploadsPlugin(useBlob ? blobToken : ''),
+    s3Storage({
+      enabled: useS3,
+      bucket: s3Bucket || 'unused',
+      collections: {
+        media: s3PublicUrl
+          ? {
+              generateFileURL: ({ filename, prefix }) => {
+                const key = [prefix, filename].filter(Boolean).join('/')
+                return `${s3PublicUrl}/${key}`
+              },
+            }
+          : true,
+      },
+      config: buildS3ClientConfig(),
+      ...(s3Acl ? { acl: s3Acl } : {}),
+      // EC2 has no Vercel body limit — server uploads keep WebP conversion via sharp.
+      clientUploads: false,
+    }),
   ],
   // Schedule publish jobs. autoRun is for long-lived servers only — not Vercel serverless.
   jobs: {

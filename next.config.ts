@@ -1,18 +1,37 @@
 import { withPayload } from '@payloadcms/next/withPayload';
 import type { NextConfig } from 'next';
+import { getS3ImageRemotePatterns } from './src/lib/cms/mediaStorage';
+
+function siteActionOrigins(): string[] {
+  const origins = new Set([
+    'dxpreview-tau.vercel.app',
+    'localhost:3000',
+    'localhost:3005',
+  ]);
+
+  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || '').trim();
+  if (siteUrl) {
+    try {
+      const url = new URL(
+        /^https?:\/\//i.test(siteUrl) ? siteUrl : `https://${siteUrl}`,
+      );
+      origins.add(url.host);
+    } catch {
+      // ignore invalid NEXT_PUBLIC_SITE_URL
+    }
+  }
+
+  return [...origins];
+}
 
 const nextConfig: NextConfig = {
   // Resolve async metadata before streaming HTML so SEO tags stay in <head>.
   htmlLimitedBots: /.*/,
-  // Payload admin uses Server Actions; allow the production alias + Vercel hosts
-  // so Origin / x-forwarded-host mismatches don't abort with "Connection closed".
+  // Payload admin uses Server Actions; allow Vercel hosts + the public site URL
+  // (EC2 domain) so Origin / x-forwarded-host mismatches don't abort.
   experimental: {
     serverActions: {
-      allowedOrigins: [
-        'dxpreview-tau.vercel.app',
-        'localhost:3000',
-        'localhost:3005',
-      ],
+      allowedOrigins: siteActionOrigins(),
     },
   },
   images: {
@@ -37,6 +56,7 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: '*.vercel.app',
       },
+      ...getS3ImageRemotePatterns(),
     ],
     localPatterns: [
       {

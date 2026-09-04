@@ -35,6 +35,7 @@ type CmsSpaceSense = {
       itemId?: string | null
       name?: string | null
       description?: string | null
+      badge?: string | null
       ctaLabel?: string | null
       ctaHref?: string | null
       image?: number | CmsMedia
@@ -105,8 +106,9 @@ function mapSpaceSenseFromCms(doc: CmsSpaceSense | null | undefined): SpaceSense
       id: optionalText(item?.itemId) || fallback?.id || slugify(name),
       name,
       description,
+      badge: optionalText(item?.badge) || fallback?.badge,
       cta: {
-        label: text(item?.ctaLabel, fallback?.cta.label ?? 'Try now'),
+        label: text(item?.ctaLabel, fallback?.cta.label ?? 'Generate'),
         href: text(item?.ctaHref, fallback?.cta.href ?? '/login'),
       },
       imageSrc: getMediaUrl(item?.image) ?? fallback?.imageSrc ?? '',

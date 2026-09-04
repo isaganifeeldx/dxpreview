@@ -23,6 +23,7 @@ export function buildSpaceSenseCmsFieldDefaults(
         itemId: item.id,
         name: item.name,
         description: item.description,
+        badge: item.badge,
         ctaLabel: item.cta.label,
         ctaHref: item.cta.href,
         imageAlt: item.imageAlt,

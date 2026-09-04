@@ -15,6 +15,7 @@ export type SpaceSenseModel = {
   id: string
   name: string
   description: string
+  badge?: string
   cta: BusinessCta
   imageSrc: string
   imageAlt: string

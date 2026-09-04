@@ -50,8 +50,8 @@ export const Media: CollectionConfig = {
     },
   ],
   upload: {
-    // Server/local uploads: convert raster originals to WebP via sharp.
-    // Client → Vercel Blob uploads convert in NumberedBlobUploadHandler first.
+    // Server / S3 uploads: convert raster originals to WebP via sharp.
+    // Vercel Blob client uploads convert in NumberedBlobUploadHandler first.
     formatOptions: {
       format: 'webp',
       options: {

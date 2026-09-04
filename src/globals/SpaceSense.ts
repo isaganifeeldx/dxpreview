@@ -146,11 +146,24 @@ export const SpaceSense: GlobalConfig = {
                       name: 'name',
                       type: 'text',
                       required: true,
+                      label: 'Tab label',
+                    },
+                    {
+                      name: 'badge',
+                      type: 'text',
+                      label: 'Badge (optional)',
+                      admin: {
+                        description: 'e.g. Soon',
+                      },
                     },
                     {
                       name: 'description',
                       type: 'textarea',
                       required: true,
+                      label: 'Prompt',
+                      admin: {
+                        description: 'Shown in the frosted prompt overlay. Use #tags or @mentions for blue highlights.',
+                      },
                     },
                     {
                       type: 'row',

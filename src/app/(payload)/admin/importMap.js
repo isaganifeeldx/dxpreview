@@ -29,6 +29,7 @@ import { default as default_6f64da3861999de587a3ed586829047d } from '../../../co
 import { default as default_c6fe5946efe4ec376b0411c30a8f0d79 } from '../../../components/payload/Logo'
 import { NumberedBlobUploadHandler as NumberedBlobUploadHandler_bb41f6c5fb5e77d5bc3e93836711d8b8 } from '../../../components/payload/NumberedBlobUploadHandler'
 import { VercelBlobClientUploadHandler as VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e } from '@payloadcms/storage-vercel-blob/client'
+import { S3ClientUploadHandler as S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24 } from '@payloadcms/storage-s3/client'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
 /** @type import('payload').ImportMap */
@@ -64,5 +65,6 @@ export const importMap = {
   "/components/payload/Logo#default": default_c6fe5946efe4ec376b0411c30a8f0d79,
   "/components/payload/NumberedBlobUploadHandler#NumberedBlobUploadHandler": NumberedBlobUploadHandler_bb41f6c5fb5e77d5bc3e93836711d8b8,
   "@payloadcms/storage-vercel-blob/client#VercelBlobClientUploadHandler": VercelBlobClientUploadHandler_16c82c5e25f430251a3e3ba57219ff4e,
+  "@payloadcms/storage-s3/client#S3ClientUploadHandler": S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }
