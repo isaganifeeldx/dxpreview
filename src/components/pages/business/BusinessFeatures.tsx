@@ -1,6 +1,22 @@
 import type { BusinessFeature } from '@/lib/business/types'
 import { BusinessFeatureGlyph } from './icons'
 
+function FeatureIcon({ item }: { item: BusinessFeature }) {
+  if (item.iconSrc) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element -- CMS icons may be SVG; next/image needs special SVG config
+      <img
+        src={item.iconSrc}
+        alt={item.iconAlt || ''}
+        className="h-6 w-6 object-contain"
+        draggable={false}
+      />
+    )
+  }
+
+  return <BusinessFeatureGlyph icon={item.icon} />
+}
+
 type BusinessFeaturesProps = {
   eyebrow: string
   title: string
@@ -31,7 +47,7 @@ export default function BusinessFeatures({
         <div className="mt-6 grid gap-3 sm:mt-8 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3 xl:grid-cols-4">
           {items.map((item) => (
             <article key={item.id} className="glass-panel rounded-[16px] !p-4 sm:!p-6">
-              <BusinessFeatureGlyph icon={item.icon} />
+              <FeatureIcon item={item} />
               <h3 className="mt-3 text-[15px] font-semibold text-[#2A3040] sm:mt-4 sm:text-[16px]">{item.title}</h3>
               <p className="mt-2 text-[13px] leading-relaxed text-[#6A758C]">{item.description}</p>
             </article>

@@ -5,21 +5,7 @@ import { seoFields } from '@/fields/seo'
 import { revalidateDxInteriorsGlobal } from '@/hooks/revalidateCms'
 import { pagePreview } from '@/lib/cms/previewUrl'
 import { interiorsCmsFieldDefaults as d } from '@/lib/interiors/cmsFieldDefaults'
-
-const featureIconOptions = [
-  { label: 'Shield', value: 'shield' },
-  { label: 'Lock', value: 'lock' },
-  { label: 'Spark', value: 'spark' },
-  { label: 'Users', value: 'users' },
-  { label: 'Template', value: 'template' },
-  { label: 'Globe', value: 'globe' },
-  { label: 'Encrypt', value: 'encrypt' },
-  { label: 'Chart', value: 'chart' },
-  { label: 'Plug', value: 'plug' },
-  { label: 'Support', value: 'support' },
-  { label: 'Workflow', value: 'workflow' },
-  { label: 'Chat', value: 'chat' },
-]
+import { businessFeatureCardFields } from '@/fields/businessFeatureCard'
 
 const imageUploadField = (label = 'Image') => ({
   name: 'image',
@@ -528,33 +514,7 @@ export const DxInteriors: GlobalConfig = {
                   labels: { singular: 'Feature', plural: 'Features' },
                   admin: { initCollapsed: true },
                   defaultValue: d.features.items,
-                  fields: [
-                    { name: 'itemId', type: 'text', label: 'Item id' },
-                    {
-                      type: 'row',
-                      fields: [
-                        {
-                          name: 'title',
-                          type: 'text',
-                          required: true,
-                          admin: { width: '60%' },
-                        },
-                        {
-                          name: 'icon',
-                          type: 'select',
-                          required: true,
-                          options: featureIconOptions,
-                          defaultValue: 'shield',
-                          admin: { width: '40%' },
-                        },
-                      ],
-                    },
-                    {
-                      name: 'description',
-                      type: 'textarea',
-                      required: true,
-                    },
-                  ],
+                  fields: businessFeatureCardFields,
                 },
               ],
             },

@@ -1,4 +1,5 @@
 import type { GlobalConfig } from 'payload'
+import { businessFeatureCardFields } from '@/fields/businessFeatureCard'
 import { closingCtaGroupFields } from '@/fields/closingCta'
 import { adminOnlyApiView, publicReadAuthenticatedUpdate } from '@/access'
 import { seoFields } from '@/fields/seo'
@@ -560,46 +561,7 @@ export const Home: GlobalConfig = {
                       description: 'Client-facing boards and flythroughs without DX watermarks or leftover branding.',
                     },
                   ],
-                  fields: [
-                    { name: 'itemId', type: 'text', label: 'Item id' },
-                    {
-                      type: 'row',
-                      fields: [
-                        {
-                          name: 'title',
-                          type: 'text',
-                          required: true,
-                          admin: { width: '60%' },
-                        },
-                        {
-                          name: 'icon',
-                          type: 'select',
-                          required: true,
-                          options: [
-                            { label: 'Shield', value: 'shield' },
-                            { label: 'Lock', value: 'lock' },
-                            { label: 'Spark', value: 'spark' },
-                            { label: 'Users', value: 'users' },
-                            { label: 'Template', value: 'template' },
-                            { label: 'Globe', value: 'globe' },
-                            { label: 'Encrypt', value: 'encrypt' },
-                            { label: 'Chart', value: 'chart' },
-                            { label: 'Plug', value: 'plug' },
-                            { label: 'Support', value: 'support' },
-                            { label: 'Workflow', value: 'workflow' },
-                            { label: 'Chat', value: 'chat' },
-                          ],
-                          defaultValue: 'shield',
-                          admin: { width: '40%' },
-                        },
-                      ],
-                    },
-                    {
-                      name: 'description',
-                      type: 'textarea',
-                      required: true,
-                    },
-                  ],
+                  fields: businessFeatureCardFields,
                 },
               ],
             },

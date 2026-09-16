@@ -46,6 +46,8 @@ export type BusinessFeatureIcon =
 export type BusinessFeature = {
   id: string
   icon: BusinessFeatureIcon
+  iconSrc?: string
+  iconAlt?: string
   title: string
   description: string
 }

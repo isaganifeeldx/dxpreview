@@ -5,7 +5,8 @@ import { getPayloadClient } from '@/lib/payload'
 import { mapCmsSeo, type CmsSeo } from '@/lib/seo/mapCmsSeo'
 import { DEFAULT_NUMBER_ICONS, DEFAULT_PROCESS_IMAGE, homePageDefaults } from './defaults'
 import type { HomePageContentData } from './types'
-import type { BusinessFeature, BusinessFeatureIcon, BusinessTestimonial } from '@/lib/business/types'
+import { mapBusinessFeatureItem, type CmsBusinessFeatureItem } from '@/lib/business/mapBusinessFeature'
+import type { BusinessFeature, BusinessTestimonial } from '@/lib/business/types'
 
 type CmsMedia = {
   url?: string | null
@@ -76,12 +77,7 @@ type CmsHome = {
   features?: {
     eyebrow?: string | null
     title?: string | null
-    items?: Array<{
-      itemId?: string | null
-      icon?: string | null
-      title?: string | null
-      description?: string | null
-    } | null> | null
+    items?: Array<CmsBusinessFeatureItem | null> | null
   } | null
   closing?: CmsClosingCta
   seo?: CmsSeo
@@ -102,31 +98,6 @@ function slugify(value: string): string {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '')
-}
-
-const FEATURE_ICONS: BusinessFeatureIcon[] = [
-  'shield',
-  'lock',
-  'spark',
-  'users',
-  'template',
-  'globe',
-  'encrypt',
-  'chart',
-  'plug',
-  'support',
-  'workflow',
-  'chat',
-]
-
-function toFeatureIcon(
-  value: string | null | undefined,
-  fallback: BusinessFeatureIcon = 'shield',
-): BusinessFeatureIcon {
-  if (value && FEATURE_ICONS.includes(value as BusinessFeatureIcon)) {
-    return value as BusinessFeatureIcon
-  }
-  return fallback
 }
 
 function mapHomeFromCms(doc: CmsHome | null | undefined): HomePageContentData {
@@ -194,16 +165,10 @@ function mapHomeFromCms(doc: CmsHome | null | undefined): HomePageContentData {
   }
 
   const features: BusinessFeature[] = []
-  for (const item of doc.features?.items ?? []) {
-    const title = item?.title?.trim()
-    const description = item?.description?.trim()
-    if (!title || !description) continue
-    features.push({
-      id: optionalText(item?.itemId) || slugify(title),
-      icon: toFeatureIcon(item?.icon),
-      title,
-      description,
-    })
+  for (const [index, item] of (doc.features?.items ?? []).entries()) {
+    const fallback = defaults.features.items[index]
+    const mapped = mapBusinessFeatureItem(item, fallback)
+    if (mapped) features.push(mapped)
   }
 
   const discoverItems =
